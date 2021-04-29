@@ -149,6 +149,10 @@ configCmd
     .description("Edit the module's configuration file")
     .action(editConfig);
 configCmd
+    .command('sort')
+    .description("Sorts the config arrays")
+    .action(writeConfig);
+configCmd
     .command('show')
     .description("Print the modules config to the console")
     .action(showConfig);

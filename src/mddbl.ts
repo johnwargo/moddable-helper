@@ -138,7 +138,7 @@ function writeConfig(): boolean {
   appConfig.modules.sort();
   appConfig.targets.sort();
   const data = JSON.stringify(appConfig, null, 2);
-  try {    
+  try {
     // write it to disk
     fs.writeFileSync(configFilePath, data);
     log.debug('Configuration file successfully written to disk');
@@ -188,6 +188,11 @@ configCmd
   .command('edit')
   .description("Edit the module's configuration file")
   .action(editConfig);
+// SORT
+configCmd
+  .command('sort')
+  .description("Sorts the config arrays")
+  .action(writeConfig);
 // SHOW
 configCmd
   .command('show')
@@ -226,9 +231,6 @@ if (readConfig()) {
   // Write the command line options to the console
   log.debug('Command Options:', options);
   log.debug(`Configuration file: ${configFilePath}`);
-
-  // TODO: display help if there's no command-line options
-  // program.help();
 } else {
   log.info(chalk.red('Unable to locate or create the module\'s configuration file'));
   log.info(`Configuration file: ${configFilePath}`);
