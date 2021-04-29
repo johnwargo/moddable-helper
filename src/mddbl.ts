@@ -7,6 +7,8 @@
  * command-line utilities. 
  **********************************************************/
 
+import { ConfigObject, defaultConfig } from './config';
+
 const chalk = require('chalk');
 const fs = require('fs');
 const logger = require('cli-logger');
@@ -15,12 +17,6 @@ const path = require('path');
 const program = require('commander');
 const shell = require('shelljs');
 const cp = require("child_process");
-
-const DEFAULT_CONFIG = {
-  editPath: '',
-  modules: [],
-  targets: []
-}
 
 // https://stackoverflow.com/questions/9153571/is-there-a-way-to-get-version-from-package-json-in-nodejs-code
 const packageDotJSON = require('./package.json');
@@ -32,8 +28,9 @@ const CONFIG_FILE_NAME = '.mddbl';
 const CURRENT_PATH = process.cwd();
 const EXIT_HEADING = chalk.red('Exiting:');
 
-var log = logger();
+var appConfig: ConfigObject;
 var configFilePath: string;
+var log = logger();
 
 function checkFile(filePath: string): boolean {
   // log.debug(`checkFile(${filePath})`);
@@ -68,28 +65,8 @@ function checkDirectory(filePath: string): boolean {
   }
 }
 
-function validateConfig(configFile: string): boolean {
-  console.debug(`validateConfig(${configFile})`);
-
-  // does the config file exist?
-
-  // if not, create it
-
-  return true;
-}
-
 function deployModule(mod: string, target: string) {
   console.log(`Deploying ${mod} to ${target}`);
-
-}
-
-function editConfig(){
-  log.info('Editing module configuration');
-
-}
-
-function showConfig() {
-  log.info('Displaying module configuration');
 
 }
 
@@ -98,17 +75,102 @@ function wipeDevice(target: string) {
 
 }
 
+function listToConsole(listStr: string, theList: string[]) {
+  if (theList.length > 0) {
+    log.info(`\nConfigured ${listStr}:`);
+    theList.sort();
+    theList.forEach(value => {
+      log.info(`- ${value}`)
+    });
+  } else {
+    log.info(`\nNo ${listStr} configured`);
+  }
+}
+
+function listModules() {
+  listToConsole('modules', appConfig.modules);
+}
+
+function listTargets() {
+  listToConsole('targets', appConfig.targets);
+}
+
+function editConfig() {
+  log.info('Editing module configuration');
+  // build the command string based on execution platform
+  var cmdStr = (os.type().indexOf('Win') === 0) ? `start ${configFilePath}` : `open -e ./${configFilePath}`;
+  // execute the command
+  cp.exec(cmdStr, function (error: any, stdout: any, stderr: any) {
+    if (error) {
+      log.error('Unable to edit configuration')
+      log.error(error);
+      return;
+    }
+    if (stdout) {
+      log.info(stdout);
+    }
+    if (stderr) {
+      log.info(stderr);
+    }
+  });
+}
+
+function readConfig() {
+  log.debug(`Reading configuration from ${configFilePath}`);
+  if (fs.existsSync(configFilePath)) {
+    const rawData: string = fs.readFileSync(configFilePath);
+    appConfig = JSON.parse(rawData);
+    // console.dir(appConfig);
+    return true;
+  } else {
+    // Assign the default config to the variable
+    appConfig = Object.assign({}, defaultConfig);
+    if (writeConfig()) {
+      return true;
+    };
+  }
+  return false;
+}
+
+function writeConfig(): boolean {
+  log.debug(`Writing configuration to ${configFilePath}`);
+  // create the pretty version of the config object
+  appConfig.modules.sort();
+  appConfig.targets.sort();
+  const data = JSON.stringify(appConfig, null, 2);
+  try {    
+    // write it to disk
+    fs.writeFileSync(configFilePath, data);
+    log.debug('Configuration file successfully written to disk');
+  } catch (err) {
+    log.error('Unable to write to configuration file');
+    log.error(err)
+    return false;
+  }
+  return true;
+}
+
+function showConfig() {
+  log.info('Module configuration:');
+  console.log(JSON.stringify(appConfig, null, 2));
+}
+
 console.log(APP_NAME);
 program.version(packageDotJSON.version);
 program.option('--debug', 'Output extra information during operation');
+// ===========================
 // Setup the `deploy` command
+// ===========================
 program
   .command('deploy <module> <target>')
   .description('Deploy <module> to specific <target>')
   .action((mod: string, target: string) => {
     deployModule(mod, target);
   });
+
+// ===========================
 // setup the `wipe` command
+// ===========================
 program
   .command('wipe <target>')
   .description('Wipes the <target> device')
@@ -116,23 +178,41 @@ program
     wipeDevice(target);
   });
 
+// ===========================
 // Setup the `config` command
-const config = program.command('config')
+// ===========================
+const configCmd = program.command('config')
   .description("Work with the module's configuration");
 // EDIT
-config
+configCmd
   .command('edit')
   .description("Edit the module's configuration file")
   .action(editConfig);
 // SHOW
-config
+configCmd
   .command('show')
   .description("Print the modules config to the console")
   .action(showConfig);
 
+// ===========================
+// Setup the `list` command
+// ===========================
+const listCmd = program.command('list')
+  .description('List configuration objects');
+
+listCmd
+  .command('modules')
+  .description('List all configured modules')
+  .action(listModules)
+
+listCmd
+  .command('targets')
+  .description('List all configured targets')
+  .action(listTargets)
+
 configFilePath = path.join(os.homedir(), CONFIG_FILE_NAME);
-console.log(configFilePath);
-if (validateConfig(configFilePath)) {
+
+if (readConfig()) {
   program.parse();
   const options = program.opts();
   if (options.debug) {
@@ -145,6 +225,7 @@ if (validateConfig(configFilePath)) {
   log.debug(`Version: ${packageDotJSON.version}`);
   // Write the command line options to the console
   log.debug('Command Options:', options);
+  log.debug(`Configuration file: ${configFilePath}`);
 
   // TODO: display help if there's no command-line options
   // program.help();
