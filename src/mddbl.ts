@@ -83,14 +83,19 @@ function deployModule(mod: string, target: string) {
 
 }
 
-function wipeDevice(target: string) {
-  console.log(`Wiping ${target}`);
+function editConfig(){
+  log.info('Editing module configuration');
 
 }
 
 function showConfig() {
   log.info('Displaying module configuration');
-  
+
+}
+
+function wipeDevice(target: string) {
+  console.log(`Wiping ${target}`);
+
 }
 
 console.log(APP_NAME);
@@ -118,10 +123,7 @@ const config = program.command('config')
 config
   .command('edit')
   .description("Edit the module's configuration file")
-  .action(() => {
-    console.log('Edit Configuration');
-
-  });
+  .action(editConfig);
 // SHOW
 config
   .command('show')
