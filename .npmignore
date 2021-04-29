@@ -1,0 +1,10 @@
+# Folders
+node_modules/
+src/
+functions/
+
+# Files
+package-lock.json
+tsconfig.json
+.firebaserc
+firebase.json
