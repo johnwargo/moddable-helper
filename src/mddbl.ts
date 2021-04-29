@@ -233,6 +233,6 @@ if (readConfig()) {
   log.debug(`Configuration file: ${configFilePath}`);
 } else {
   log.info(chalk.red('Unable to locate or create the module\'s configuration file'));
-  log.info(`Configuration file: ${configFilePath}`);
+  log.info(`Configuration file: ${chalk.yellow(configFilePath)}`);
   process.exit(1);
 }
