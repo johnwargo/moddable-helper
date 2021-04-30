@@ -8,7 +8,6 @@ var logger = require('cli-logger');
 var os = require('os');
 var path = require('path');
 var program = require('commander');
-var shell = require('shelljs');
 var cp = require("child_process");
 var packageDotJSON = require('./package.json');
 var APP_NAME = '\nModdable Helper (mddbl)';
@@ -87,10 +86,10 @@ function deployModule(modName, targetName) {
     }
     console.log("Deploying " + modName + " to " + targetName);
     if (mod.isHost) {
-        executeCommand("mcconfig -d -m -p " + target.platform, mod.folderPath);
+        executeCommand("mcconfig -d -m -p " + target.platform.toLowerCase(), mod.folderPath);
     }
     else {
-        executeCommand("mcrun -d -m -p " + target.platform, mod.folderPath);
+        executeCommand("mcrun -d -m -p " + target.platform.toLowerCase(), mod.folderPath);
     }
 }
 function wipeDevice(targetName) {

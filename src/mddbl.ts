@@ -3,12 +3,15 @@
  * Moddable Helper
  * by John M. Wargo
  * 
- * Simplifies some of the pain from using the Moddable SDK
- * command-line utilities. 
+ * Simplifies some of the pain of using the Moddable SDK
+ * command-line utilities. streamlines deploy and wipe 
+ * actions.
  **********************************************************/
 
 // TODO: Implement Add Module
 // TODO: Implement Add Target
+
+// ESP32 Wipe Command: python %IDF_PATH%\components\esptool_py\esptool\esptool.py erase_flash
 
 import { ConfigObject, defaultConfig, emptyModule, emptyTarget, Module, Target } from './config';
 
@@ -18,7 +21,6 @@ const logger = require('cli-logger');
 const os = require('os');
 const path = require('path');
 const program = require('commander');
-const shell = require('shelljs');
 const cp = require("child_process");
 
 // https://stackoverflow.com/questions/9153571/is-there-a-way-to-get-version-from-package-json-in-nodejs-code
@@ -33,16 +35,6 @@ const WORKING_PATH = process.cwd();
 var appConfig: ConfigObject;
 var configFilePath: string;
 var log = logger();
-
-// function checkFile(filePath: string): boolean {
-//   log.debug(`Locating ${filePath}`);
-//   try {
-//     return fs.existsSync(filePath);
-//   } catch (err) {
-//     log.error(`checkFile error: ${err}`);
-//     return false;
-//   }
-// }
 
 function checkDirectory(filePath: string): boolean {
   log.debug(`Locating ${filePath}`);
@@ -92,7 +84,6 @@ function executeCommand(cmd: string, folder: string = '') {
   }
 }
 
-
 function deployModule(modName: string, targetName: string) {
   log.debug(`deployModule(${modName}, ${targetName})`);
   // Does the specified module exist?
@@ -117,11 +108,12 @@ function deployModule(modName: string, targetName: string) {
     log.error(`Target platform '${target.platform}' not defined, ${CHECK_CONFIG_STRING}`);
     return;
   }
+  // Execute the command
   console.log(`Deploying ${modName} to ${targetName}`);
   if (mod.isHost) {
-    executeCommand(`mcconfig -d -m -p ${target.platform}`, mod.folderPath);
+    executeCommand(`mcconfig -d -m -p ${target.platform.toLowerCase()}`, mod.folderPath);
   } else {
-    executeCommand(`mcrun -d -m -p ${target.platform}`, mod.folderPath);
+    executeCommand(`mcrun -d -m -p ${target.platform.toLowerCase()}`, mod.folderPath);
   }
 }
 
