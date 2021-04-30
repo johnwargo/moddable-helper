@@ -14,21 +14,11 @@ var packageDotJSON = require('./package.json');
 var APP_NAME = '\nModdable Helper (mddbl)';
 var APP_AUTHOR = 'by John M. Wargo (https://johnwargo.com)';
 var CONFIG_FILE_NAME = 'mddbl.json';
-var CURRENT_PATH = process.cwd();
-var EXIT_HEADING = chalk.red('Exiting:');
+var CHECK_CONFIG_STRING = "please check the module configuration (" + CONFIG_FILE_NAME + ")";
+var WORKING_PATH = process.cwd();
 var appConfig;
 var configFilePath;
 var log = logger();
-function checkFile(filePath) {
-    log.debug("Locating " + filePath);
-    try {
-        return fs.existsSync(filePath);
-    }
-    catch (err) {
-        log.error("checkFile error: " + err);
-        return false;
-    }
-}
 function checkDirectory(filePath) {
     log.debug("Locating " + filePath);
     if (fs.existsSync(filePath)) {
@@ -50,33 +40,72 @@ function checkDirectory(filePath) {
         return false;
     }
 }
-function executeCommand(folder, cmd) {
+function executeCommand(cmd, folder) {
+    if (folder === void 0) { folder = ''; }
     log.debug("executeCommand(" + cmd + ")");
-    try {
-        log.info(chalk.yellow('Executing:'), cmd);
-        cp.execSync(cmd, { stdio: 'inherit' });
-    }
-    catch (e) {
-        log.warn(e);
-    }
-}
-function deployModule(modName, targetName) {
-    console.log("Deploying " + modName + " to " + targetName);
-    var mod = appConfig.modules.find(function (item) { return item.name === modName; });
-    var target = appConfig.targets.find(function (item) { return item.name === targetName; });
-    if (mod && target) {
-        if (mod.isHost) {
-            executeCommand(target.folderPath, "mcconfig");
+    if (checkDirectory(folder)) {
+        try {
+            if (folder.length > 0) {
+                log.info(chalk.yellow('Changing directory:') + " " + folder);
+                process.chdir(folder);
+            }
+            log.info(chalk.yellow('Executing:') + " " + cmd);
+            cp.execSync(cmd, { stdio: 'inherit' });
+            if (folder.length > 0) {
+                log.info(chalk.yellow('Changing directory:') + " " + WORKING_PATH);
+                process.chdir(WORKING_PATH);
+            }
         }
-        else {
-            executeCommand(target.folderPath, "mcrun");
+        catch (e) {
+            log.error(chalk.red('Error executing command'));
+            log.error(e);
         }
     }
     else {
+        log.error("Specified module folder (" + folder + ") does not exist");
+    }
+}
+function deployModule(modName, targetName) {
+    log.debug("deployModule(" + modName + ", " + targetName + ")");
+    var mod = appConfig.modules.find(function (item) { return item.name === modName; });
+    if (!mod) {
+        log.error("Module '" + modName + "' not defined, " + CHECK_CONFIG_STRING);
+        return;
+    }
+    if (!mod.folderPath) {
+        log.error("Module path '" + mod.folderPath + "' not defined, " + CHECK_CONFIG_STRING);
+        return;
+    }
+    var target = appConfig.targets.find(function (item) { return item.name === targetName; });
+    if (!target) {
+        log.error("Target '" + targetName + "' not defined, " + CHECK_CONFIG_STRING);
+        return;
+    }
+    if (!target.platform) {
+        log.error("Target platform '" + target.platform + "' not defined, " + CHECK_CONFIG_STRING);
+        return;
+    }
+    console.log("Deploying " + modName + " to " + targetName);
+    if (mod.isHost) {
+        executeCommand("mcconfig -d -m -p " + target.platform, mod.folderPath);
+    }
+    else {
+        executeCommand("mcrun -d -m -p " + target.platform, mod.folderPath);
     }
 }
 function wipeDevice(targetName) {
+    log.debug("wipeDevice(" + targetName + ")");
+    var target = appConfig.targets.find(function (item) { return item.name === targetName; });
+    if (!target) {
+        log.error("Target '" + targetName + "' not defined, " + CHECK_CONFIG_STRING);
+        return;
+    }
+    if (!target.wipeCommand) {
+        log.error("Target wipe command '" + target.wipeCommand + "' not defined, " + CHECK_CONFIG_STRING);
+        return;
+    }
     console.log("Wiping " + targetName);
+    executeCommand(target.wipeCommand);
 }
 function listArray(listStr, theList) {
     if (theList.length > 0) {
@@ -198,7 +227,7 @@ listCmd
     .command('targets')
     .description('List all configured targets')
     .action(listTargets);
-configFilePath = path.join(CURRENT_PATH, CONFIG_FILE_NAME);
+configFilePath = path.join(WORKING_PATH, CONFIG_FILE_NAME);
 if (!readConfig()) {
     log.info("\nConfiguration file not found (" + configFilePath + ")");
     log.info("Execute " + chalk.yellow('`mdbbl config init`') + " to create one here");
@@ -215,5 +244,5 @@ else {
 log.debug(APP_AUTHOR);
 log.debug("Version: " + packageDotJSON.version);
 log.debug('Command Options:', options);
-log.debug("Working directory: " + CURRENT_PATH);
+log.debug("Working directory: " + WORKING_PATH);
 log.debug("Configuration file: " + configFilePath);

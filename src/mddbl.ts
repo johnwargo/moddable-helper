@@ -24,26 +24,25 @@ const cp = require("child_process");
 // https://stackoverflow.com/questions/9153571/is-there-a-way-to-get-version-from-package-json-in-nodejs-code
 const packageDotJSON = require('./package.json');
 
-// constants
 const APP_NAME = '\nModdable Helper (mddbl)';
 const APP_AUTHOR = 'by John M. Wargo (https://johnwargo.com)';
 const CONFIG_FILE_NAME = 'mddbl.json';
-const CURRENT_PATH = process.cwd();
-const EXIT_HEADING = chalk.red('Exiting:');
+const CHECK_CONFIG_STRING = `please check the module configuration (${CONFIG_FILE_NAME})`;
+const WORKING_PATH = process.cwd();
 
 var appConfig: ConfigObject;
 var configFilePath: string;
 var log = logger();
 
-function checkFile(filePath: string): boolean {
-  log.debug(`Locating ${filePath}`);
-  try {
-    return fs.existsSync(filePath);
-  } catch (err) {
-    log.error(`checkFile error: ${err}`);
-    return false;
-  }
-}
+// function checkFile(filePath: string): boolean {
+//   log.debug(`Locating ${filePath}`);
+//   try {
+//     return fs.existsSync(filePath);
+//   } catch (err) {
+//     log.error(`checkFile error: ${err}`);
+//     return false;
+//   }
+// }
 
 function checkDirectory(filePath: string): boolean {
   log.debug(`Locating ${filePath}`);
@@ -66,36 +65,81 @@ function checkDirectory(filePath: string): boolean {
   }
 }
 
-function executeCommand(folder: string, cmd: string) {
+function executeCommand(cmd: string, folder: string = '') {
   log.debug(`executeCommand(${cmd})`);
-  try {
-    log.info(chalk.yellow('Executing:'), cmd);
-    cp.execSync(cmd, { stdio: 'inherit' });
-  } catch (e) {
-    log.warn(e);
+  // does the module folder exist?
+  if (checkDirectory(folder)) {
+    try {
+      if (folder.length > 0) {
+        // Change to the module folder
+        log.info(`${chalk.yellow('Changing directory:')} ${folder}`);
+        process.chdir(folder);
+      }
+      // execute the command
+      log.info(`${chalk.yellow('Executing:')} ${cmd}`);
+      cp.execSync(cmd, { stdio: 'inherit' });
+      if (folder.length > 0) {
+        // switch back to the starting folder
+        log.info(`${chalk.yellow('Changing directory:')} ${WORKING_PATH}`);
+        process.chdir(WORKING_PATH);
+      }
+    } catch (e) {
+      log.error(chalk.red('Error executing command'));
+      log.error(e);
+    }
+  } else {
+    log.error(`Specified module folder (${folder}) does not exist`);
   }
 }
 
 
 function deployModule(modName: string, targetName: string) {
-  console.log(`Deploying ${modName} to ${targetName}`);
-
+  log.debug(`deployModule(${modName}, ${targetName})`);
+  // Does the specified module exist?
   const mod: any = appConfig.modules.find(item => item.name === modName);
+  if (!mod) {
+    log.error(`Module '${modName}' not defined, ${CHECK_CONFIG_STRING}`);
+    return;
+  }
+  // Does the module have a folder path?
+  if (!mod.folderPath) {
+    log.error(`Module path '${mod.folderPath}' not defined, ${CHECK_CONFIG_STRING}`);
+    return;
+  }
+  // Does the specified target exist?
   const target: any = appConfig.targets.find(item => item.name === targetName);
-  if (mod && target) {
-    if (mod.isHost) {
-      executeCommand(target.folderPath, `mcconfig`);
-    } else {
-      executeCommand(target.folderPath, `mcrun`);
-    }
+  if (!target) {
+    log.error(`Target '${targetName}' not defined, ${CHECK_CONFIG_STRING}`);
+    return;
+  }
+  // Does the target have a platform?
+  if (!target.platform) {
+    log.error(`Target platform '${target.platform}' not defined, ${CHECK_CONFIG_STRING}`);
+    return;
+  }
+  console.log(`Deploying ${modName} to ${targetName}`);
+  if (mod.isHost) {
+    executeCommand(`mcconfig -d -m -p ${target.platform}`, mod.folderPath);
   } else {
-
+    executeCommand(`mcrun -d -m -p ${target.platform}`, mod.folderPath);
   }
 }
 
 function wipeDevice(targetName: string) {
+  log.debug(`wipeDevice(${targetName})`);
+  // See if we can find the target  
+  const target: any = appConfig.targets.find(item => item.name === targetName);
+  if (!target) {
+    log.error(`Target '${targetName}' not defined, ${CHECK_CONFIG_STRING}`);
+    return;
+  }
+  // IS the wipe command defined?
+  if (!target.wipeCommand) {
+    log.error(`Target wipe command '${target.wipeCommand}' not defined, ${CHECK_CONFIG_STRING}`);
+    return;
+  }
   console.log(`Wiping ${targetName}`);
-
+  executeCommand(target.wipeCommand);
 }
 
 function listArray(listStr: string, theList: Target[] | Module[]) {
@@ -257,7 +301,7 @@ listCmd
   .action(listTargets)
 
 // Look for the config file in the current folder
-configFilePath = path.join(CURRENT_PATH, CONFIG_FILE_NAME);
+configFilePath = path.join(WORKING_PATH, CONFIG_FILE_NAME);
 
 if (!readConfig()) {
 
@@ -277,5 +321,5 @@ if (options.debug) {
 log.debug(APP_AUTHOR);
 log.debug(`Version: ${packageDotJSON.version}`);
 log.debug('Command Options:', options);
-log.debug(`Working directory: ${CURRENT_PATH}`);
+log.debug(`Working directory: ${WORKING_PATH}`);
 log.debug(`Configuration file: ${configFilePath}`);
