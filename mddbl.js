@@ -50,28 +50,54 @@ function checkDirectory(filePath) {
         return false;
     }
 }
+function executeCommand(folder, cmd) {
+    log.debug("executeCommand(" + cmd + ")");
+    try {
+        log.info(chalk.yellow('Executing:'), cmd);
+        cp.execSync(cmd, { stdio: 'inherit' });
+    }
+    catch (e) {
+        log.warn(e);
+    }
+}
 function deployModule(modName, targetName) {
     console.log("Deploying " + modName + " to " + targetName);
+    var mod = appConfig.modules.find(function (item) { return item.name === modName; });
+    var target = appConfig.targets.find(function (item) { return item.name === targetName; });
+    if (mod && target) {
+        if (mod.isHost) {
+            executeCommand(target.folderPath, "mcconfig");
+        }
+        else {
+            executeCommand(target.folderPath, "mcrun");
+        }
+    }
+    else {
+    }
 }
 function wipeDevice(targetName) {
     console.log("Wiping " + targetName);
 }
-function listToConsole(listStr, theList) {
+function listArray(listStr, theList) {
     if (theList.length > 0) {
         log.info("\nConfigured " + listStr + ":");
-        theList.forEach(function (value) {
-            log.info("- " + value.name);
-        });
+        for (var item in theList) {
+            var outputStr = "- " + theList[item].name;
+            if (theList[item].description) {
+                outputStr += ": " + theList[item].description;
+            }
+            log.info(outputStr);
+        }
     }
     else {
         log.info("\nNo " + listStr + " configured");
     }
 }
 function listModules() {
-    listToConsole('modules', appConfig.modules);
+    listArray('Modules', appConfig.modules);
 }
 function listTargets() {
-    listToConsole('targets', appConfig.targets);
+    listArray('Targets', appConfig.targets);
 }
 function editConfig() {
     log.info('Editing module configuration');
@@ -86,23 +112,22 @@ function editConfig() {
             log.info(stdout);
         }
         if (stderr) {
-            log.info(stderr);
+            log.error(stderr);
         }
     });
 }
+function initConfig() {
+    appConfig = Object.assign({}, config_1.defaultConfig);
+    if (writeConfig()) {
+        log.debug('Successfully wrote configuration to disk');
+    }
+}
 function readConfig() {
-    log.debug("Reading configuration from " + configFilePath);
+    log.debug('Reading configuration');
     if (fs.existsSync(configFilePath)) {
         var rawData = fs.readFileSync(configFilePath);
         appConfig = JSON.parse(rawData);
         return true;
-    }
-    else {
-        appConfig = Object.assign({}, config_1.defaultConfig);
-        if (writeConfig()) {
-            return true;
-        }
-        ;
     }
     return false;
 }
@@ -147,16 +172,20 @@ program
 var configCmd = program.command('config')
     .description("Work with the module's configuration");
 configCmd
+    .command('init')
+    .description('Initialize the current folder')
+    .action(initConfig);
+configCmd
     .command('edit')
-    .description("Edit the module's configuration file")
+    .description('Edit the module\'s configuration file')
     .action(editConfig);
 configCmd
     .command('sort')
-    .description("Sorts the config arrays")
+    .description('Sorts the config arrays')
     .action(writeConfig);
 configCmd
     .command('show')
-    .description("Print the modules config to the console")
+    .description('Print the modules config to the console')
     .action(showConfig);
 var listCmd = program.command('list')
     .description('List configuration objects');
@@ -168,7 +197,7 @@ listCmd
     .command('targets')
     .description('List all configured targets')
     .action(listTargets);
-configFilePath = path.join(os.homedir(), CONFIG_FILE_NAME);
+configFilePath = path.join(process.cwd(), CONFIG_FILE_NAME);
 if (readConfig()) {
     program.parse();
     var options = program.opts();
@@ -184,7 +213,7 @@ if (readConfig()) {
     log.debug("Configuration file: " + configFilePath);
 }
 else {
-    log.info(chalk.red('Unable to locate or create the module\'s configuration file'));
-    log.info("Configuration file: " + chalk.yellow(configFilePath));
+    log.info("\nConfiguration file not found (" + configFilePath + ")");
+    log.info("Execute " + chalk.yellow('`mdbbl config init`') + " to create one here");
     process.exit(1);
 }

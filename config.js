@@ -5,16 +5,19 @@ exports.PixelFormats = ['gray16', 'gray256', 'rgb332', 'rgb565be', 'rgb565le'];
 exports.defaultConfig = {
     editCommand: '',
     modules: [],
-    targets: []
+    targets: [],
 };
 exports.emptyModule = {
     name: '',
     description: '',
-    folderPath: ''
+    isHost: false,
+    folderPath: '',
 };
 exports.emptyTarget = {
     name: '',
+    description: '',
     platform: '',
     format: '',
-    rotation: 0
+    rotation: 0,
+    wipeCommand: '',
 };
