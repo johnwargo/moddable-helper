@@ -13,7 +13,7 @@ var cp = require("child_process");
 var packageDotJSON = require('./package.json');
 var APP_NAME = '\nModdable Helper (mddbl)';
 var APP_AUTHOR = 'by John M. Wargo (https://johnwargo.com)';
-var CONFIG_FILE_NAME = '.mddbl';
+var CONFIG_FILE_NAME = 'mddbl.json';
 var CURRENT_PATH = process.cwd();
 var EXIT_HEADING = chalk.red('Exiting:');
 var appConfig;
@@ -117,9 +117,10 @@ function editConfig() {
     });
 }
 function initConfig() {
+    log.info('Initializing project folder');
     appConfig = Object.assign({}, config_1.defaultConfig);
     if (writeConfig()) {
-        log.debug('Successfully wrote configuration to disk');
+        log.info("Successfully created configuration file (" + CONFIG_FILE_NAME + ")");
     }
 }
 function readConfig() {
@@ -173,7 +174,7 @@ var configCmd = program.command('config')
     .description("Work with the module's configuration");
 configCmd
     .command('init')
-    .description('Initialize the current folder')
+    .description('Initialize the current folder (create module config file')
     .action(initConfig);
 configCmd
     .command('edit')
@@ -197,19 +198,20 @@ listCmd
     .command('targets')
     .description('List all configured targets')
     .action(listTargets);
-configFilePath = path.join(process.cwd(), CONFIG_FILE_NAME);
+configFilePath = path.join(CURRENT_PATH, CONFIG_FILE_NAME);
+program.parse();
+var options = program.opts();
+if (options.debug) {
+    log.level(log.DEBUG);
+}
+else {
+    log.level(log.INFO);
+}
 if (readConfig()) {
-    program.parse();
-    var options = program.opts();
-    if (options.debug) {
-        log.level(log.DEBUG);
-    }
-    else {
-        log.level(log.INFO);
-    }
     log.debug(APP_AUTHOR);
     log.debug("Version: " + packageDotJSON.version);
     log.debug('Command Options:', options);
+    log.debug("Working directory: " + CURRENT_PATH);
     log.debug("Configuration file: " + configFilePath);
 }
 else {

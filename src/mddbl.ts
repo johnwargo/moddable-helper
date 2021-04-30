@@ -27,7 +27,7 @@ const packageDotJSON = require('./package.json');
 // constants
 const APP_NAME = '\nModdable Helper (mddbl)';
 const APP_AUTHOR = 'by John M. Wargo (https://johnwargo.com)';
-const CONFIG_FILE_NAME = '.mddbl';
+const CONFIG_FILE_NAME = 'mddbl.json';
 const CURRENT_PATH = process.cwd();
 const EXIT_HEADING = chalk.red('Exiting:');
 
@@ -144,10 +144,12 @@ function editConfig() {
 }
 
 function initConfig() {
-  // Assign the default config to the variable
+  log.info('Initializing project folder...');
+  // Assign the default config to the variable  
   appConfig = Object.assign({}, defaultConfig);
+  // write the object to the file
   if (writeConfig()) {
-    log.debug('Successfully wrote configuration to disk');
+    log.info(`Successfully created configuration file (${CONFIG_FILE_NAME})`);
   }
 }
 
@@ -161,11 +163,12 @@ function readConfig() {
   return false;
 }
 
-function compare(a: Module | Target, b: Module | Target) {
-  return a.name > b.name ? 1 : -1;
-}
-
 function writeConfig(): boolean {
+
+  function compare(a: Module | Target, b: Module | Target) {
+    return a.name > b.name ? 1 : -1;
+  }
+
   // Save the configuration to disk
   log.debug(`Writing configuration to ${configFilePath}`);
   // Sort the modules and targets arrays
@@ -254,20 +257,21 @@ listCmd
   .action(listTargets)
 
 // Look for the config file in the current folder
-configFilePath = path.join(process.cwd(), CONFIG_FILE_NAME);
+configFilePath = path.join(CURRENT_PATH, CONFIG_FILE_NAME);
+
+program.parse();
+const options = program.opts();
+if (options.debug) {
+  log.level(log.DEBUG);
+} else {
+  log.level(log.INFO);
+}
 
 if (readConfig()) {
-  program.parse();
-  const options = program.opts();
-  if (options.debug) {
-    log.level(log.DEBUG);
-  } else {
-    log.level(log.INFO);
-  }
-
   log.debug(APP_AUTHOR);
   log.debug(`Version: ${packageDotJSON.version}`);
   log.debug('Command Options:', options);
+  log.debug(`Working directory: ${CURRENT_PATH}`);
   log.debug(`Configuration file: ${configFilePath}`);
 } else {
   log.info(`\nConfiguration file not found (${configFilePath})`);

@@ -1,7 +1,6 @@
 # Folders
 node_modules/
 src/
-functions/
 
 # Files
 package-lock.json
