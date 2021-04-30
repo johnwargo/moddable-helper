@@ -117,7 +117,7 @@ function editConfig() {
     });
 }
 function initConfig() {
-    log.info('Initializing project folder');
+    log.info('Initializing project folder...');
     appConfig = Object.assign({}, config_1.defaultConfig);
     if (writeConfig()) {
         log.info("Successfully created configuration file (" + CONFIG_FILE_NAME + ")");
@@ -132,10 +132,10 @@ function readConfig() {
     }
     return false;
 }
-function compare(a, b) {
-    return a.name > b.name ? 1 : -1;
-}
 function writeConfig() {
+    function compare(a, b) {
+        return a.name > b.name ? 1 : -1;
+    }
     log.debug("Writing configuration to " + configFilePath);
     appConfig.modules.sort(compare);
     appConfig.targets.sort(compare);
@@ -152,8 +152,8 @@ function writeConfig() {
     return true;
 }
 function showConfig() {
-    log.info('Module configuration:');
-    console.log(JSON.stringify(appConfig, null, 2));
+    log.info('\nModule configuration:');
+    log.info(JSON.stringify(appConfig, null, 2));
 }
 console.log(APP_NAME);
 program.version(packageDotJSON.version);
@@ -199,6 +199,11 @@ listCmd
     .description('List all configured targets')
     .action(listTargets);
 configFilePath = path.join(CURRENT_PATH, CONFIG_FILE_NAME);
+if (!readConfig()) {
+    log.info("\nConfiguration file not found (" + configFilePath + ")");
+    log.info("Execute " + chalk.yellow('`mdbbl config init`') + " to create one here");
+    process.exit(1);
+}
 program.parse();
 var options = program.opts();
 if (options.debug) {
@@ -207,15 +212,8 @@ if (options.debug) {
 else {
     log.level(log.INFO);
 }
-if (readConfig()) {
-    log.debug(APP_AUTHOR);
-    log.debug("Version: " + packageDotJSON.version);
-    log.debug('Command Options:', options);
-    log.debug("Working directory: " + CURRENT_PATH);
-    log.debug("Configuration file: " + configFilePath);
-}
-else {
-    log.info("\nConfiguration file not found (" + configFilePath + ")");
-    log.info("Execute " + chalk.yellow('`mdbbl config init`') + " to create one here");
-    process.exit(1);
-}
+log.debug(APP_AUTHOR);
+log.debug("Version: " + packageDotJSON.version);
+log.debug('Command Options:', options);
+log.debug("Working directory: " + CURRENT_PATH);
+log.debug("Configuration file: " + configFilePath);

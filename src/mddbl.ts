@@ -190,8 +190,8 @@ function writeConfig(): boolean {
 
 function showConfig() {
   // print the module configuration settings to the console
-  log.info('Module configuration:');
-  console.log(JSON.stringify(appConfig, null, 2));
+  log.info('\nModule configuration:');
+  log.info(JSON.stringify(appConfig, null, 2));
 }
 
 // *****************************************
@@ -259,6 +259,13 @@ listCmd
 // Look for the config file in the current folder
 configFilePath = path.join(CURRENT_PATH, CONFIG_FILE_NAME);
 
+if (!readConfig()) {
+
+  log.info(`\nConfiguration file not found (${configFilePath})`);
+  log.info(`Execute ${chalk.yellow('`mdbbl config init`')} to create one here`);
+  process.exit(1);
+}
+
 program.parse();
 const options = program.opts();
 if (options.debug) {
@@ -267,14 +274,8 @@ if (options.debug) {
   log.level(log.INFO);
 }
 
-if (readConfig()) {
-  log.debug(APP_AUTHOR);
-  log.debug(`Version: ${packageDotJSON.version}`);
-  log.debug('Command Options:', options);
-  log.debug(`Working directory: ${CURRENT_PATH}`);
-  log.debug(`Configuration file: ${configFilePath}`);
-} else {
-  log.info(`\nConfiguration file not found (${configFilePath})`);
-  log.info(`Execute ${chalk.yellow('`mdbbl config init`')} to create one here`);
-  process.exit(1);
-}
+log.debug(APP_AUTHOR);
+log.debug(`Version: ${packageDotJSON.version}`);
+log.debug('Command Options:', options);
+log.debug(`Working directory: ${CURRENT_PATH}`);
+log.debug(`Configuration file: ${configFilePath}`);
