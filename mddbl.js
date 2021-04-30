@@ -50,18 +50,17 @@ function checkDirectory(filePath) {
         return false;
     }
 }
-function deployModule(mod, target) {
-    console.log("Deploying " + mod + " to " + target);
+function deployModule(modName, targetName) {
+    console.log("Deploying " + modName + " to " + targetName);
 }
-function wipeDevice(target) {
-    console.log("Wiping " + target);
+function wipeDevice(targetName) {
+    console.log("Wiping " + targetName);
 }
 function listToConsole(listStr, theList) {
     if (theList.length > 0) {
         log.info("\nConfigured " + listStr + ":");
-        theList.sort();
         theList.forEach(function (value) {
-            log.info("- " + value);
+            log.info("- " + value.name);
         });
     }
     else {
@@ -107,10 +106,13 @@ function readConfig() {
     }
     return false;
 }
+function compare(a, b) {
+    return a.name > b.name ? 1 : -1;
+}
 function writeConfig() {
     log.debug("Writing configuration to " + configFilePath);
-    appConfig.modules.sort();
-    appConfig.targets.sort();
+    appConfig.modules.sort(compare);
+    appConfig.targets.sort(compare);
     var data = JSON.stringify(appConfig, null, 2);
     try {
         fs.writeFileSync(configFilePath, data);
@@ -183,6 +185,6 @@ if (readConfig()) {
 }
 else {
     log.info(chalk.red('Unable to locate or create the module\'s configuration file'));
-    log.info("Configuration file: " + configFilePath);
+    log.info("Configuration file: " + chalk.yellow(configFilePath));
     process.exit(1);
 }

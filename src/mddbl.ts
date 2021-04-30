@@ -7,7 +7,7 @@
  * command-line utilities. 
  **********************************************************/
 
-import { ConfigObject, defaultConfig } from './config';
+import { ConfigObject, defaultConfig, emptyModule, emptyTarget, Module, Target } from './config';
 
 const chalk = require('chalk');
 const fs = require('fs');
@@ -65,22 +65,21 @@ function checkDirectory(filePath: string): boolean {
   }
 }
 
-function deployModule(mod: string, target: string) {
-  console.log(`Deploying ${mod} to ${target}`);
+function deployModule(modName: string, targetName: string) {
+  console.log(`Deploying ${modName} to ${targetName}`);
 
 }
 
-function wipeDevice(target: string) {
-  console.log(`Wiping ${target}`);
+function wipeDevice(targetName: string) {
+  console.log(`Wiping ${targetName}`);
 
 }
 
-function listToConsole(listStr: string, theList: string[]) {
+function listToConsole(listStr: string, theList: Target[] | Module[]) {
   if (theList.length > 0) {
     log.info(`\nConfigured ${listStr}:`);
-    theList.sort();
-    theList.forEach(value => {
-      log.info(`- ${value}`)
+    theList.forEach((value: any) => {
+      log.info(`- ${value.name}`)
     });
   } else {
     log.info(`\nNo ${listStr} configured`);
@@ -120,7 +119,6 @@ function readConfig() {
   if (fs.existsSync(configFilePath)) {
     const rawData: string = fs.readFileSync(configFilePath);
     appConfig = JSON.parse(rawData);
-    // console.dir(appConfig);
     return true;
   } else {
     // Assign the default config to the variable
@@ -132,11 +130,15 @@ function readConfig() {
   return false;
 }
 
+function compare(a: Module | Target, b: Module | Target) {
+  return a.name > b.name ? 1 : -1;
+}
+
 function writeConfig(): boolean {
   log.debug(`Writing configuration to ${configFilePath}`);
   // create the pretty version of the config object
-  appConfig.modules.sort();
-  appConfig.targets.sort();
+  appConfig.modules.sort(compare);
+  appConfig.targets.sort(compare);
   const data = JSON.stringify(appConfig, null, 2);
   try {
     // write it to disk
