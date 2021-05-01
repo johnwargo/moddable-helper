@@ -193,18 +193,25 @@ function initConfig() {
 }
 
 function readConfig() {
-  log.debug('Reading configuration');
+  log.info('Reading configuration file');
   if (fs.existsSync(configFilePath)) {
-    const rawData: string = fs.readFileSync(configFilePath);
-    appConfig = JSON.parse(rawData);
+    try {
+      const rawData: string = fs.readFileSync(configFilePath);
+      appConfig = JSON.parse(rawData);      
+    } catch (err) {
+      log.error(`readConfig error: ${err}`);
+      return;
+    }
     // get the log level from the config 
     const logLevel = appConfig.debug ? log.DEBUG : log.INFO;
     log.level(logLevel);
+
+    log.debug('\nProgram Information (debug)');
     log.debug(APP_AUTHOR);
     log.debug(`Version: ${packageDotJSON.version}`);
     log.debug('Command Options:', program.opts());
     log.debug(`Working directory: ${WORKING_PATH}`);
-    log.debug(`Configuration file: ${configFilePath}`);
+    log.debug(`Configuration file: ${configFilePath}\n`);
   } else {
     log.info(`\nConfiguration file not found (${configFilePath})`);
     log.info(`Execute ${chalk.yellow('`mdbbl config init`')} to create one here`);
@@ -213,13 +220,12 @@ function readConfig() {
 }
 
 function writeConfig(): boolean {
-
   function compare(a: Module | Target, b: Module | Target) {
     return a.name > b.name ? 1 : -1;
   }
 
   // Save the configuration to disk
-  log.debug(`Writing configuration to ${configFilePath}`);
+  log.info(`Writing configuration to ${configFilePath}`);
   // Sort the modules and targets arrays
   appConfig.modules.sort(compare);
   appConfig.targets.sort(compare);
@@ -242,7 +248,8 @@ function showConfig() {
   readConfig();
   // print the module configuration settings to the console
   log.info('\nModule configuration:');
-  log.info(JSON.stringify(appConfig, null, 2));
+  // log.info(JSON.stringify(appConfig, null, 2));
+  console.dir(appConfig);
 }
 
 // *****************************************
@@ -287,8 +294,11 @@ configCmd
   .action(editConfig);
 configCmd
   .command('sort')
-  .description('Sorts the config arrays')
-  .action(writeConfig);
+  .description('Sorts the config modules and targets arrays')
+  .action(() => {
+    readConfig();
+    if (appConfig) writeConfig();
+  });
 configCmd
   .command('show')
   .description('Print the modules config to the console')

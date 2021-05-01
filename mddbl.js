@@ -156,17 +156,24 @@ function initConfig() {
     }
 }
 function readConfig() {
-    log.debug('Reading configuration');
+    log.info('Reading configuration file');
     if (fs.existsSync(configFilePath)) {
-        var rawData = fs.readFileSync(configFilePath);
-        appConfig = JSON.parse(rawData);
+        try {
+            var rawData = fs.readFileSync(configFilePath);
+            appConfig = JSON.parse(rawData);
+        }
+        catch (err) {
+            log.error("readConfig error: " + err);
+            return;
+        }
         var logLevel = appConfig.debug ? log.DEBUG : log.INFO;
         log.level(logLevel);
+        log.debug('\nProgram Information (debug)');
         log.debug(APP_AUTHOR);
         log.debug("Version: " + packageDotJSON.version);
         log.debug('Command Options:', program.opts());
         log.debug("Working directory: " + WORKING_PATH);
-        log.debug("Configuration file: " + configFilePath);
+        log.debug("Configuration file: " + configFilePath + "\n");
     }
     else {
         log.info("\nConfiguration file not found (" + configFilePath + ")");
@@ -178,7 +185,7 @@ function writeConfig() {
     function compare(a, b) {
         return a.name > b.name ? 1 : -1;
     }
-    log.debug("Writing configuration to " + configFilePath);
+    log.info("Writing configuration to " + configFilePath);
     appConfig.modules.sort(compare);
     appConfig.targets.sort(compare);
     var data = JSON.stringify(appConfig, null, 2);
@@ -197,7 +204,7 @@ function showConfig() {
     log.debug('showConfig()');
     readConfig();
     log.info('\nModule configuration:');
-    log.info(JSON.stringify(appConfig, null, 2));
+    console.dir(appConfig);
 }
 console.log(APP_NAME);
 configFilePath = path.join(WORKING_PATH, CONFIG_FILE_NAME);
@@ -227,8 +234,12 @@ configCmd
     .action(editConfig);
 configCmd
     .command('sort')
-    .description('Sorts the config arrays')
-    .action(writeConfig);
+    .description('Sorts the config modules and targets arrays')
+    .action(function () {
+    readConfig();
+    if (appConfig)
+        writeConfig();
+});
 configCmd
     .command('show')
     .description('Print the modules config to the console')
