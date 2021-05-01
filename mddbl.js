@@ -45,8 +45,9 @@ function executeCommand(cmd, folder) {
     if (checkDirectory(folder)) {
         try {
             if (folder.length > 0) {
-                log.info(chalk.yellow('Changing directory:') + " " + folder);
+                log.info(chalk.yellow("Changing to the '" + folder + "' directory"));
                 process.chdir(folder);
+                log.info("Current directory: " + process.cwd());
             }
             log.info(chalk.yellow('Executing:') + " " + cmd);
             cp.execSync(cmd, { stdio: 'inherit' });

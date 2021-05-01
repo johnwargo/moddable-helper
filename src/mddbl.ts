@@ -61,20 +61,25 @@ function executeCommand(cmd: string, folder: string = '') {
   log.debug(`executeCommand(${cmd})`);
   // does the module folder exist?
   if (checkDirectory(folder)) {
+    const changeFolder: boolean = folder.length > 0;
     try {
-      if (folder.length > 0) {
+      if (changeFolder) {
         // Change to the module folder
-        log.info(`${chalk.yellow('Changing directory:')} ${folder}`);
+        log.info(chalk.yellow(`Changing to the '${folder}' directory`));
         process.chdir(folder);
+        log.debug(`Current directory: ${process.cwd()}`);
       }
+
       // execute the command
       log.info(`${chalk.yellow('Executing:')} ${cmd}`);
       cp.execSync(cmd, { stdio: 'inherit' });
-      if (folder.length > 0) {
+
+      if (changeFolder) {
         // switch back to the starting folder
-        log.info(`${chalk.yellow('Changing directory:')} ${WORKING_PATH}`);
+        log.info(chalk.yellow(`Changing back to the '${WORKING_PATH}' directory`));
         process.chdir(WORKING_PATH);
       }
+      
     } catch (e) {
       log.error(chalk.red('Error executing command'));
       log.error(e);
@@ -197,7 +202,7 @@ function readConfig() {
   if (fs.existsSync(configFilePath)) {
     try {
       const rawData: string = fs.readFileSync(configFilePath);
-      appConfig = JSON.parse(rawData);      
+      appConfig = JSON.parse(rawData);
     } catch (err) {
       log.error(`readConfig error: ${err}`);
       return;
