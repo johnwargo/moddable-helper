@@ -86,6 +86,7 @@ function executeCommand(cmd: string, folder: string = '') {
 
 function deployModule(modName: string, targetName: string) {
   log.debug(`deployModule(${modName}, ${targetName})`);
+  readConfig();
   // Does the specified module exist?
   const mod: any = appConfig.modules.find(item => item.name === modName);
   if (!mod) {
@@ -119,6 +120,7 @@ function deployModule(modName: string, targetName: string) {
 
 function wipeDevice(targetName: string) {
   log.debug(`wipeDevice(${targetName})`);
+  readConfig();
   // See if we can find the target  
   const target: any = appConfig.targets.find(item => item.name === targetName);
   if (!target) {
@@ -138,7 +140,6 @@ function listArray(listStr: string, theList: Target[] | Module[]) {
   // Write the array contents to the console
   if (theList.length > 0) {
     log.info(`\nConfigured ${listStr}:`);
-
     for (let item in theList) {
       let outputStr = `- ${theList[item].name}`;
       if (theList[item].description) {
@@ -152,10 +153,12 @@ function listArray(listStr: string, theList: Target[] | Module[]) {
 }
 
 function listModules() {
+  readConfig();
   listArray('Modules', appConfig.modules);
 }
 
 function listTargets() {
+  readConfig();
   listArray('Targets', appConfig.targets);
 }
 
@@ -194,9 +197,19 @@ function readConfig() {
   if (fs.existsSync(configFilePath)) {
     const rawData: string = fs.readFileSync(configFilePath);
     appConfig = JSON.parse(rawData);
-    return true;
+    // get the log level from the config 
+    const logLevel = appConfig.debug ? log.DEBUG : log.INFO;
+    log.level(logLevel);
+    log.debug(APP_AUTHOR);
+    log.debug(`Version: ${packageDotJSON.version}`);
+    log.debug('Command Options:', program.opts());
+    log.debug(`Working directory: ${WORKING_PATH}`);
+    log.debug(`Configuration file: ${configFilePath}`);
+  } else {
+    log.info(`\nConfiguration file not found (${configFilePath})`);
+    log.info(`Execute ${chalk.yellow('`mdbbl config init`')} to create one here`);
+    process.exit(1);
   }
-  return false;
 }
 
 function writeConfig(): boolean {
@@ -225,6 +238,8 @@ function writeConfig(): boolean {
 }
 
 function showConfig() {
+  log.debug('showConfig()');
+  readConfig();
   // print the module configuration settings to the console
   log.info('\nModule configuration:');
   log.info(JSON.stringify(appConfig, null, 2));
@@ -234,6 +249,7 @@ function showConfig() {
 // Start
 // *****************************************
 console.log(APP_NAME);
+configFilePath = path.join(WORKING_PATH, CONFIG_FILE_NAME);
 program.version(packageDotJSON.version);
 program.option('--debug', 'Output extra information during operation');
 // ===========================
@@ -292,26 +308,4 @@ listCmd
   .description('List all configured targets')
   .action(listTargets)
 
-// Look for the config file in the current folder
-configFilePath = path.join(WORKING_PATH, CONFIG_FILE_NAME);
-
-if (!readConfig()) {
-
-  log.info(`\nConfiguration file not found (${configFilePath})`);
-  log.info(`Execute ${chalk.yellow('`mdbbl config init`')} to create one here`);
-  process.exit(1);
-}
-
 program.parse();
-const options = program.opts();
-if (options.debug) {
-  log.level(log.DEBUG);
-} else {
-  log.level(log.INFO);
-}
-
-log.debug(APP_AUTHOR);
-log.debug(`Version: ${packageDotJSON.version}`);
-log.debug('Command Options:', options);
-log.debug(`Working directory: ${WORKING_PATH}`);
-log.debug(`Configuration file: ${configFilePath}`);

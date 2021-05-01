@@ -17,29 +17,31 @@ export interface Target {
 }
 
 export interface ConfigObject {
+    debug: boolean;
     editCommand: string;
     modules: Module[];
     targets: Target[];
 }
 
 export const defaultConfig: ConfigObject = {
-    editCommand: '',
-    modules: [],
-    targets: [],
+    "debug": false,
+    "editCommand": "",
+    "modules": [],
+    "targets": [],
 }
 
 export const emptyModule: Module = {
-    name: '',
-    description: '',
-    isHost: false,
-    folderPath: '',
+    "name": "",
+    "description": "",
+    "isHost": false,
+    "folderPath": "",
 }
 
 export const emptyTarget: Target = {
-    name: '',
-    description: '',
-    platform: '',
-    format: '',
-    rotation: 0,
-    wipeCommand: '',
+    "name": "",
+    "description": "",
+    "platform": "",
+    "format": "",
+    "rotation": 0,
+    "wipeCommand": "",
 }
