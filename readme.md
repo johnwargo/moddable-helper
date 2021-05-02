@@ -1,5 +1,7 @@
 # Moddable Helper
 
+Table of Contents
+
 <!-- vscode-markdown-toc -->
 * [Introduction](#Introduction)
 * [Installation](#Installation)
