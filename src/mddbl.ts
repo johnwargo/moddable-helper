@@ -177,7 +177,7 @@ function listArray(listStr: string, theList: Target[] | Module[]) {
     for (let item in theList) {
       let outputStr = `- ${theList[item].name}`;
       if (theList[item].description) {
-        outputStr += `: ${theList[item].description}`;
+        outputStr += ` - ${theList[item].description}`;
       }
       log.info(outputStr)
     }

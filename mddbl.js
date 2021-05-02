@@ -128,7 +128,7 @@ function listArray(listStr, theList) {
         for (var item in theList) {
             var outputStr = "- " + theList[item].name;
             if (theList[item].description) {
-                outputStr += ": " + theList[item].description;
+                outputStr += " - " + theList[item].description;
             }
             log.info(outputStr);
         }

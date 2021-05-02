@@ -14,7 +14,9 @@ Table of Contents:
 		* [Editing the Configuration File](#EditingtheConfigurationFile)
 		* [Sorting Module and Target Lists](#SortingModuleandTargetLists)
 	* [Deploy](#Deploy)
+	* [List Modules or Targets](#ListModulesorTargets)
 	* [Wipe Device](#WipeDevice)
+* [Issues & Pull Requests](#IssuesPullRequests)
 
 <!-- vscode-markdown-toc-config
 	numbering=false
@@ -217,23 +219,23 @@ The example configuration file shown above defines three modules:
 "modules": [
     {
       "name": "host",
-      "description": "",
+      "description": "The project's host module",
       "isHost": true,
       "folderPath": "host"
     },
     {
       "name": "hw",
-      "description": "",
+      "description": "Text-only version of the project",
       "isHost": false,
       "folderPath": "helloworld"
     },
     {
       "name": "hwg",
-      "description": "",
+      "description": "Hello World Graphical version",
       "isHost": false,
       "folderPath": "helloworld-gui"
     }
-],
+  ],
 ```
 
 The `host` module refers to the JavaScript Host module code in the project's `host` folder. The `hw` and `hwg` modules refer to JavaScript Modules in the `helloworld` and `helloworld-gui` folders.
@@ -325,6 +327,32 @@ To deploy the `helloworld` module to the `m5fire` device defined in our sample c
 mddbl deploy hw m5fire
 ```
 
+### <a name='ListModulesorTargets'></a>List Modules or Targets
+
+When you're getting ready to execute the `deploy` or `wipe` commands, you may forget which module and target options are available to you. You can list the modules or targets defined in the project's configuration file using:
+
+```shell
+mddbl list modules
+```
+
+and
+
+```shell
+mddbl list targets
+```
+
+For the configuration file example in this document, the module list will look the following:
+
+```text
+Moddable Helper (mddbl)
+Reading configuration file
+
+Configured Modules:
+- host - The project's host module
+- hw - Text-only version of the project
+- hwg - Hello World Graphical version
+```
+
 ### <a name='WipeDevice'></a>Wipe Device
 
 While troubleshooting deployment or coding issues, you may encounter the need to wipe the device. Most, if not all, hardware platforms Moddable supports offer some mechanism for wiping the memory of the device. Since the device SDK commands needed to do this are obscure and not often executed, the Moddable Helper CLI offers a mechanism for storing the wipe command in the configuration file then invoking it by executing the following command:
@@ -339,7 +367,7 @@ For example, using the sample configuration file example in this document, to wi
 mddbl wipe m5fire
 ```
 
-## Issues & Pull Requests
+## <a name='IssuesPullRequests'></a>Issues & Pull Requests
 
 If you have an issue with this module, don't email the author, instead, submit an [issue](https://github.com/johnwargo/moddable-helper/issues) in this repository.
 
