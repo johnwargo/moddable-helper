@@ -9,11 +9,13 @@ Delivers a command-line interface to simplifying usage of the [Moddable SDK](htt
 The module supports the following commands:
 
 * `init` - Create an empty configuration file in the current folder
-* `Config` - Access configuration options
+* `config` - Access configuration options
     * `edit` - Edit the project's configuration file
     * `show` - Display the contents of the configuration file
     * `sort` - Sort the module and target lists by name
 * `deploy <module> <target>` - Deploy the selected module (module or host) to the specified target device
+* `list modules` - Display the list of modules defined in the `modules` section of the configuration file
+* `list targets` - Display the list of targets defined in the `targets` section of the configuration file
 * `wipe <target>` - Wipe the selected target device
 
 jdhsjkhkjhk
