@@ -90,6 +90,12 @@ With this module, you create a configuration file called `mddbl.json` (the modul
       "description": "Moddable Two",
       "platform": "esp32/moddable_two",
       "wipeCommand": "python %IDF_PATH%\\components\\esptool_py\\esptool\\esptool.py erase_flash"
+    },
+    {
+      "name": "m5fire",
+      "description": "M5Stack Fire device",
+      "platform": "esp32/m5stack_fire",
+      "wipeCommand": "python %IDF_PATH%\\components\\esptool_py\\esptool\\esptool.py erase_flash"
     }
   ]
 }
@@ -183,7 +189,7 @@ The example configuration file shown above defines three modules:
 ],
 ```
 
-The `host` module refers to the JavaScript host code in the project's `host` folder. The `hw` and `hwg` modules refer to JavaScript modules in the `helloworld` and `helloworld-gui` folders.
+The `host` module refers to the JavaScript Host module code in the project's `host` folder. The `hw` and `hwg` modules refer to JavaScript Modules in the `helloworld` and `helloworld-gui` folders.
 
 Use the `targets` section of the configuration file to configure an array of `target` objects representing each of the Moddable-compatible hardware devices used by your project. The `target` object has the following configuration:
 
@@ -195,6 +201,47 @@ Use the `targets` section of the configuration file to configure an array of `ta
     "wipeCommand": "",
 }
 ```
+
+* `name` - The unique identifier for the module
+* `description` - A description of the module
+* `platform` - The Moddable SDK platform identifier for the device
+* `wipeCommand` - The file system command to wipe the device. The command used is specific to the hardware platform, not the Moddable SDK.
+
+> **Note**: On Microsoft Windows, you must double-up file system delimeters
+
+
+
+
+###############
+
+
+The example configuration file shown above defines two Targets:
+
+```json
+"targets": [
+    {
+      "name": "mdbl2",
+      "description": "Moddable Two",
+      "platform": "esp32/moddable_two",
+      "wipeCommand": "python %IDF_PATH%\\components\\esptool_py\\esptool\\esptool.py erase_flash"
+    },
+    {
+      "name": "m5fire",
+      "description": "M5Stack Fire device",
+      "platform": "esp32/m5stack_fire",
+      "wipeCommand": "python %IDF_PATH%\\components\\esptool_py\\esptool\\esptool.py erase_flash"
+    }
+]
+```
+
+
+
+Sort
+
+```shell
+mdbbl config sort
+```
+
 
 ### Deployment
 
