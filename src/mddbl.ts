@@ -73,27 +73,23 @@ function toggleDebug() {
   }
 }
 
-function doDeploy(cmd: string, mod: Module, target: Target) {
+function doDeploy(rootCmd: string, mod: Module, target: Target) {
+  log.debug(`executeCommand(${rootCmd}, ${mod.name}, ${target.name})`);
 
-  // doDeploy(`mcconfig -d -m -p ${target.platform.toLowerCase()}`, mod.folderPath);
-  // doDeploy(`mcrun -d -m -p ${target.platform.toLowerCase()}`, mod.folderPath);
-
-  log.debug(`executeCommand(${cmd}, ${mod.name}, ${target.name})`);
-
-  const folder = mod.folderPath;
   // does the module folder exist?
+  const folder = mod.folderPath;
   if (!checkDirectory(folder)) {
     log.error(`Specified module folder (${folder}) does not exist`);
     process.exit(1);
   }
 
   // Build the command string
-  let theCmd: string = cmd + ' ';
-  if (mod.debugFlag) theCmd += '-d ';
-  if (mod.makeFlag) theCmd += '-m ';
+  let cmd: string = rootCmd + ' ';
+  if (mod.debugFlag) cmd += '-d ';
+  if (mod.makeFlag) cmd += '-m ';
   // add the target platform
-  theCmd += `-p ${target.platform}`;
-  log.debug(`Command: ${theCmd}`);
+  cmd += `-p ${target.platform}`;
+  log.debug(`Command: ${cmd}`);
 
   try {
     // Change to the module folder
@@ -101,8 +97,8 @@ function doDeploy(cmd: string, mod: Module, target: Target) {
     process.chdir(folder);
     log.debug(`Current directory: ${process.cwd()}`);
     // execute the command
-    log.info(`${chalk.yellow('Executing:')} ${theCmd}`);
-    cp.execSync(theCmd, { stdio: 'inherit' });
+    log.info(`${chalk.yellow('Executing:')} ${cmd}`);
+    cp.execSync(cmd, { stdio: 'inherit' });
     // switch back to the starting folder
     log.info(chalk.yellow(`Changing back to the '${WORKING_PATH}' directory`));
     process.chdir(WORKING_PATH);
