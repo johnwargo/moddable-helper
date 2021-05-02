@@ -1,16 +1,16 @@
 # Moddable Helper
 
-
-## Background
-
-I've been playing around lately with the [Moddable SDK](https://github.com/Moddable-OpenSource/moddable); I think the platform's pretty interesting for a lot of reasons I'll write about later on [my blog](https://johnwargo.com), and they deliver several very capable IoT devices with built-in displays at a great price.
-
-One of the things I noticed when I started working with the Moddable SDK was that I found myself typing the same commands over and over again as I coded projects for the devices. Now, that's not unexpected for command-line based tooling, but when building and deploying for Moddable devices, I kept typing the exact same command-line options over and over again (`-d m -p <device>`) that I decided to make this helper to reduce my typing.
-
-This repository hosts a node.jd module that:
+Delivers a command-line interface to simplifying usage of the [Moddable SDK](https://github.com/Moddable-OpenSource/moddable). This repository hosts a node.js module that:
 
 * Let me define options/parameters for my project in a configuration file, then use a simplified command structure to execute the corresponding Moddable SDK commands
 * Let me to more easily wipe devices using the device's native SDK (without having to remember the command every time I want to do it)
+
+
+## Background
+
+I've been playing around lately with the Moddable SDK and I think the platform's pretty interesting for a lot of reasons I'll write about later on [my blog](https://johnwargo.com). They deliver several very capable IoT devices with built-in displays at a great price. The real power comes from their SDK which delivers a robust and solid JavaScript API for inexpensive microcontroller devices
+
+One of the things I noticed when I started working with the Moddable SDK was that I found myself typing the same commands over and over again as I coded projects for the devices. Now, that's not unexpected for command-line based tooling, but when building and deploying for Moddable devices, I kept typing the exact same command-line options over and over again (`-d m -p <device>`) that I decided to make this helper to reduce my typing.
 
 Let me show you how this works using a real-world example. The folks at Moddable published a book called [IoT Development for ESP32 and ESP8266 with JavaScript](https://github.com/Moddable-OpenSource/iot-product-dev-book) that contains a lot of sample code demonstrating how to use the different APIs in their SDK. Moddable developers often break a project down into multiple parts, a host (the core native application running on the device) plus additional JavaScript modules that run within the host (a dramatic oversimplification, I know, but I'm not here to teach you Moddable development). Developers typically keep their host and module files in different file system folders.
 
