@@ -161,7 +161,7 @@ To use this module, you must first create the module's configuration file in the
 The module can create it for you automatically, simply open a terminal window, navigate to the project folder, and execute the following command:
 
 ```shell
-mddble init
+mddbl init
 ```
 
 Moddable Helper will create the default configuration file shown above.
@@ -182,6 +182,12 @@ To enable debug mode, set the configuration file's `debug` option to `true` as s
     "modules": [],
     "targets": [],
 }
+```
+
+You can also toggle the `debug` setting using the following command:
+
+```shell
+mddbl debug
 ```
 
 ##### Modules
@@ -273,7 +279,7 @@ The example configuration file shown above defines two Targets devices:
 To view the contents of the configuration file in the console, execute the following command:
 
 ```shell
-mddble config show
+mddbl config show
 ```
 
 #### <a name='EditingtheConfigurationFile'></a>Editing the Configuration File
@@ -286,11 +292,13 @@ mdbbl config edit
 
 #### <a name='SortingModuleandTargetLists'></a>Sorting Module and Target Lists
 
-For those users who have a little bit of obsessive compulsive disorder (OCD) you can sort the Module and Target lists using the following command:
+For users with a bit of obsessive compulsive disorder (OCD), you can sort the Module and Target lists using the following command:
 
 ```shell
 mdbbl config sort
 ```
+
+You know, just because.
 
 ### <a name='Deploy'></a>Deploy
 
