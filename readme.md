@@ -5,6 +5,7 @@ Table of Contents:
 <!-- vscode-markdown-toc -->
 * [Introduction](#Introduction)
 * [Installation](#Installation)
+* [Issues & Pull Requests](#IssuesPullRequests)
 * [Background](#Background)
 * [Usage](#Usage)
 	* [Configuration](#Configuration)
@@ -16,7 +17,6 @@ Table of Contents:
 	* [Deploy](#Deploy)
 	* [List Modules or Targets](#ListModulesorTargets)
 	* [Wipe Device](#WipeDevice)
-* [Issues & Pull Requests](#IssuesPullRequests)
 
 <!-- vscode-markdown-toc-config
 	numbering=false
@@ -55,6 +55,12 @@ npm install -g moddable-helper
 ```
 
 This installs a `mddbl` command you can use anywhere on the system.
+
+## <a name='IssuesPullRequests'></a>Issues & Pull Requests
+
+If you have an issue with this module, don't email the author, instead, submit an [issue](https://github.com/johnwargo/moddable-helper/issues) in this repository.
+
+I build this project for the community, so if you have an enhancement, fix, or change for the project please submit a [Pull Request](https://github.com/johnwargo/moddable-helper/pulls).
 
 ## <a name='Background'></a>Background
 
@@ -341,7 +347,7 @@ and
 mddbl list targets
 ```
 
-For the configuration file example in this document, the module list will look the following:
+For the configuration file example in this document, the module list output looks the following:
 
 ```text
 Moddable Helper (mddbl)
@@ -366,12 +372,6 @@ For example, using the sample configuration file example in this document, to wi
 ```shell
 mddbl wipe m5fire
 ```
-
-## <a name='IssuesPullRequests'></a>Issues & Pull Requests
-
-If you have an issue with this module, don't email the author, instead, submit an [issue](https://github.com/johnwargo/moddable-helper/issues) in this repository.
-
-I build this project for the community, so if you have an enhancement, fix, or change for the project please submit a [Pull Request](https://github.com/johnwargo/moddable-helper/pulls).
 
 ***
 
