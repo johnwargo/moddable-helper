@@ -17,7 +17,14 @@ The module supports the following commands:
 * `list targets` - Display the list of targets defined in the `targets` section of the configuration file
 * `wipe <target>` - Wipe the selected target device
 
-jdhsjkhkjhk
+## Installation
+
+To install the module, open a terminal window (or command prompt on Windows), and execute the following command:
+
+```shell 
+npm install -g moddable-helper
+```
+
 
 ## Background
 
