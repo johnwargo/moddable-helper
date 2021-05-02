@@ -175,6 +175,8 @@ mddble config show
 
 #### <a name='ConfigurationOptions'></a>Configuration Options
 
+The following sections describe the configuration options for the Moddable Helper module.
+
 ##### Debug
 
 If you're having trouble with the Moddable Helper, you can enable debug mode through the configuration file. In debug mode, the CLI outputs more information to the console as it runs.
