@@ -62,6 +62,19 @@ function checkDirectory(filePath: string): boolean {
   }
 }
 
+function toggleDebug(){
+  log.debug('toggleDebug()');
+  readConfig();
+  if (appConfig) {
+    log.debug(`Toggling Debug configuration parameter to ${!appConfig.debug}`)
+    appConfig.debug = !appConfig.debug;
+    // write the changes to disk
+    if (!writeConfig()) {
+      process.exit(1);
+    }
+  }
+}
+
 function executeCommand(cmd: string, folder: string = '') {
   log.debug(`executeCommand(${cmd})`);
 
@@ -97,7 +110,6 @@ function executeCommand(cmd: string, folder: string = '') {
     log.error(chalk.red(e));
     process.exit(1);
   }
-
 }
 
 function deployModule(modName: string, targetName: string) {
@@ -275,7 +287,7 @@ function showConfig() {
 }
 
 function sortConfig() {
-  
+
   // Function that helps sort the object array
   function compare(a: Module | Target, b: Module | Target) {
     return a.name > b.name ? 1 : -1;
@@ -301,6 +313,13 @@ console.log(APP_NAME);
 configFilePath = path.join(WORKING_PATH, CONFIG_FILE_NAME);
 program.version(packageDotJSON.version);
 program.option('--debug', 'Output extra information during operation');
+// ===========================
+// Setup the `debug` command
+// ===========================
+program
+  .command('debug')
+  .description('Toggle the debug configuration setting')
+  .action(toggleDebug);
 // ===========================
 // Setup the `deploy` command
 // ===========================

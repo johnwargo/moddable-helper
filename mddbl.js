@@ -39,6 +39,17 @@ function checkDirectory(filePath) {
         return false;
     }
 }
+function toggleDebug() {
+    log.debug('toggleDebug()');
+    readConfig();
+    if (appConfig) {
+        log.debug("Toggling Debug configuration parameter to " + !appConfig.debug);
+        appConfig.debug = !appConfig.debug;
+        if (!writeConfig()) {
+            process.exit(1);
+        }
+    }
+}
 function executeCommand(cmd, folder) {
     if (folder === void 0) { folder = ''; }
     log.debug("executeCommand(" + cmd + ")");
@@ -227,6 +238,10 @@ console.log(APP_NAME);
 configFilePath = path.join(WORKING_PATH, CONFIG_FILE_NAME);
 program.version(packageDotJSON.version);
 program.option('--debug', 'Output extra information during operation');
+program
+    .command('debug')
+    .description('Toggle the debug configuration setting')
+    .action(toggleDebug);
 program
     .command('deploy <module> <target>')
     .description('Deploy <module> to specific <target>')
