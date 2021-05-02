@@ -175,9 +175,21 @@ mddble config show
 
 #### <a name='ConfigurationOptions'></a>Configuration Options
 
-debug option
+##### Debug
 
+If you're having trouble with the Moddable Helper, you can enable debug mode through the configuration file. In debug mode, the CLI outputs more information to the console as it runs.
 
+To enable debug mode, set the configuration file's `debug` option to `true` as shown in the following example:
+
+```json
+{
+    "debug": true,
+    "modules": [],
+    "targets": [],
+}
+```
+
+##### Modules
 
 Use the `modules` section of the configuration file to configure an array of `module` objects representing each of the JavaScript modules in your Moddable project. The `module` object has the following configuration:
 
@@ -221,6 +233,8 @@ The example configuration file shown above defines three modules:
 ```
 
 The `host` module refers to the JavaScript Host module code in the project's `host` folder. The `hw` and `hwg` modules refer to JavaScript Modules in the `helloworld` and `helloworld-gui` folders.
+
+##### Targets
 
 Use the `targets` section of the configuration file to configure an array of `target` objects representing each of the Moddable-compatible hardware devices used by your project. The `target` object has the following configuration:
 
@@ -266,7 +280,6 @@ For those users who have a little bit of obsessive compulsive disorder (OCD) you
 ```shell
 mdbbl config sort
 ```
-
 
 ### <a name='Deploy'></a>Deploy
 
