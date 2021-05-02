@@ -86,7 +86,7 @@ function executeCommand(cmd: string, folder: string = '') {
     // execute the command
     log.info(`${chalk.yellow('Executing:')} ${cmd}`);
     cp.execSync(cmd, { stdio: 'inherit' });
-    
+
     if (changeFolder) {
       // switch back to the starting folder
       log.info(chalk.yellow(`Changing back to the '${WORKING_PATH}' directory`));
@@ -187,7 +187,9 @@ function listTargets() {
 function editConfig() {
   log.info('Editing module configuration');
   // build the command string based on execution platform
-  var cmdStr = (os.type().indexOf('Win') === 0) ? `start ${configFilePath}` : `open -e ./${configFilePath}`;
+  var cmdStr = (os.type().indexOf('Win') === 0)
+    ? `start ${configFilePath}`
+    : `open -e ./${configFilePath}`;
   // execute the command
   cp.exec(cmdStr, function (error: any, stdout: any, stderr: any) {
     if (error) {
