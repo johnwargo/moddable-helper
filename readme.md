@@ -103,18 +103,24 @@ With this module, you create a configuration file called `mddbl.json` (the modul
       "name": "host",
       "description": "The project's host module",
       "isHost": true,
+      "debugFlag": true,
+      "makeFlag": true,
       "folderPath": "host"
     },
     {
       "name": "hw",
       "description": "Text-only version of the project",
       "isHost": false,
+      "debugFlag": true,
+      "makeFlag": true,
       "folderPath": "helloworld"
     },
     {
       "name": "hwg",
       "description": "Hello World Graphical version",
       "isHost": false,
+      "debugFlag": true,
+      "makeFlag": true,
       "folderPath": "helloworld-gui"
     }
   ],
@@ -211,6 +217,8 @@ Use the `modules` section of the configuration file to configure an array of `mo
     "name": "",
     "description": "",
     "isHost": false,
+    "debugFlag": true,
+    "makeFlag": true,
     "folderPath": "",
 }
 ```
@@ -218,6 +226,8 @@ Use the `modules` section of the configuration file to configure an array of `mo
 * `name` - The unique identifier for the module. This is the value you'll use in `mddbl` commands to refer to the module.
 * `description` - A description of the module, not used for anything except to remind you about this module's configuration.
 * `isHost` - Boolean value indicating whether the module is a Host or Module (controls whether Moddable Helper executes `mcconfig` or `mcrun` to deploy the module).
+* `debugFlag` - Enables/disables the `-d` parameter passed to `mcconfig` and `mcrun`; refer to the [Moddable documentation](https://github.com/Moddable-OpenSource/moddable/blob/public/documentation/tools/tools.md#arguments) for details about this parameter.
+* `makeFlag` - Enables/disables the `-m` parameter passed to `mcconfig` and `mcrun`; refer to the [Moddable documentation](https://github.com/Moddable-OpenSource/moddable/blob/public/documentation/tools/tools.md#arguments) for details about this parameter.
 * `folderPath` - The name of the subfolder hosting the module.
 
 The example configuration file shown above defines three modules:
@@ -228,21 +238,27 @@ The example configuration file shown above defines three modules:
       "name": "host",
       "description": "The project's host module",
       "isHost": true,
+      "debugFlag": true,
+      "makeFlag": true,
       "folderPath": "host"
     },
     {
       "name": "hw",
       "description": "Text-only version of the project",
       "isHost": false,
+      "debugFlag": true,
+      "makeFlag": true,
       "folderPath": "helloworld"
     },
     {
       "name": "hwg",
       "description": "Hello World Graphical version",
       "isHost": false,
+      "debugFlag": true,
+      "makeFlag": true,
       "folderPath": "helloworld-gui"
     }
-  ],
+],
 ```
 
 The `host` module refers to the JavaScript Host module code in the project's `host` folder. The `hw` and `hwg` modules refer to JavaScript Modules in the `helloworld` and `helloworld-gui` folders.

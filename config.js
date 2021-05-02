@@ -10,6 +10,8 @@ exports.defaultConfig = {
 exports.emptyModule = {
     "name": "",
     "description": "",
+    "debugFlag": true,
+    "makeFlag": true,
     "isHost": false,
     "folderPath": "",
 };

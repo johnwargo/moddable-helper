@@ -50,28 +50,28 @@ function toggleDebug() {
         }
     }
 }
-function executeCommand(cmd, folder) {
-    if (folder === void 0) { folder = ''; }
-    log.debug("executeCommand(" + cmd + ")");
-    var changeFolder = folder.length > 0;
-    if (changeFolder) {
-        if (!checkDirectory(folder)) {
-            log.error("Specified module folder (" + folder + ") does not exist");
-            process.exit(1);
-        }
+function doDeploy(cmd, mod, target) {
+    log.debug("executeCommand(" + cmd + ", " + mod.name + ", " + target.name + ")");
+    var folder = mod.folderPath;
+    if (!checkDirectory(folder)) {
+        log.error("Specified module folder (" + folder + ") does not exist");
+        process.exit(1);
     }
+    var theCmd = cmd + ' ';
+    if (mod.debugFlag)
+        theCmd += '-d ';
+    if (mod.makeFlag)
+        theCmd += '-m ';
+    theCmd += "-p " + target.platform;
+    log.debug("Command: " + theCmd);
     try {
-        if (changeFolder) {
-            log.info(chalk.yellow("Changing to the '" + folder + "' directory"));
-            process.chdir(folder);
-            log.debug("Current directory: " + process.cwd());
-        }
-        log.info(chalk.yellow('Executing:') + " " + cmd);
-        cp.execSync(cmd, { stdio: 'inherit' });
-        if (changeFolder) {
-            log.info(chalk.yellow("Changing back to the '" + WORKING_PATH + "' directory"));
-            process.chdir(WORKING_PATH);
-        }
+        log.info(chalk.yellow("Changing to the '" + folder + "' directory"));
+        process.chdir(folder);
+        log.debug("Current directory: " + process.cwd());
+        log.info(chalk.yellow('Executing:') + " " + theCmd);
+        cp.execSync(theCmd, { stdio: 'inherit' });
+        log.info(chalk.yellow("Changing back to the '" + WORKING_PATH + "' directory"));
+        process.chdir(WORKING_PATH);
     }
     catch (e) {
         log.error(chalk.red(e));
@@ -101,10 +101,10 @@ function deployModule(modName, targetName) {
     }
     console.log("Deploying " + modName + " to " + targetName);
     if (mod.isHost) {
-        executeCommand("mcconfig -d -m -p " + target.platform.toLowerCase(), mod.folderPath);
+        doDeploy('mcconfig', mod, target);
     }
     else {
-        executeCommand("mcrun -d -m -p " + target.platform.toLowerCase(), mod.folderPath);
+        doDeploy('mcrun', mod, target);
     }
 }
 function wipeDevice(targetName) {
@@ -119,8 +119,14 @@ function wipeDevice(targetName) {
         log.error("Target wipe command '" + target.wipeCommand + "' not defined, " + CHECK_CONFIG_STRING);
         process.exit(1);
     }
-    console.log("Wiping " + targetName);
-    executeCommand(target.wipeCommand);
+    try {
+        console.log("Wiping " + targetName);
+        cp.execSync(target.wipeCommand, { stdio: 'inherit' });
+    }
+    catch (e) {
+        log.error(chalk.red(e));
+        process.exit(1);
+    }
 }
 function listArray(listStr, theList) {
     if (theList.length > 0) {

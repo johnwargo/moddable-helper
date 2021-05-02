@@ -3,8 +3,8 @@ export const PixelFormats = ['gray16', 'gray256', 'rgb332', 'rgb565be', 'rgb565l
 export interface Module {
     name: string;
     description: string;
-    // debugBuild: boolean;
-    // runMake: boolean;
+    debugFlag: boolean;
+    makeFlag: boolean;
     isHost: boolean;
     folderPath: string;
 }
@@ -19,7 +19,7 @@ export interface Target {
 }
 
 export interface ConfigObject {
-    debug: boolean;    
+    debug: boolean;
     modules: Module[];
     targets: Target[];
 }
@@ -33,9 +33,9 @@ export const defaultConfig: ConfigObject = {
 export const emptyModule: Module = {
     "name": "",
     "description": "",
-    //  "debugBuild": true,
-    //  "runMake": true,
     "isHost": false,
+    "debugFlag": true,
+    "makeFlag": true,
     "folderPath": "",
 }
 

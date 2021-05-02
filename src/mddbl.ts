@@ -60,7 +60,7 @@ function checkDirectory(filePath: string): boolean {
   }
 }
 
-function toggleDebug(){
+function toggleDebug() {
   log.debug('toggleDebug()');
   readConfig();
   if (appConfig) {
@@ -73,37 +73,39 @@ function toggleDebug(){
   }
 }
 
-function executeCommand(cmd: string, folder: string = '') {
-  log.debug(`executeCommand(${cmd})`);
+function doDeploy(cmd: string, mod: Module, target: Target) {
 
-  // Only change the folder during execution if we have a folder
-  // name passed to this function
-  const changeFolder: boolean = folder.length > 0;
-  if (changeFolder) {
-    // does the module folder exist?
-    if (!checkDirectory(folder)) {
-      log.error(`Specified module folder (${folder}) does not exist`);
-      process.exit(1);
-    }
+  // doDeploy(`mcconfig -d -m -p ${target.platform.toLowerCase()}`, mod.folderPath);
+  // doDeploy(`mcrun -d -m -p ${target.platform.toLowerCase()}`, mod.folderPath);
+
+  log.debug(`executeCommand(${cmd}, ${mod.name}, ${target.name})`);
+
+  const folder = mod.folderPath;
+  // does the module folder exist?
+  if (!checkDirectory(folder)) {
+    log.error(`Specified module folder (${folder}) does not exist`);
+    process.exit(1);
   }
 
+  // Build the command string
+  let theCmd: string = cmd + ' ';
+  if (mod.debugFlag) theCmd += '-d ';
+  if (mod.makeFlag) theCmd += '-m ';
+  // add the target platform
+  theCmd += `-p ${target.platform}`;
+  log.debug(`Command: ${theCmd}`);
+
   try {
-    if (changeFolder) {
-      // Change to the module folder
-      log.info(chalk.yellow(`Changing to the '${folder}' directory`));
-      process.chdir(folder);
-      log.debug(`Current directory: ${process.cwd()}`);
-    }
-
+    // Change to the module folder
+    log.info(chalk.yellow(`Changing to the '${folder}' directory`));
+    process.chdir(folder);
+    log.debug(`Current directory: ${process.cwd()}`);
     // execute the command
-    log.info(`${chalk.yellow('Executing:')} ${cmd}`);
-    cp.execSync(cmd, { stdio: 'inherit' });
-
-    if (changeFolder) {
-      // switch back to the starting folder
-      log.info(chalk.yellow(`Changing back to the '${WORKING_PATH}' directory`));
-      process.chdir(WORKING_PATH);
-    }
+    log.info(`${chalk.yellow('Executing:')} ${theCmd}`);
+    cp.execSync(theCmd, { stdio: 'inherit' });
+    // switch back to the starting folder
+    log.info(chalk.yellow(`Changing back to the '${WORKING_PATH}' directory`));
+    process.chdir(WORKING_PATH);
   } catch (e) {
     log.error(chalk.red(e));
     process.exit(1);
@@ -142,9 +144,9 @@ function deployModule(modName: string, targetName: string) {
   // Execute the command
   console.log(`Deploying ${modName} to ${targetName}`);
   if (mod.isHost) {
-    executeCommand(`mcconfig -d -m -p ${target.platform.toLowerCase()}`, mod.folderPath);
+    doDeploy('mcconfig', mod, target);
   } else {
-    executeCommand(`mcrun -d -m -p ${target.platform.toLowerCase()}`, mod.folderPath);
+    doDeploy('mcrun', mod, target);
   }
 }
 
@@ -156,16 +158,20 @@ function wipeDevice(targetName: string) {
   if (!target) {
     log.error(`Target '${targetName}' not defined, ${CHECK_CONFIG_STRING}`);
     process.exit(1);
-    // return;
   }
-  // IS the wipe command defined?
+  // Is the wipe command defined?
   if (!target.wipeCommand) {
     log.error(`Target wipe command '${target.wipeCommand}' not defined, ${CHECK_CONFIG_STRING}`);
     process.exit(1);
-    // return;
   }
-  console.log(`Wiping ${targetName}`);
-  executeCommand(target.wipeCommand);
+
+  try {
+    console.log(`Wiping ${targetName}`);
+    cp.execSync(target.wipeCommand, { stdio: 'inherit' });
+  } catch (e) {
+    log.error(chalk.red(e));
+    process.exit(1);
+  }
 }
 
 function listArray(listStr: string, theList: Target[] | Module[]) {
