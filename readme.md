@@ -92,19 +92,19 @@ With this module, you create a configuration file called `mddbl.json` (the modul
   "modules": [
     {
       "name": "host",
-      "description": "",
+      "description": "The project's host module",
       "isHost": true,
       "folderPath": "host"
     },
     {
       "name": "hw",
-      "description": "",
+      "description": "Text-only version of the project",
       "isHost": false,
       "folderPath": "helloworld"
     },
     {
       "name": "hwg",
-      "description": "",
+      "description": "Hello World Graphical version",
       "isHost": false,
       "folderPath": "helloworld-gui"
     }
