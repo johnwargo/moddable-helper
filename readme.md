@@ -1,3 +1,5 @@
+# Moddable Helper
+
 <!-- vscode-markdown-toc -->
 * [Installation](#Installation)
 * [Background](#Background)
@@ -11,8 +13,6 @@
 	autoSave=true
 	/vscode-markdown-toc-config -->
 <!-- /vscode-markdown-toc -->
-
-# Moddable Helper
 
 Delivers a command-line interface to simplifying usage of the [Moddable SDK](https://github.com/Moddable-OpenSource/moddable). This repository hosts a node.js module that:
 
