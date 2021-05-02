@@ -10,11 +10,9 @@
 
 // TODO: Implement Add Module
 // TODO: Implement Add Target
-// TODO: Add sort on save config option
 // TODO: Automatically pass additional command-line parameters to Moddable SDK
 // TODO: Implement support for the format command-line option
 // TODO: Implement support for the rotation command-line option
-// TODO: Add an option to toggle debug mode
 
 // ESP32 Wipe Command: python %IDF_PATH%\components\esptool_py\esptool\esptool.py erase_flash
 

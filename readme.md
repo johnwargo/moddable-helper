@@ -17,6 +17,7 @@ Table of Contents:
 	* [Deploy](#Deploy)
 	* [List Modules or Targets](#ListModulesorTargets)
 	* [Wipe Device](#WipeDevice)
+* [Planned Features](#PlannedFeatures)
 
 <!-- vscode-markdown-toc-config
 	numbering=false
@@ -372,6 +373,13 @@ For example, using the sample configuration file example in this document, to wi
 ```shell
 mddbl wipe m5fire
 ```
+
+## <a name='PlannedFeatures'></a>Planned Features
+
+* Implement a command-line option to add a module to the configuration file
+* Implement a command-line option to add a target to the configuration file
+* Add support for other `mcconfig` and `mcrun` command-line parameters
+* Anything else I come up with as I work with the Moddable SDK
 
 ***
 
