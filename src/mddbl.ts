@@ -249,15 +249,8 @@ function readConfig() {
 }
 
 function writeConfig(): boolean {
-  function compare(a: Module | Target, b: Module | Target) {
-    return a.name > b.name ? 1 : -1;
-  }
-
   // Save the configuration to disk
   log.info(`Writing configuration to ${configFilePath}`);
-  // Sort the modules and targets arrays
-  appConfig.modules.sort(compare);
-  appConfig.targets.sort(compare);
   // create the pretty version of the config object
   const data = JSON.stringify(appConfig, null, 2);
   try {
@@ -279,6 +272,26 @@ function showConfig() {
   log.info('\nModule configuration:');
   // log.info(JSON.stringify(appConfig, null, 2));
   console.dir(appConfig);
+}
+
+function sortConfig() {
+  
+  // Function that helps sort the object array
+  function compare(a: Module | Target, b: Module | Target) {
+    return a.name > b.name ? 1 : -1;
+  }
+
+  // Get the config in memory
+  readConfig();
+  if (appConfig) {
+    // Sort the modules and targets arrays
+    appConfig.modules.sort(compare);
+    appConfig.targets.sort(compare);
+    // write the changes to disk
+    if (!writeConfig()) {
+      process.exit(1);
+    }
+  }
 }
 
 // *****************************************
@@ -330,14 +343,7 @@ configCmd
 configCmd
   .command('sort')
   .description('Sorts the config modules and targets arrays')
-  .action(() => {
-    readConfig();
-    if (appConfig) {
-      if (!writeConfig()) {
-        process.exit(1);
-      }
-    }
-  });
+  .action(sortConfig);
 
 // ===========================
 // Setup the `list` command

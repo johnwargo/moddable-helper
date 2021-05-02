@@ -137,7 +137,9 @@ function listTargets() {
 }
 function editConfig() {
     log.info('Editing module configuration');
-    var cmdStr = (os.type().indexOf('Win') === 0) ? "start " + configFilePath : "open -e ./" + configFilePath;
+    var cmdStr = (os.type().indexOf('Win') === 0)
+        ? "start " + configFilePath
+        : "open -e ./" + configFilePath;
     cp.exec(cmdStr, function (error, stdout, stderr) {
         if (error) {
             log.error('Unable to edit configuration');
@@ -189,12 +191,7 @@ function readConfig() {
     }
 }
 function writeConfig() {
-    function compare(a, b) {
-        return a.name > b.name ? 1 : -1;
-    }
     log.info("Writing configuration to " + configFilePath);
-    appConfig.modules.sort(compare);
-    appConfig.targets.sort(compare);
     var data = JSON.stringify(appConfig, null, 2);
     try {
         fs.writeFileSync(configFilePath, data);
@@ -212,6 +209,19 @@ function showConfig() {
     readConfig();
     log.info('\nModule configuration:');
     console.dir(appConfig);
+}
+function sortConfig() {
+    function compare(a, b) {
+        return a.name > b.name ? 1 : -1;
+    }
+    readConfig();
+    if (appConfig) {
+        appConfig.modules.sort(compare);
+        appConfig.targets.sort(compare);
+        if (!writeConfig()) {
+            process.exit(1);
+        }
+    }
 }
 console.log(APP_NAME);
 configFilePath = path.join(WORKING_PATH, CONFIG_FILE_NAME);
@@ -246,14 +256,7 @@ configCmd
 configCmd
     .command('sort')
     .description('Sorts the config modules and targets arrays')
-    .action(function () {
-    readConfig();
-    if (appConfig) {
-        if (!writeConfig()) {
-            process.exit(1);
-        }
-    }
-});
+    .action(sortConfig);
 var listCmd = program.command('list')
     .description('List configuration objects');
 listCmd
