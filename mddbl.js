@@ -42,28 +42,29 @@ function checkDirectory(filePath) {
 function executeCommand(cmd, folder) {
     if (folder === void 0) { folder = ''; }
     log.debug("executeCommand(" + cmd + ")");
-    if (checkDirectory(folder)) {
-        var changeFolder = folder.length > 0;
-        try {
-            if (changeFolder) {
-                log.info(chalk.yellow("Changing to the '" + folder + "' directory"));
-                process.chdir(folder);
-                log.debug("Current directory: " + process.cwd());
-            }
-            log.info(chalk.yellow('Executing:') + " " + cmd);
-            cp.execSync(cmd, { stdio: 'inherit' });
-            if (changeFolder) {
-                log.info(chalk.yellow("Changing back to the '" + WORKING_PATH + "' directory"));
-                process.chdir(WORKING_PATH);
-            }
-        }
-        catch (e) {
-            log.error(chalk.red(e));
+    var changeFolder = folder.length > 0;
+    if (changeFolder) {
+        if (!checkDirectory(folder)) {
+            log.error("Specified module folder (" + folder + ") does not exist");
             process.exit(1);
         }
     }
-    else {
-        log.error("Specified module folder (" + folder + ") does not exist");
+    try {
+        if (changeFolder) {
+            log.info(chalk.yellow("Changing to the '" + folder + "' directory"));
+            process.chdir(folder);
+            log.debug("Current directory: " + process.cwd());
+        }
+        log.info(chalk.yellow('Executing:') + " " + cmd);
+        cp.execSync(cmd, { stdio: 'inherit' });
+        if (changeFolder) {
+            log.info(chalk.yellow("Changing back to the '" + WORKING_PATH + "' directory"));
+            process.chdir(WORKING_PATH);
+        }
+    }
+    catch (e) {
+        log.error(chalk.red(e));
+        process.exit(1);
     }
 }
 function deployModule(modName, targetName) {
@@ -223,6 +224,10 @@ program
     deployModule(mod, target);
 });
 program
+    .command('init')
+    .description('Initialize the current folder (create module config file')
+    .action(initConfig);
+program
     .command('wipe <target>')
     .description('Wipes the <target> device')
     .action(function (target) {
@@ -231,13 +236,13 @@ program
 var configCmd = program.command('config')
     .description("Work with the module's configuration");
 configCmd
-    .command('init')
-    .description('Initialize the current folder (create module config file')
-    .action(initConfig);
-configCmd
     .command('edit')
     .description('Edit the module\'s configuration file')
     .action(editConfig);
+configCmd
+    .command('show')
+    .description('Print the modules config to the console')
+    .action(showConfig);
 configCmd
     .command('sort')
     .description('Sorts the config modules and targets arrays')
@@ -249,10 +254,6 @@ configCmd
         }
     }
 });
-configCmd
-    .command('show')
-    .description('Print the modules config to the console')
-    .action(showConfig);
 var listCmd = program.command('list')
     .description('List configuration objects');
 listCmd

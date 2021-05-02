@@ -4,7 +4,6 @@ exports.emptyTarget = exports.emptyModule = exports.defaultConfig = exports.Pixe
 exports.PixelFormats = ['gray16', 'gray256', 'rgb332', 'rgb565be', 'rgb565le'];
 exports.defaultConfig = {
     "debug": false,
-    "editCommand": "",
     "modules": [],
     "targets": [],
 };

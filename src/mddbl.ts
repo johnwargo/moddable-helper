@@ -63,31 +63,40 @@ function checkDirectory(filePath: string): boolean {
 
 function executeCommand(cmd: string, folder: string = '') {
   log.debug(`executeCommand(${cmd})`);
-  // does the module folder exist?
-  if (checkDirectory(folder)) {
-    const changeFolder: boolean = folder.length > 0;
-    try {
-      if (changeFolder) {
-        // Change to the module folder
-        log.info(chalk.yellow(`Changing to the '${folder}' directory`));
-        process.chdir(folder);
-        log.debug(`Current directory: ${process.cwd()}`);
-      }
-      // execute the command
-      log.info(`${chalk.yellow('Executing:')} ${cmd}`);
-      cp.execSync(cmd, { stdio: 'inherit' });
-      if (changeFolder) {
-        // switch back to the starting folder
-        log.info(chalk.yellow(`Changing back to the '${WORKING_PATH}' directory`));
-        process.chdir(WORKING_PATH);
-      }
-    } catch (e) {
-      log.error(chalk.red(e));
+
+  // Only change the folder during execution if we have a folder
+  // name passed to this function
+  const changeFolder: boolean = folder.length > 0;
+  if (changeFolder) {
+    // does the module folder exist?
+    if (!checkDirectory(folder)) {
+      log.error(`Specified module folder (${folder}) does not exist`);
       process.exit(1);
     }
-  } else {
-    log.error(`Specified module folder (${folder}) does not exist`);
   }
+
+  try {
+    if (changeFolder) {
+      // Change to the module folder
+      log.info(chalk.yellow(`Changing to the '${folder}' directory`));
+      process.chdir(folder);
+      log.debug(`Current directory: ${process.cwd()}`);
+    }
+
+    // execute the command
+    log.info(`${chalk.yellow('Executing:')} ${cmd}`);
+    cp.execSync(cmd, { stdio: 'inherit' });
+    
+    if (changeFolder) {
+      // switch back to the starting folder
+      log.info(chalk.yellow(`Changing back to the '${WORKING_PATH}' directory`));
+      process.chdir(WORKING_PATH);
+    }
+  } catch (e) {
+    log.error(chalk.red(e));
+    process.exit(1);
+  }
+
 }
 
 function deployModule(modName: string, targetName: string) {
@@ -285,7 +294,13 @@ program
   .action((mod: string, target: string) => {
     deployModule(mod, target);
   });
-
+// ===========================
+// Setup the `init` command
+// ===========================
+program
+  .command('init')
+  .description('Initialize the current folder (create module config file')
+  .action(initConfig);
 // ===========================
 // setup the `wipe` command
 // ===========================
@@ -302,13 +317,13 @@ program
 const configCmd = program.command('config')
   .description("Work with the module's configuration");
 configCmd
-  .command('init')
-  .description('Initialize the current folder (create module config file')
-  .action(initConfig);
-configCmd
   .command('edit')
   .description('Edit the module\'s configuration file')
   .action(editConfig);
+configCmd
+  .command('show')
+  .description('Print the modules config to the console')
+  .action(showConfig);
 configCmd
   .command('sort')
   .description('Sorts the config modules and targets arrays')
@@ -320,10 +335,6 @@ configCmd
       }
     }
   });
-configCmd
-  .command('show')
-  .description('Print the modules config to the console')
-  .action(showConfig);
 
 // ===========================
 // Setup the `list` command

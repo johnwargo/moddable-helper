@@ -19,15 +19,13 @@ export interface Target {
 }
 
 export interface ConfigObject {
-    debug: boolean;
-    editCommand: string;
+    debug: boolean;    
     modules: Module[];
     targets: Target[];
 }
 
 export const defaultConfig: ConfigObject = {
     "debug": false,
-    "editCommand": "",
     "modules": [],
     "targets": [],
 }
