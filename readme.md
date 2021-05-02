@@ -153,10 +153,37 @@ Use the `modules` section of the configuration file to configure an array of `mo
 }
 ```
 
-* `name` - 
-* `description` - 
-* `isHost` - 
-* `folderPath` - 
+* `name` - The unique identifier for the module
+* `description` - A description of the module
+* `isHost` - Boolean value indicating whether the module is a Host or Module (controls whether Moddable Helper executes `mcconfig` or `mcrun` to deploy the module)
+* `folderPath` - The name of the subfolder hosting the module
+
+The example configuration file shown above defines three modules:
+
+```json
+"modules": [
+    {
+      "name": "host",
+      "description": "",
+      "isHost": true,
+      "folderPath": "host"
+    },
+    {
+      "name": "hw",
+      "description": "",
+      "isHost": false,
+      "folderPath": "helloworld"
+    },
+    {
+      "name": "hwg",
+      "description": "",
+      "isHost": false,
+      "folderPath": "helloworld-gui"
+    }
+],
+```
+
+The `host` module refers to the JavaScript host code in the project's `host` folder. The `hw` and `hwg` modules refer to JavaScript modules in the `helloworld` and `helloworld-gui` folders.
 
 Use the `targets` section of the configuration file to configure an array of `target` objects representing each of the Moddable-compatible hardware devices used by your project. The `target` object has the following configuration:
 
