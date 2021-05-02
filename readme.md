@@ -21,10 +21,11 @@ The module supports the following commands:
 
 To install the module, open a terminal window (or command prompt on Windows), and execute the following command:
 
-```shell 
+```shell
 npm install -g moddable-helper
 ```
 
+This installs a `mddbl` command you can use anywhere on the system.
 
 ## Background
 
