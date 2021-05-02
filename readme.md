@@ -1,6 +1,6 @@
 # Moddable Helper
 
-Table of Contents
+Table of Contents:
 
 <!-- vscode-markdown-toc -->
 * [Introduction](#Introduction)
@@ -306,15 +306,43 @@ You know, just because.
 
 ### <a name='Deploy'></a>Deploy
 
-Bacon ipsum dolor amet cupim rump doner beef shoulder ball tip leberkas flank jerky capicola chislic shank salami. Ham doner flank alcatra beef ribs ball tip andouille kevin tongue fatback turkey shoulder hamburger venison. Filet mignon chicken pork chop short ribs, bacon swine landjaeger. Pastrami short ribs tongue, capicola ham chuck cupim. Fatback drumstick hamburger, sirloin turducken jowl prosciutto pancetta tongue. Hamburger shank spare ribs corned beef porchetta. Swine prosciutto beef, frankfurter sirloin pastrami short loin burgdoggen turkey sausage landjaeger porchetta ham hock.
+To deploy a Host or Module to a connected device, execute the following command in the terminal window pointing to the Moddable project folder:
 
-Chuck pork belly ham turducken pig, tri-tip pastrami sirloin turkey tongue capicola. Chuck andouille frankfurter, flank alcatra tenderloin corned beef ham hock pork chop pork belly. Cupim short ribs ribeye andouille boudin sirloin porchetta spare ribs biltong jowl brisket ham hock pastrami. Venison spare ribs t-bone cupim, pork pork chop pig chuck corned beef turducken shoulder.
+```shell
+mddbl deploy <module> <target>
+```
+
+For example, to deploy a project's `host` to the `mdbl2` (Moddable Two) defined in our sample config file, use:
+
+```shell
+mddbl deploy host mdbl2
+```
+
+To deploy the `helloworld` module to the `m5fire` device defined in our sample config file, use:
+
+```shell
+mddbl deploy hw m5fire
+```
 
 ### <a name='WipeDevice'></a>Wipe Device
 
-Bacon ipsum dolor amet cupim rump doner beef shoulder ball tip leberkas flank jerky capicola chislic shank salami. Ham doner flank alcatra beef ribs ball tip andouille kevin tongue fatback turkey shoulder hamburger venison. Filet mignon chicken pork chop short ribs, bacon swine landjaeger. Pastrami short ribs tongue, capicola ham chuck cupim. Fatback drumstick hamburger, sirloin turducken jowl prosciutto pancetta tongue. Hamburger shank spare ribs corned beef porchetta. Swine prosciutto beef, frankfurter sirloin pastrami short loin burgdoggen turkey sausage landjaeger porchetta ham hock.
+While troubleshooting deployment or coding issues, you may encounter the need to wipe the device. Most, if not all, hardware platforms Moddable supports offer some mechanism for wiping the memory of the device. Since the device SDK commands needed to do this are obscure and not often executed, the Moddable Helper CLI offers a mechanism for storing the wipe command in the configuration file then invoking it by executing the following command:
 
-Chuck pork belly ham turducken pig, tri-tip pastrami sirloin turkey tongue capicola. Chuck andouille frankfurter, flank alcatra tenderloin corned beef ham hock pork chop pork belly. Cupim short ribs ribeye andouille boudin sirloin porchetta spare ribs biltong jowl brisket ham hock pastrami. Venison spare ribs t-bone cupim, pork pork chop pig chuck corned beef turducken shoulder.
+```shell
+mddbl wipe <target>
+```
+
+For example, using the sample configuration file example in this document, to wipe the M5Stack Fire device, use the following command:
+
+```shell
+mddbl wipe m5fire
+```
+
+## Issues & Pull Requests
+
+If you have an issue with this module, don't email the author, instead, submit an [issue](https://github.com/johnwargo/moddable-helper/issues) in this repository.
+
+I build this project for the community, so if you have an enhancement, fix, or change for the project please submit a [Pull Request](https://github.com/johnwargo/moddable-helper/pulls).
 
 ***
 
