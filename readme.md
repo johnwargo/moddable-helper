@@ -58,9 +58,9 @@ This installs a `mddbl` command you can use anywhere on the system.
 
 ## <a name='IssuesPullRequests'></a>Issues & Pull Requests
 
-If you have an issue with this module, don't email the author, instead, submit an [issue](https://github.com/johnwargo/moddable-helper/issues) in this repository.
+If you have an issue with this module, don't email the author, submit an [issue](https://github.com/johnwargo/moddable-helper/issues) in this repository instead.
 
-I build this project for the community, so if you have an enhancement, fix, or change for the project please submit a [Pull Request](https://github.com/johnwargo/moddable-helper/pulls).
+I built this project for the community, so if you have an enhancement, fix, or change for the project please submit a [Pull Request](https://github.com/johnwargo/moddable-helper/pulls).
 
 ## <a name='Background'></a>Background
 
