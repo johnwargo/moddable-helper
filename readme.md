@@ -274,6 +274,8 @@ The example configuration file shown above defines two Targets devices:
 ]
 ```
 
+> **Note**: The targets use the same wipe command because the devices are both based on the ESP32 hardware platform.
+
 #### <a name='ViewingtheConfigurationFile'></a>Viewing the Configuration File
 
 To view the contents of the configuration file in the console, execute the following command:
