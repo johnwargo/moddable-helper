@@ -1,5 +1,8 @@
 # Moddable Helper
 
+
+## Background
+
 I've been playing around lately with the [Moddable SDK](https://github.com/Moddable-OpenSource/moddable); I think the platform's pretty interesting for a lot of reasons I'll write about later on [my blog](https://johnwargo.com), and they deliver several very capable IoT devices with built-in displays at a great price.
 
 One of the things I noticed when I started working with the Moddable SDK was that I found myself typing the same commands over and over again as I coded projects for the devices. Now, that's not unexpected for command-line based tooling, but when building and deploying for Moddable devices, I kept typing the exact same command-line options over and over again (`-d m -p <device>`) that I decided to make this helper to reduce my typing.
@@ -26,6 +29,14 @@ Then, to deploy the host, you'd execute the following commands:
 cd ../helloworld
 mcrun -d -m -p esp32/moddable_two
 ```
+
+As you can see, I'm switching folders from time to time depending on whether I'm deploying an update to the project's host or an update to the `helloworld` module. I'm also executing two different Moddable SDK commands, each with the exact same command-line parameters. There has to be a better way. 
+
+
+
+
+
+XXXX
 
 
 
@@ -62,6 +73,10 @@ mcrun -d -m -p esp32/moddable_two
   ]
 }
 ```
+
+## Usage
+
+
 
 ***
 
