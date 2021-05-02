@@ -116,7 +116,54 @@ Moddable Helper switches to the module's folder (`helloworld` as specified in th
 
 ## Usage
 
+### Configuration
 
+To use this module, you must first create the module's configuration file in the Moddable project's root folder. The file must be called `mddbl.json` and the default configuration file contains the following:
+
+```json
+{
+    "debug": false,
+    "modules": [],
+    "targets": [],
+}
+```
+
+The module can create it for you automatically, simply open a terminal window, navigate to the project folder, and execute the following command:
+
+
+
+
+```json
+{
+    "name": "",
+    "description": "",
+    "isHost": false,
+    "folderPath": "",
+}
+```
+
+
+
+```json
+{
+    "name": "",
+    "description": "",
+    "platform": "",
+    "wipeCommand": "",
+}
+```
+
+### Deployment
+
+Bacon ipsum dolor amet cupim rump doner beef shoulder ball tip leberkas flank jerky capicola chislic shank salami. Ham doner flank alcatra beef ribs ball tip andouille kevin tongue fatback turkey shoulder hamburger venison. Filet mignon chicken pork chop short ribs, bacon swine landjaeger. Pastrami short ribs tongue, capicola ham chuck cupim. Fatback drumstick hamburger, sirloin turducken jowl prosciutto pancetta tongue. Hamburger shank spare ribs corned beef porchetta. Swine prosciutto beef, frankfurter sirloin pastrami short loin burgdoggen turkey sausage landjaeger porchetta ham hock.
+
+Chuck pork belly ham turducken pig, tri-tip pastrami sirloin turkey tongue capicola. Chuck andouille frankfurter, flank alcatra tenderloin corned beef ham hock pork chop pork belly. Cupim short ribs ribeye andouille boudin sirloin porchetta spare ribs biltong jowl brisket ham hock pastrami. Venison spare ribs t-bone cupim, pork pork chop pig chuck corned beef turducken shoulder.
+
+### Wiping Devices
+
+Bacon ipsum dolor amet cupim rump doner beef shoulder ball tip leberkas flank jerky capicola chislic shank salami. Ham doner flank alcatra beef ribs ball tip andouille kevin tongue fatback turkey shoulder hamburger venison. Filet mignon chicken pork chop short ribs, bacon swine landjaeger. Pastrami short ribs tongue, capicola ham chuck cupim. Fatback drumstick hamburger, sirloin turducken jowl prosciutto pancetta tongue. Hamburger shank spare ribs corned beef porchetta. Swine prosciutto beef, frankfurter sirloin pastrami short loin burgdoggen turkey sausage landjaeger porchetta ham hock.
+
+Chuck pork belly ham turducken pig, tri-tip pastrami sirloin turkey tongue capicola. Chuck andouille frankfurter, flank alcatra tenderloin corned beef ham hock pork chop pork belly. Cupim short ribs ribeye andouille boudin sirloin porchetta spare ribs biltong jowl brisket ham hock pastrami. Venison spare ribs t-bone cupim, pork pork chop pig chuck corned beef turducken shoulder.
 
 ***
 
