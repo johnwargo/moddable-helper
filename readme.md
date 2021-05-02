@@ -6,8 +6,12 @@
 * [Background](#Background)
 * [Usage](#Usage)
 	* [Configuration](#Configuration)
-	* [Deployment](#Deployment)
-	* [Wiping Devices](#WipingDevices)
+		* [Creating the Configuration File](#CreatingtheConfigurationFile)
+		* [Viewing the Configuration File](#ViewingtheConfigurationFile)
+		* [Configuration Options](#ConfigurationOptions)
+		* [Sorting Module and Target Lists](#SortingModuleandTargetLists)
+	* [Deploy](#Deploy)
+	* [Wipe Device](#WipeDevice)
 
 <!-- vscode-markdown-toc-config
 	numbering=false
@@ -151,6 +155,8 @@ To use this module, you must first create the module's configuration file in the
 }
 ```
 
+#### <a name='CreatingtheConfigurationFile'></a>Creating the Configuration File
+
 The module can create it for you automatically, simply open a terminal window, navigate to the project folder, and execute the following command:
 
 ```shell
@@ -159,11 +165,19 @@ mddble init
 
 Moddable Helper will create the default configuration file shown above.
 
+#### <a name='ViewingtheConfigurationFile'></a>Viewing the Configuration File
+
 To view the contents of the configuration file in the console, execute the following command:
 
 ```shell
 mddble config show
 ```
+
+#### <a name='ConfigurationOptions'></a>Configuration Options
+
+debug option
+
+
 
 Use the `modules` section of the configuration file to configure an array of `module` objects representing each of the JavaScript modules in your Moddable project. The `module` object has the following configuration:
 
@@ -226,13 +240,7 @@ Use the `targets` section of the configuration file to configure an array of `ta
 
 > **Note**: On Microsoft Windows, you must double-up file system delimiters; `"python %IDF_PATH%\components\esptool_py\esptool\esptool.py erase_flash"` becomes `"python %IDF_PATH%\\components\\esptool_py\\esptool\\esptool.py erase_flash"`. JavaScript uses the backslash (`\`) when escaping other characters in a string, so to include the backslash in a command string, you must escape it with a backslash first.
 
-
-
-
-###############
-
-
-The example configuration file shown above defines two Targets:
+The example configuration file shown above defines two Targets devices:
 
 ```json
 "targets": [
@@ -251,22 +259,22 @@ The example configuration file shown above defines two Targets:
 ]
 ```
 
+#### <a name='SortingModuleandTargetLists'></a>Sorting Module and Target Lists
 
-
-Sort
+For those users who have a little bit of obsessive compulsive disorder (OCD) you can sort the Module and Target lists using the following command:
 
 ```shell
 mdbbl config sort
 ```
 
 
-### <a name='Deployment'></a>Deploy
+### <a name='Deploy'></a>Deploy
 
 Bacon ipsum dolor amet cupim rump doner beef shoulder ball tip leberkas flank jerky capicola chislic shank salami. Ham doner flank alcatra beef ribs ball tip andouille kevin tongue fatback turkey shoulder hamburger venison. Filet mignon chicken pork chop short ribs, bacon swine landjaeger. Pastrami short ribs tongue, capicola ham chuck cupim. Fatback drumstick hamburger, sirloin turducken jowl prosciutto pancetta tongue. Hamburger shank spare ribs corned beef porchetta. Swine prosciutto beef, frankfurter sirloin pastrami short loin burgdoggen turkey sausage landjaeger porchetta ham hock.
 
 Chuck pork belly ham turducken pig, tri-tip pastrami sirloin turkey tongue capicola. Chuck andouille frankfurter, flank alcatra tenderloin corned beef ham hock pork chop pork belly. Cupim short ribs ribeye andouille boudin sirloin porchetta spare ribs biltong jowl brisket ham hock pastrami. Venison spare ribs t-bone cupim, pork pork chop pig chuck corned beef turducken shoulder.
 
-### <a name='WipingDevices'></a>Wipe Device
+### <a name='WipeDevice'></a>Wipe Device
 
 Bacon ipsum dolor amet cupim rump doner beef shoulder ball tip leberkas flank jerky capicola chislic shank salami. Ham doner flank alcatra beef ribs ball tip andouille kevin tongue fatback turkey shoulder hamburger venison. Filet mignon chicken pork chop short ribs, bacon swine landjaeger. Pastrami short ribs tongue, capicola ham chuck cupim. Fatback drumstick hamburger, sirloin turducken jowl prosciutto pancetta tongue. Hamburger shank spare ribs corned beef porchetta. Swine prosciutto beef, frankfurter sirloin pastrami short loin burgdoggen turkey sausage landjaeger porchetta ham hock.
 
