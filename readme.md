@@ -7,8 +7,9 @@
 * [Usage](#Usage)
 	* [Configuration](#Configuration)
 		* [Creating the Configuration File](#CreatingtheConfigurationFile)
-		* [Viewing the Configuration File](#ViewingtheConfigurationFile)
 		* [Configuration Options](#ConfigurationOptions)
+		* [Viewing the Configuration File](#ViewingtheConfigurationFile)
+		* [Editing the Configuration File](#EditingtheConfigurationFile)
 		* [Sorting Module and Target Lists](#SortingModuleandTargetLists)
 	* [Deploy](#Deploy)
 	* [Wipe Device](#WipeDevice)
@@ -165,14 +166,6 @@ mddble init
 
 Moddable Helper will create the default configuration file shown above.
 
-#### <a name='ViewingtheConfigurationFile'></a>Viewing the Configuration File
-
-To view the contents of the configuration file in the console, execute the following command:
-
-```shell
-mddble config show
-```
-
 #### <a name='ConfigurationOptions'></a>Configuration Options
 
 The following sections describe the configuration options for the Moddable Helper module.
@@ -273,6 +266,22 @@ The example configuration file shown above defines two Targets devices:
       "wipeCommand": "python %IDF_PATH%\\components\\esptool_py\\esptool\\esptool.py erase_flash"
     }
 ]
+```
+
+#### <a name='ViewingtheConfigurationFile'></a>Viewing the Configuration File
+
+To view the contents of the configuration file in the console, execute the following command:
+
+```shell
+mddble config show
+```
+
+#### <a name='EditingtheConfigurationFile'></a>Editing the Configuration File
+
+To launch the module's configuration file using your system's default `.json` file editor, execute the following command:
+
+```shell
+mdbbl config edit
 ```
 
 #### <a name='SortingModuleandTargetLists'></a>Sorting Module and Target Lists
