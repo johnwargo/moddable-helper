@@ -17,6 +17,8 @@ The module supports the following commands:
 * `list targets` - Display the list of targets defined in the `targets` section of the configuration file
 * `wipe <target>` - Wipe the selected target device
 
+Detailed instructions for these commands provided below.
+
 ## Installation
 
 To install the module, open a terminal window (or command prompt on Windows), and execute the following command:
@@ -31,9 +33,11 @@ This installs a `mddbl` command you can use anywhere on the system.
 
 I've been playing around lately with the Moddable SDK and I think the platform's pretty interesting for a lot of reasons I'll write about later on [my blog](https://johnwargo.com). They deliver several very capable IoT devices with built-in displays at a great price. The real power comes from their SDK which delivers a robust and solid JavaScript API for inexpensive microcontroller devices
 
-One of the things I noticed when I started working with the Moddable SDK was that I found myself typing the same commands over and over again as I coded projects for the devices. Now, that's not unexpected for command-line based tooling, but when building and deploying for Moddable devices, I kept typing the exact same command-line options over and over again (`-d m -p <device>`) that I decided to make this helper to reduce my typing.
+One of the things I noticed when I started working with the Moddable SDK was that I found myself typing the same commands over and over again as I coded projects for the devices. Now, that's not unexpected for command-line based tooling, but when building and deploying for Moddable devices, I kept typing the exact same command-line options over and over again (`-d m -p <device>`). I decided to make this helper module to reduce my typing and simplify my work.
 
-Let me show you how this works using a real-world example. The folks at Moddable published a book called [IoT Development for ESP32 and ESP8266 with JavaScript](https://github.com/Moddable-OpenSource/iot-product-dev-book) that contains a lot of sample code demonstrating how to use the different APIs in their SDK. Moddable developers often break a project down into multiple parts, a host (the core native application running on the device) plus additional JavaScript modules that run within the host (a dramatic oversimplification, I know, but I'm not here to teach you Moddable development). Developers typically keep their host and module files in different file system folders.
+Let me show you how this works using a real-world example. 
+
+The folks at Moddable published a book called [IoT Development for ESP32 and ESP8266 with JavaScript](https://github.com/Moddable-OpenSource/iot-product-dev-book) that contains a lot of sample code demonstrating how to use the different APIs in their SDK. Moddable developers often break a project down into multiple parts, a host (the core native application running on the device plus a little JavaScript code to bootstrap the project) plus additional JavaScript modules that run within the host (a dramatic oversimplification, I know, but I'm not here to teach you Moddable development). Developers typically keep their host and module files in different folders within a project folder.
 
 > **Note**: What I show here applies to any Moddable SDK project
 
@@ -44,22 +48,18 @@ cd host
 mcconfig -d -m -p esp32/moddable_two
 ```
 
-Then, to deploy the host, you'd execute the following commands:
+Next, to deploy the host, execute the following commands:
 
 ```shell
 cd ../helloworld
 mcrun -d -m -p esp32/moddable_two
 ```
 
-As you can see, I'm switching folders from time to time depending on whether I'm deploying an update to the project's host or an update to the `helloworld` module. I'm also executing two different Moddable SDK commands, each with the exact same command-line parameters. There has to be a better way. 
+As you can see, I'm switching folders from time to time depending on whether I'm deploying an update to the project's host or an update to the `helloworld` module. I'm also executing two different Moddable SDK commands, each with the exact same command-line parameters. There has to be a better way.
 
+Yes, I know I could open two different terminal windows and execute host or module commands in their own terminal - I'm for simplification here, not opening even more windows.
 
-
-
-
-XXXX
-
-
+With this module, you create a configuration file called `mddbl.json` (the module can create it for your automatically using the `mddbl init` command) in the project's root folder, then define all of the options for your project there:
 
 ```json
 {
@@ -94,6 +94,25 @@ XXXX
   ]
 }
 ```
+
+With that in place, you can open a terminal window, navigate to your project folder, then deploy the project's host using:
+
+```shell  
+mddbl deploy host mdbl2
+```
+
+The mddbl module switches to the host module's folder (`host` as specified in the module's `folderPath` property), executes the command to deploy the host (`mcconfig -d -m -p esp32/moddable_two`), then switches back to the starting folder.
+
+Next, to deploy one of the project's modules, `helloworld` for example, simply use the following command:
+
+```shell 
+mddbl deploy hw mdbl2
+```
+
+Moddable Helper switches to the module's folder (`helloworld` as specified in the module's `folderPath` property), executes the command to deploy the host (`mcrun -d -m -p esp32/moddable_two`), then switches back to the starting folder.
+
+> **Note**: The mddbl module uses the module's `isHost` property to determine whether to executs `mcconfig` or `mcrun`.
+
 
 ## Usage
 
