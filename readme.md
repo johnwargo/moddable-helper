@@ -176,10 +176,10 @@ Use the `modules` section of the configuration file to configure an array of `mo
 }
 ```
 
-* `name` - The unique identifier for the module
-* `description` - A description of the module
-* `isHost` - Boolean value indicating whether the module is a Host or Module (controls whether Moddable Helper executes `mcconfig` or `mcrun` to deploy the module)
-* `folderPath` - The name of the subfolder hosting the module
+* `name` - The unique identifier for the module. This is the value you'll use in `mddbl` commands to refer to the module.
+* `description` - A description of the module, not used for anything except to remind you about this module's configuration.
+* `isHost` - Boolean value indicating whether the module is a Host or Module (controls whether Moddable Helper executes `mcconfig` or `mcrun` to deploy the module).
+* `folderPath` - The name of the subfolder hosting the module.
 
 The example configuration file shown above defines three modules:
 
@@ -219,12 +219,12 @@ Use the `targets` section of the configuration file to configure an array of `ta
 }
 ```
 
-* `name` - The unique identifier for the module
-* `description` - A description of the module
-* `platform` - The Moddable SDK platform identifier for the device
+* `name` - The unique identifier for the device. This is the value you'll use in `mddbl` commands to refer to the device; the Moddable SDK uses a full description to refer to a device (`esp32/moddable_two` for example) and this just gives you a shortcut for the full name.
+* `description` - A description of the device, not used for anything except to remind you about this device.
+* `platform` - The full Moddable SDK platform identifier for the device (`esp32/moddable_two` for example).
 * `wipeCommand` - The file system command to wipe the device. The command used is specific to the hardware platform, not the Moddable SDK.
 
-> **Note**: On Microsoft Windows, you must double-up file system delimeters
+> **Note**: On Microsoft Windows, you must double-up file system delimiters; `"python %IDF_PATH%\components\esptool_py\esptool\esptool.py erase_flash"` becomes "python %IDF_PATH%\\components\\esptool_py\\esptool\\esptool.py erase_flash". JavaScript uses the backslash (`\`) when escaping other characters in a string, so to include the backslash in a command string, you must escape it with a backslash first.
 
 
 
@@ -260,13 +260,13 @@ mdbbl config sort
 ```
 
 
-### <a name='Deployment'></a>Deployment
+### <a name='Deployment'></a>Deploy
 
 Bacon ipsum dolor amet cupim rump doner beef shoulder ball tip leberkas flank jerky capicola chislic shank salami. Ham doner flank alcatra beef ribs ball tip andouille kevin tongue fatback turkey shoulder hamburger venison. Filet mignon chicken pork chop short ribs, bacon swine landjaeger. Pastrami short ribs tongue, capicola ham chuck cupim. Fatback drumstick hamburger, sirloin turducken jowl prosciutto pancetta tongue. Hamburger shank spare ribs corned beef porchetta. Swine prosciutto beef, frankfurter sirloin pastrami short loin burgdoggen turkey sausage landjaeger porchetta ham hock.
 
 Chuck pork belly ham turducken pig, tri-tip pastrami sirloin turkey tongue capicola. Chuck andouille frankfurter, flank alcatra tenderloin corned beef ham hock pork chop pork belly. Cupim short ribs ribeye andouille boudin sirloin porchetta spare ribs biltong jowl brisket ham hock pastrami. Venison spare ribs t-bone cupim, pork pork chop pig chuck corned beef turducken shoulder.
 
-### <a name='WipingDevices'></a>Wiping Devices
+### <a name='WipingDevices'></a>Wipe Device
 
 Bacon ipsum dolor amet cupim rump doner beef shoulder ball tip leberkas flank jerky capicola chislic shank salami. Ham doner flank alcatra beef ribs ball tip andouille kevin tongue fatback turkey shoulder hamburger venison. Filet mignon chicken pork chop short ribs, bacon swine landjaeger. Pastrami short ribs tongue, capicola ham chuck cupim. Fatback drumstick hamburger, sirloin turducken jowl prosciutto pancetta tongue. Hamburger shank spare ribs corned beef porchetta. Swine prosciutto beef, frankfurter sirloin pastrami short loin burgdoggen turkey sausage landjaeger porchetta ham hock.
 
