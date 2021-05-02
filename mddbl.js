@@ -43,22 +43,23 @@ function executeCommand(cmd, folder) {
     if (folder === void 0) { folder = ''; }
     log.debug("executeCommand(" + cmd + ")");
     if (checkDirectory(folder)) {
+        var changeFolder = folder.length > 0;
         try {
-            if (folder.length > 0) {
+            if (changeFolder) {
                 log.info(chalk.yellow("Changing to the '" + folder + "' directory"));
                 process.chdir(folder);
-                log.info("Current directory: " + process.cwd());
+                log.debug("Current directory: " + process.cwd());
             }
             log.info(chalk.yellow('Executing:') + " " + cmd);
             cp.execSync(cmd, { stdio: 'inherit' });
-            if (folder.length > 0) {
-                log.info(chalk.yellow('Changing directory:') + " " + WORKING_PATH);
+            if (changeFolder) {
+                log.info(chalk.yellow("Changing back to the '" + WORKING_PATH + "' directory"));
                 process.chdir(WORKING_PATH);
             }
         }
         catch (e) {
-            log.error(chalk.red('Error executing command'));
-            log.error(e);
+            log.error(chalk.red(e));
+            process.exit(1);
         }
     }
     else {
@@ -71,20 +72,20 @@ function deployModule(modName, targetName) {
     var mod = appConfig.modules.find(function (item) { return item.name === modName; });
     if (!mod) {
         log.error("Module '" + modName + "' not defined, " + CHECK_CONFIG_STRING);
-        return;
+        process.exit(1);
     }
     if (!mod.folderPath) {
         log.error("Module path '" + mod.folderPath + "' not defined, " + CHECK_CONFIG_STRING);
-        return;
+        process.exit(1);
     }
     var target = appConfig.targets.find(function (item) { return item.name === targetName; });
     if (!target) {
         log.error("Target '" + targetName + "' not defined, " + CHECK_CONFIG_STRING);
-        return;
+        process.exit(1);
     }
     if (!target.platform) {
         log.error("Target platform '" + target.platform + "' not defined, " + CHECK_CONFIG_STRING);
-        return;
+        process.exit(1);
     }
     console.log("Deploying " + modName + " to " + targetName);
     if (mod.isHost) {
@@ -100,11 +101,11 @@ function wipeDevice(targetName) {
     var target = appConfig.targets.find(function (item) { return item.name === targetName; });
     if (!target) {
         log.error("Target '" + targetName + "' not defined, " + CHECK_CONFIG_STRING);
-        return;
+        process.exit(1);
     }
     if (!target.wipeCommand) {
         log.error("Target wipe command '" + target.wipeCommand + "' not defined, " + CHECK_CONFIG_STRING);
-        return;
+        process.exit(1);
     }
     console.log("Wiping " + targetName);
     executeCommand(target.wipeCommand);
@@ -122,6 +123,7 @@ function listArray(listStr, theList) {
     }
     else {
         log.info("\nNo " + listStr + " configured");
+        process.exit(1);
     }
 }
 function listModules() {
@@ -139,7 +141,7 @@ function editConfig() {
         if (error) {
             log.error('Unable to edit configuration');
             log.error(error);
-            return;
+            process.exit(1);
         }
         if (stdout) {
             log.info(stdout);
@@ -155,6 +157,9 @@ function initConfig() {
     if (writeConfig()) {
         log.info("Successfully created configuration file (" + CONFIG_FILE_NAME + ")");
     }
+    else {
+        process.exit(1);
+    }
 }
 function readConfig() {
     log.info('Reading configuration file');
@@ -165,7 +170,7 @@ function readConfig() {
         }
         catch (err) {
             log.error("readConfig error: " + err);
-            return;
+            process.exit(1);
         }
         var logLevel = appConfig.debug ? log.DEBUG : log.INFO;
         log.level(logLevel);
@@ -238,8 +243,11 @@ configCmd
     .description('Sorts the config modules and targets arrays')
     .action(function () {
     readConfig();
-    if (appConfig)
-        writeConfig();
+    if (appConfig) {
+        if (!writeConfig()) {
+            process.exit(1);
+        }
+    }
 });
 configCmd
     .command('show')

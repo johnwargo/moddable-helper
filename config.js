@@ -18,7 +18,5 @@ exports.emptyTarget = {
     "name": "",
     "description": "",
     "platform": "",
-    "format": "",
-    "rotation": 0,
     "wipeCommand": "",
 };

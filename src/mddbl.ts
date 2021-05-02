@@ -10,6 +10,10 @@
 
 // TODO: Implement Add Module
 // TODO: Implement Add Target
+// TODO: Add sort on save config option
+// TODO: Automatically pass additional command-line parameters to Moddable SDK
+// TODO: Implement support for the format command-line option
+// TODO: Implement support for the rotation command-line option
 
 // ESP32 Wipe Command: python %IDF_PATH%\components\esptool_py\esptool\esptool.py erase_flash
 
@@ -69,20 +73,17 @@ function executeCommand(cmd: string, folder: string = '') {
         process.chdir(folder);
         log.debug(`Current directory: ${process.cwd()}`);
       }
-
       // execute the command
       log.info(`${chalk.yellow('Executing:')} ${cmd}`);
       cp.execSync(cmd, { stdio: 'inherit' });
-
       if (changeFolder) {
         // switch back to the starting folder
         log.info(chalk.yellow(`Changing back to the '${WORKING_PATH}' directory`));
         process.chdir(WORKING_PATH);
       }
-      
     } catch (e) {
-      log.error(chalk.red('Error executing command'));
-      log.error(e);
+      log.error(chalk.red(e));
+      process.exit(1);
     }
   } else {
     log.error(`Specified module folder (${folder}) does not exist`);
@@ -96,23 +97,27 @@ function deployModule(modName: string, targetName: string) {
   const mod: any = appConfig.modules.find(item => item.name === modName);
   if (!mod) {
     log.error(`Module '${modName}' not defined, ${CHECK_CONFIG_STRING}`);
-    return;
+    process.exit(1);
+    // return;
   }
   // Does the module have a folder path?
   if (!mod.folderPath) {
     log.error(`Module path '${mod.folderPath}' not defined, ${CHECK_CONFIG_STRING}`);
-    return;
+    process.exit(1);
+    // return;
   }
   // Does the specified target exist?
   const target: any = appConfig.targets.find(item => item.name === targetName);
   if (!target) {
     log.error(`Target '${targetName}' not defined, ${CHECK_CONFIG_STRING}`);
-    return;
+    process.exit(1);
+    // return;
   }
   // Does the target have a platform?
   if (!target.platform) {
     log.error(`Target platform '${target.platform}' not defined, ${CHECK_CONFIG_STRING}`);
-    return;
+    process.exit(1);
+    // return;
   }
   // Execute the command
   console.log(`Deploying ${modName} to ${targetName}`);
@@ -130,12 +135,14 @@ function wipeDevice(targetName: string) {
   const target: any = appConfig.targets.find(item => item.name === targetName);
   if (!target) {
     log.error(`Target '${targetName}' not defined, ${CHECK_CONFIG_STRING}`);
-    return;
+    process.exit(1);
+    // return;
   }
   // IS the wipe command defined?
   if (!target.wipeCommand) {
     log.error(`Target wipe command '${target.wipeCommand}' not defined, ${CHECK_CONFIG_STRING}`);
-    return;
+    process.exit(1);
+    // return;
   }
   console.log(`Wiping ${targetName}`);
   executeCommand(target.wipeCommand);
@@ -154,6 +161,7 @@ function listArray(listStr: string, theList: Target[] | Module[]) {
     }
   } else {
     log.info(`\nNo ${listStr} configured`);
+    process.exit(1);
   }
 }
 
@@ -176,7 +184,8 @@ function editConfig() {
     if (error) {
       log.error('Unable to edit configuration')
       log.error(error);
-      return;
+      process.exit(1);
+      // return;
     }
     if (stdout) {
       log.info(stdout);
@@ -194,6 +203,8 @@ function initConfig() {
   // write the object to the file
   if (writeConfig()) {
     log.info(`Successfully created configuration file (${CONFIG_FILE_NAME})`);
+  } else {
+    process.exit(1);
   }
 }
 
@@ -205,7 +216,8 @@ function readConfig() {
       appConfig = JSON.parse(rawData);
     } catch (err) {
       log.error(`readConfig error: ${err}`);
-      return;
+      process.exit(1);
+      // return;
     }
     // get the log level from the config 
     const logLevel = appConfig.debug ? log.DEBUG : log.INFO;
@@ -302,7 +314,11 @@ configCmd
   .description('Sorts the config modules and targets arrays')
   .action(() => {
     readConfig();
-    if (appConfig) writeConfig();
+    if (appConfig) {
+      if (!writeConfig()) {
+        process.exit(1);
+      }
+    }
   });
 configCmd
   .command('show')
