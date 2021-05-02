@@ -8,14 +8,14 @@ Delivers a command-line interface to simplifying usage of the [Moddable SDK](htt
 
 The module supports the following commands:
 
-* `init` - Create an empty configuration file in the current folder
-* `config edit` - Edit the project's configuration file
-* `config show` - Display the contents of the configuration file
-* `config sort` - Sort the module and target lists by name
-* `deploy <module> <target>` - Deploy the selected module (module or host) to the specified target device
-* `list modules` - Display the list of modules defined in the `modules` section of the configuration file
-* `list targets` - Display the list of targets defined in the `targets` section of the configuration file
-* `wipe <target>` - Wipe the selected target device
+* `mddbl init` - Create an empty configuration file in the current folder
+* `mddbl config edit` - Edit the project's configuration file
+* `mddbl config show` - Display the contents of the configuration file
+* `mddbl config sort` - Sort the module and target lists by name
+* `mddbl deploy <module> <target>` - Deploy the selected module (module or host) to the specified target device
+* `mddbl list modules` - Display the list of modules defined in the `modules` section of the configuration file
+* `mddbl list targets` - Display the list of targets defined in the `targets` section of the configuration file
+* `mddbl wipe <target>` - Wipe the selected target device
 
 Detailed instructions for these commands provided below.
 
@@ -111,7 +111,7 @@ mddbl deploy hw mdbl2
 
 Moddable Helper switches to the module's folder (`helloworld` as specified in the module's `folderPath` property), executes the command to deploy the host (`mcrun -d -m -p esp32/moddable_two`), then switches back to the starting folder.
 
-> **Note**: The mddbl module uses the module's `isHost` property to determine whether to executs `mcconfig` or `mcrun`.
+> **Note**: The mddbl module uses the module's `isHost` property to determine whether to execute `mcconfig` or `mcrun` to deploy the module.
 
 
 ## Usage
