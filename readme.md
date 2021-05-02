@@ -2,8 +2,9 @@
 
 Delivers a command-line interface to simplifying usage of the [Moddable SDK](https://github.com/Moddable-OpenSource/moddable). This repository hosts a node.js module that:
 
-* Let me define options/parameters for my project in a configuration file, then use a simplified command structure to execute the corresponding Moddable SDK commands
-* Let me to more easily wipe devices using the device's native SDK (without having to remember the command every time I want to do it)
+* Delivers a simple set of commands that drive the Moddable SDK, and eliminates some of the repetitive typing required to work with the Moddable SDK command-line tools
+* Uses a project configuration file to configure the settings modules and target devices used by the project
+* Delivers a mechanism that enables developers to more easily wipe devices using the device's native SDK (without having to remember the command every time)
 
 
 ## Background
