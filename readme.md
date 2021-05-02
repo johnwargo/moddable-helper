@@ -224,7 +224,7 @@ Use the `targets` section of the configuration file to configure an array of `ta
 * `platform` - The full Moddable SDK platform identifier for the device (`esp32/moddable_two` for example).
 * `wipeCommand` - The file system command to wipe the device. The command used is specific to the hardware platform, not the Moddable SDK.
 
-> **Note**: On Microsoft Windows, you must double-up file system delimiters; `"python %IDF_PATH%\components\esptool_py\esptool\esptool.py erase_flash"` becomes "python %IDF_PATH%\\components\\esptool_py\\esptool\\esptool.py erase_flash". JavaScript uses the backslash (`\`) when escaping other characters in a string, so to include the backslash in a command string, you must escape it with a backslash first.
+> **Note**: On Microsoft Windows, you must double-up file system delimiters; `"python %IDF_PATH%\components\esptool_py\esptool\esptool.py erase_flash"` becomes `"python %IDF_PATH%\\components\\esptool_py\\esptool\\esptool.py erase_flash"`. JavaScript uses the backslash (`\`) when escaping other characters in a string, so to include the backslash in a command string, you must escape it with a backslash first.
 
 
 
