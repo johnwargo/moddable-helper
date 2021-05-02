@@ -118,7 +118,7 @@ Moddable Helper switches to the module's folder (`helloworld` as specified in th
 
 ### Configuration
 
-To use this module, you must first create the module's configuration file in the Moddable project's root folder. The file must be called `mddbl.json` and the default configuration file contains the following:
+To use this module, you must first create the module's configuration file in the Moddable project's root folder. The file must be called `mddbl.json` and the default configuration file contains the following options:
 
 ```json
 {
@@ -130,8 +130,19 @@ To use this module, you must first create the module's configuration file in the
 
 The module can create it for you automatically, simply open a terminal window, navigate to the project folder, and execute the following command:
 
+```shell
+mddble init
+```
 
+Moddable Helper will create the default configuration file shown above.
 
+To view the contents of the configuration file in the console, execute the following command:
+
+```shell
+mddble config show
+```
+
+Use the `modules` section of the configuration file to configure an array of `module` objects representing each of the JavaScript modules in your Moddable project. The `module` object has the following configuration:
 
 ```json
 {
@@ -142,7 +153,12 @@ The module can create it for you automatically, simply open a terminal window, n
 }
 ```
 
+* `name` - 
+* `description` - 
+* `isHost` - 
+* `folderPath` - 
 
+Use the `targets` section of the configuration file to configure an array of `target` objects representing each of the Moddable-compatible hardware devices used by your project. The `target` object has the following configuration:
 
 ```json
 {
