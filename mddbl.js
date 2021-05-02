@@ -50,26 +50,26 @@ function toggleDebug() {
         }
     }
 }
-function doDeploy(cmd, mod, target) {
-    log.debug("executeCommand(" + cmd + ", " + mod.name + ", " + target.name + ")");
+function doDeploy(rootCmd, mod, target) {
+    log.debug("executeCommand(" + rootCmd + ", " + mod.name + ", " + target.name + ")");
     var folder = mod.folderPath;
     if (!checkDirectory(folder)) {
         log.error("Specified module folder (" + folder + ") does not exist");
         process.exit(1);
     }
-    var theCmd = cmd + ' ';
+    var cmd = rootCmd + ' ';
     if (mod.debugFlag)
-        theCmd += '-d ';
+        cmd += '-d ';
     if (mod.makeFlag)
-        theCmd += '-m ';
-    theCmd += "-p " + target.platform;
-    log.debug("Command: " + theCmd);
+        cmd += '-m ';
+    cmd += "-p " + target.platform;
+    log.debug("Command: " + cmd);
     try {
         log.info(chalk.yellow("Changing to the '" + folder + "' directory"));
         process.chdir(folder);
         log.debug("Current directory: " + process.cwd());
-        log.info(chalk.yellow('Executing:') + " " + theCmd);
-        cp.execSync(theCmd, { stdio: 'inherit' });
+        log.info(chalk.yellow('Executing:') + " " + cmd);
+        cp.execSync(cmd, { stdio: 'inherit' });
         log.info(chalk.yellow("Changing back to the '" + WORKING_PATH + "' directory"));
         process.chdir(WORKING_PATH);
     }
