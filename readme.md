@@ -1,3 +1,17 @@
+<!-- vscode-markdown-toc -->
+* 1. [Installation](#Installation)
+* 2. [Background](#Background)
+* 3. [Usage](#Usage)
+	* 3.1. [Configuration](#Configuration)
+	* 3.2. [Deployment](#Deployment)
+	* 3.3. [Wiping Devices](#WipingDevices)
+
+<!-- vscode-markdown-toc-config
+	numbering=true
+	autoSave=true
+	/vscode-markdown-toc-config -->
+<!-- /vscode-markdown-toc -->
+
 # Moddable Helper
 
 Delivers a command-line interface to simplifying usage of the [Moddable SDK](https://github.com/Moddable-OpenSource/moddable). This repository hosts a node.js module that:
@@ -19,7 +33,7 @@ The module supports the following commands:
 
 Detailed instructions for these commands provided below.
 
-## Installation
+##  1. <a name='Installation'></a>Installation
 
 To install the module, open a terminal window (or command prompt on Windows), and execute the following command:
 
@@ -29,7 +43,7 @@ npm install -g moddable-helper
 
 This installs a `mddbl` command you can use anywhere on the system.
 
-## Background
+##  2. <a name='Background'></a>Background
 
 I've been playing around lately with the Moddable SDK and I think the platform's pretty interesting for a lot of reasons I'll write about later on [my blog](https://johnwargo.com). They deliver several very capable IoT devices with built-in displays at a great price. The real power comes from their SDK which delivers a robust and solid JavaScript API for inexpensive microcontroller devices
 
@@ -120,9 +134,9 @@ Moddable Helper switches to the module's folder (`helloworld` as specified in th
 > **Note**: The mddbl module uses the module's `isHost` property to determine whether to execute `mcconfig` or `mcrun` to deploy the module.
 
 
-## Usage
+##  3. <a name='Usage'></a>Usage
 
-### Configuration
+###  3.1. <a name='Configuration'></a>Configuration
 
 To use this module, you must first create the module's configuration file in the Moddable project's root folder. The file must be called `mddbl.json` and the default configuration file contains the following options:
 
@@ -243,13 +257,13 @@ mdbbl config sort
 ```
 
 
-### Deployment
+###  3.2. <a name='Deployment'></a>Deployment
 
 Bacon ipsum dolor amet cupim rump doner beef shoulder ball tip leberkas flank jerky capicola chislic shank salami. Ham doner flank alcatra beef ribs ball tip andouille kevin tongue fatback turkey shoulder hamburger venison. Filet mignon chicken pork chop short ribs, bacon swine landjaeger. Pastrami short ribs tongue, capicola ham chuck cupim. Fatback drumstick hamburger, sirloin turducken jowl prosciutto pancetta tongue. Hamburger shank spare ribs corned beef porchetta. Swine prosciutto beef, frankfurter sirloin pastrami short loin burgdoggen turkey sausage landjaeger porchetta ham hock.
 
 Chuck pork belly ham turducken pig, tri-tip pastrami sirloin turkey tongue capicola. Chuck andouille frankfurter, flank alcatra tenderloin corned beef ham hock pork chop pork belly. Cupim short ribs ribeye andouille boudin sirloin porchetta spare ribs biltong jowl brisket ham hock pastrami. Venison spare ribs t-bone cupim, pork pork chop pig chuck corned beef turducken shoulder.
 
-### Wiping Devices
+###  3.3. <a name='WipingDevices'></a>Wiping Devices
 
 Bacon ipsum dolor amet cupim rump doner beef shoulder ball tip leberkas flank jerky capicola chislic shank salami. Ham doner flank alcatra beef ribs ball tip andouille kevin tongue fatback turkey shoulder hamburger venison. Filet mignon chicken pork chop short ribs, bacon swine landjaeger. Pastrami short ribs tongue, capicola ham chuck cupim. Fatback drumstick hamburger, sirloin turducken jowl prosciutto pancetta tongue. Hamburger shank spare ribs corned beef porchetta. Swine prosciutto beef, frankfurter sirloin pastrami short loin burgdoggen turkey sausage landjaeger porchetta ham hock.
 
