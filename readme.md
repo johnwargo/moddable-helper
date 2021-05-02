@@ -6,6 +6,17 @@ Delivers a command-line interface to simplifying usage of the [Moddable SDK](htt
 * Uses a project configuration file to configure the settings modules and target devices used by the project
 * Delivers a mechanism that enables developers to more easily wipe devices using the device's native SDK (without having to remember the command every time)
 
+The module supports the following commands:
+
+* `Config` - Access configuration options
+    - `edit` - Edit the project's configuration file
+    - `sort` - Sort the module and target lists by name
+    - `show` - Display the contents of the configuration file
+* `deploy <module> <target>` - Deploy the selected module (module or host) to the specified target device
+* `init` - Create an empty configuration file in the current folder
+* `wipe <target>` - Wipe the selected target device
+
+jdhsjkhkjhk
 
 ## Background
 
