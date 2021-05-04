@@ -105,7 +105,6 @@ With this module, you create a configuration file called `mddbl.json` (the modul
       "isHost": true,
       "debugFlag": true,
       "makeFlag": true,
-      "platformFlag": true,
       "folderPath": "host"
     },
     {
@@ -114,7 +113,6 @@ With this module, you create a configuration file called `mddbl.json` (the modul
       "isHost": false,
       "debugFlag": true,
       "makeFlag": true,
-      "platformFlag": true,
       "folderPath": "helloworld"
     },
     {
@@ -123,7 +121,6 @@ With this module, you create a configuration file called `mddbl.json` (the modul
       "isHost": false,
       "debugFlag": true,
       "makeFlag": true,
-      "platformFlag": true,
       "folderPath": "helloworld-gui"
     }
   ],
@@ -222,7 +219,6 @@ Use the `modules` section of the configuration file to configure an array of `mo
     "isHost": false,
     "debugFlag": true,
     "makeFlag": true,
-    "platformFlag": true,
     "folderPath": "",
 }
 ```
@@ -232,7 +228,6 @@ Use the `modules` section of the configuration file to configure an array of `mo
 * `isHost` - Boolean value indicating whether the module is a Host or Module (controls whether Moddable Helper executes `mcconfig` or `mcrun` to deploy the module).
 * `debugFlag` - Enables/disables the `-d` parameter passed to `mcconfig` and `mcrun`; refer to the [Moddable documentation](https://github.com/Moddable-OpenSource/moddable/blob/public/documentation/tools/tools.md#arguments) for details about this parameter.
 * `makeFlag` - Enables/disables the `-m` parameter passed to `mcconfig` and `mcrun`; refer to the [Moddable documentation](https://github.com/Moddable-OpenSource/moddable/blob/public/documentation/tools/tools.md#arguments) for details about this parameter.
-* `platformFlag` - Enables/disables the `-p` parameter passed to `mcconfig` and `mcrun`; refer to the [Moddable documentation](https://github.com/Moddable-OpenSource/moddable/blob/public/documentation/tools/tools.md#arguments) for details about this parameter. When you omit this parameter (set the value to `false`) the Moddable SDK will use the device OS by default (`win` for Windows, `mac` for macOS, etc.).
 * `folderPath` - The name of the subfolder hosting the module.
 
 The example configuration file shown above defines three modules:
@@ -340,10 +335,12 @@ You know, just because.
 To deploy a Host or Module to a connected device, execute the following command in the terminal window pointing to the Moddable project folder:
 
 ```shell
-mddbl deploy <module> <target>
+mddbl deploy <module> [target]
 ```
 
-For example, to deploy a project's `host` to the `mdbl2` (Moddable Two) defined in our sample config file, use:
+> **Note**: The `target` parameter is optional. If you omit it, then the Moddable SDK will load the module in the simulator for the operating system running the command (`win` for Windows, `mac` for macOS, etc.).
+
+To deploy a project's `host` to the `mdbl2` (Moddable Two) defined in our sample config file, use:
 
 ```shell
 mddbl deploy host mdbl2
