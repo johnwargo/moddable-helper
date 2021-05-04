@@ -8,8 +8,6 @@
  * actions.
  **********************************************************/
 
-// TODO: Implement support for the format command-line option
-// TODO: Implement support for the rotation command-line option
 // TODO: Deploy interactive
 // TODO: Module Add
 // TODO: Module Delete
@@ -90,11 +88,18 @@ function doDeploy(rootCmd: string, mod: Module, target: Target) {
   let cmd: string = rootCmd + ' ';
   if (mod.debugFlag) cmd += '-d ';
   if (mod.makeFlag) cmd += '-m ';
+  // Target the platform flag (-p)
   if (target) cmd += `-p ${target.platform} `;
   if (target.formatFlag) {
     cmd += `-f `;
     if (target.formatStr.length > 0) cmd += `${target.formatStr} `;
   }
+  // Process the rotation flag (`r)
+  if (target.rotationFlag) {
+    cmd += `-r `;
+    if (target.rotationValue > -1) cmd += `${target.rotationValue} `;
+  }
+
   log.debug(`Command: ${cmd}`);
 
   try {
@@ -143,6 +148,13 @@ function deployModule(modName: string, targetName: string = '') {
       log.error(`Target platform '${target.platform}' not defined, ${CHECK_CONFIG_STRING}`);
       process.exit(1);
     }
+
+    if (target.rotationFlag && target.rotationValue &&
+      !(target.rotationValue == 0 || target.rotationValue == 90 || target.rotationValue == 180 || target.rotationValue == 270)) {
+      log.error(`Invalid Target rotation value (${target.rotationValue})`);
+      process.exit(1);
+    }
+
   }
 
   // Execute the command

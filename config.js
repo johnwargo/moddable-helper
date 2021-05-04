@@ -13,12 +13,15 @@ exports.emptyModule = {
     "isHost": false,
     "debugFlag": true,
     "makeFlag": true,
-    "platformFlag": true,
     "folderPath": "",
 };
 exports.emptyTarget = {
     "name": "",
     "description": "",
     "platform": "",
+    "formatFlag": false,
+    "formatStr": "",
+    "rotationFlag": false,
+    "rotationValue": 0,
     "wipeCommand": "",
 };

@@ -132,6 +132,8 @@ With this module, you create a configuration file called `mddbl.json` (the modul
       "platform": "esp32/moddable_two",
       "formatFlag": false,
       "formatStr": "",
+      "rotationFlag": false,
+      "rotationValue": 0,
       "wipeCommand": "python %IDF_PATH%\\components\\esptool_py\\esptool\\esptool.py erase_flash"
     },
     {
@@ -140,6 +142,8 @@ With this module, you create a configuration file called `mddbl.json` (the modul
       "platform": "esp32/m5stack_fire",
       "formatFlag": true,
       "formatStr": "gray16",
+      "rotationFlag": false,
+      "rotationValue": 0,
       "wipeCommand": "python %IDF_PATH%\\components\\esptool_py\\esptool\\esptool.py erase_flash"
     }
   ]
@@ -286,6 +290,8 @@ Use the `targets` section of the configuration file to configure an array of `ta
 * `platform` - The full Moddable SDK platform identifier for the device (`esp32/moddable_two` for example).
 * `formatFlag` - Enables/disables the `-f` parameter passed to `mcconfig` and `mcrun`; refer to the [Moddable documentation](https://github.com/Moddable-OpenSource/moddable/blob/public/documentation/tools/tools.md#arguments) for details about this parameter.
 * `formatStr` - With `formatFlag` enabled, specifies the format string passed to the Moddable SDK. Available options are (from the Moddable SDK Docs) `gray16`, `gray256`, `rgb332`, `rgb565be` or `rgb565le`. The Moddable SDK defaults to `rgb565le` if you leave this value empty.
+* `rotationFlag` - Enables/disables the `-r` parameter passed to `mcconfig` and `mcrun`; refer to the [Moddable documentation](https://github.com/Moddable-OpenSource/moddable/blob/public/documentation/tools/tools.md#arguments) for details about this parameter.
+* `rotationValue` - With `rotationFlag` enabled, specifies the screen rotation value. Supported values are `0`, `90`, `180` or `270`. The Moddable SDK defaults to 0, but there's no way to leave this value blank, so you must ensure a valid value is set for this property.
 * `wipeCommand` - The file system command to wipe the device. The command used is specific to the hardware platform, not the Moddable SDK.
 
 > **Note**: On Microsoft Windows, you must double-up file system delimiters; `"python %IDF_PATH%\components\esptool_py\esptool\esptool.py erase_flash"` becomes `"python %IDF_PATH%\\components\\esptool_py\\esptool\\esptool.py erase_flash"`. JavaScript uses the backslash (`\`) when escaping other characters in a string, so to include the backslash in a command string, you must escape it with a backslash first.
@@ -300,6 +306,8 @@ The example configuration file shown above defines two Targets devices:
       "platform": "esp32/moddable_two",
       "formatFlag": false,
       "formatStr": "",
+      "rotationFlag": false,
+      "rotationValue": 0,
       "wipeCommand": "python %IDF_PATH%\\components\\esptool_py\\esptool\\esptool.py erase_flash"
     },
     {
@@ -308,9 +316,11 @@ The example configuration file shown above defines two Targets devices:
       "platform": "esp32/m5stack_fire",
       "formatFlag": true,
       "formatStr": "gray16",
+      "rotationFlag": false,
+      "rotationValue": 0,
       "wipeCommand": "python %IDF_PATH%\\components\\esptool_py\\esptool\\esptool.py erase_flash"
     }
-]
+  ]
 ```
 
 > **Note**: The targets use the same wipe command because the devices are both based on the ESP32 hardware platform.

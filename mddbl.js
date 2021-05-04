@@ -62,8 +62,18 @@ function doDeploy(rootCmd, mod, target) {
         cmd += '-d ';
     if (mod.makeFlag)
         cmd += '-m ';
-    if (mod.platformFlag)
+    if (target)
         cmd += "-p " + target.platform + " ";
+    if (target.formatFlag) {
+        cmd += "-f ";
+        if (target.formatStr.length > 0)
+            cmd += target.formatStr + " ";
+    }
+    if (target.rotationFlag) {
+        cmd += "-r ";
+        if (target.rotationValue > -1)
+            cmd += target.rotationValue + " ";
+    }
     log.debug("Command: " + cmd);
     try {
         log.info(chalk.yellow("Changing to the '" + folder + "' directory"));
@@ -80,6 +90,7 @@ function doDeploy(rootCmd, mod, target) {
     }
 }
 function deployModule(modName, targetName) {
+    if (targetName === void 0) { targetName = ''; }
     log.debug("deployModule(" + modName + ", " + targetName + ")");
     readConfig();
     var mod = appConfig.modules.find(function (item) { return item.name === modName; });
@@ -91,14 +102,22 @@ function deployModule(modName, targetName) {
         log.error("Module path '" + mod.folderPath + "' not defined, " + CHECK_CONFIG_STRING);
         process.exit(1);
     }
-    var target = appConfig.targets.find(function (item) { return item.name === targetName; });
-    if (!target) {
-        log.error("Target '" + targetName + "' not defined, " + CHECK_CONFIG_STRING);
-        process.exit(1);
-    }
-    if (!target.platform) {
-        log.error("Target platform '" + target.platform + "' not defined, " + CHECK_CONFIG_STRING);
-        process.exit(1);
+    var target;
+    if (targetName.length > 0) {
+        target = appConfig.targets.find(function (item) { return item.name === targetName; });
+        if (!target) {
+            log.error("Target '" + targetName + "' not defined, " + CHECK_CONFIG_STRING);
+            process.exit(1);
+        }
+        if (!target.platform) {
+            log.error("Target platform '" + target.platform + "' not defined, " + CHECK_CONFIG_STRING);
+            process.exit(1);
+        }
+        if (target.rotationFlag && target.rotationValue &&
+            !(target.rotationValue == 0 || target.rotationValue == 90 || target.rotationValue == 180 || target.rotationValue == 270)) {
+            log.error("Invalid Target rotation value (" + target.rotationValue + ")");
+            process.exit(1);
+        }
     }
     console.log("Deploying " + modName + " to " + targetName);
     if (mod.isHost) {
@@ -250,8 +269,8 @@ program
     .description('Toggle the debug configuration setting')
     .action(toggleDebug);
 program
-    .command('deploy <module> <target>')
-    .description('Deploy <module> to specific <target>')
+    .command('deploy <module> [target]')
+    .description('Deploy <module> to specified [target] device')
     .action(function (mod, target) {
     deployModule(mod, target);
 });
