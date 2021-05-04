@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.4 - May 5, 2021
+
+* Added interactive deployment mode
+
 ## 0.0.3 - May 4, 2021
 
 * Added the `formatFlag` and `formatStr` configuration options
