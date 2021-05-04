@@ -2,10 +2,11 @@
 
 ## 0.0.3 - May 4, 2021
 
-* Removed the `platformFlag` configuration option (that didn't last long, did it?)
 * Added the `formatFlag` and `formatStr` configuration options
 * Added the `rotationFlag` and `rotationValue` configuration options
+* Added the `modules` and `targets` commands
 * Removed the `list` commands
+* Removed the `platformFlag` configuration option (that didn't last long, did it?)
 
 ## 0.0.2 - May 4, 2021
 
