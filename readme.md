@@ -384,22 +384,10 @@ mddbl deploy host
 When you're getting ready to execute the `deploy` or `wipe` commands, you may forget which module and target options are available to you. You can list the modules or targets defined in the project's configuration file using:
 
 ```shell
-mddbl list modules
-```
-
-or
-
-```shell
 mddbl modules
 ```
 
 and
-
-```shell
-mddbl list targets
-```
-
-or
 
 ```shell
 mddbl targets

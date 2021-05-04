@@ -398,18 +398,4 @@ configCmd
   .description('Sorts the config modules and targets arrays')
   .action(sortConfig);
 
-// ===========================
-// Setup the `list` command
-// ===========================
-const listCmd = program.command('list')
-  .description('List configuration objects');
-listCmd
-  .command('modules')
-  .description('List all configured modules')
-  .action(listModules)
-listCmd
-  .command('targets')
-  .description('List all configured targets')
-  .action(listTargets)
-
 program.parse();
