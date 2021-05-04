@@ -14,6 +14,13 @@
 // TODO: Implement support for the format command-line option
 // TODO: Implement support for the rotation command-line option
 
+// TODO: Deploy target optional
+// TODO: Deploy interactive
+// TODO: Module Add
+// TODO: Module Delete
+// TODO: Target Add
+// TODO: Target Delete
+
 // ESP32 Wipe Command: python %IDF_PATH%\components\esptool_py\esptool\esptool.py erase_flash
 
 import { ConfigObject, defaultConfig, emptyModule, emptyTarget, Module, Target } from './config';
@@ -87,7 +94,7 @@ function doDeploy(rootCmd: string, mod: Module, target: Target) {
   let cmd: string = rootCmd + ' ';
   if (mod.debugFlag) cmd += '-d ';
   if (mod.makeFlag) cmd += '-m ';
-  if (mod.platformFlag) cmd += `-p ${target.platform} `;
+  if (target) cmd += `-p ${target.platform} `;
   log.debug(`Command: ${cmd}`);
 
   try {
@@ -107,35 +114,37 @@ function doDeploy(rootCmd: string, mod: Module, target: Target) {
   }
 }
 
-function deployModule(modName: string, targetName: string) {
+function deployModule(modName: string, targetName: string = '') {
   log.debug(`deployModule(${modName}, ${targetName})`);
   readConfig();
+
   // Does the specified module exist?
   const mod: any = appConfig.modules.find(item => item.name === modName);
   if (!mod) {
     log.error(`Module '${modName}' not defined, ${CHECK_CONFIG_STRING}`);
     process.exit(1);
-    // return;
   }
   // Does the module have a folder path?
   if (!mod.folderPath) {
     log.error(`Module path '${mod.folderPath}' not defined, ${CHECK_CONFIG_STRING}`);
     process.exit(1);
-    // return;
   }
-  // Does the specified target exist?
-  const target: any = appConfig.targets.find(item => item.name === targetName);
-  if (!target) {
-    log.error(`Target '${targetName}' not defined, ${CHECK_CONFIG_STRING}`);
-    process.exit(1);
-    // return;
+
+  var target: any;
+  if (targetName.length > 0) {
+    // Does the specified target exist?
+    target = appConfig.targets.find(item => item.name === targetName);
+    if (!target) {
+      log.error(`Target '${targetName}' not defined, ${CHECK_CONFIG_STRING}`);
+      process.exit(1);
+    }
+    // Does the target have a platform?
+    if (!target.platform) {
+      log.error(`Target platform '${target.platform}' not defined, ${CHECK_CONFIG_STRING}`);
+      process.exit(1);
+    }
   }
-  // Does the target have a platform?
-  if (!target.platform) {
-    log.error(`Target platform '${target.platform}' not defined, ${CHECK_CONFIG_STRING}`);
-    process.exit(1);
-    // return;
-  }
+
   // Execute the command
   console.log(`Deploying ${modName} to ${targetName}`);
   if (mod.isHost) {
@@ -323,8 +332,8 @@ program
 // Setup the `deploy` command
 // ===========================
 program
-  .command('deploy <module> <target>')
-  .description('Deploy <module> to specific <target>')
+  .command('deploy <module> [target]')
+  .description('Deploy <module> to specified [target] device')
   .action((mod: string, target: string) => {
     deployModule(mod, target);
   });
@@ -333,8 +342,22 @@ program
 // ===========================
 program
   .command('init')
-  .description('Initialize the current folder (create module config file')
+  .description('Initialize the current folder (create module config file)')
   .action(initConfig);
+// ===========================
+// Setup the `modules` command
+// ===========================
+program
+  .command('modules')
+  .description('List all configured Modules')
+  .action(listModules);
+// ===========================
+// Setup the `targets` command
+// ===========================
+program
+  .command('targets')
+  .description('List all configured Targets')
+  .action(listTargets);
 // ===========================
 // setup the `wipe` command
 // ===========================

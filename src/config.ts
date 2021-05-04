@@ -5,7 +5,6 @@ export interface Module {
     description: string;
     debugFlag: boolean;
     makeFlag: boolean;
-    platformFlag: boolean;
     isHost: boolean;
     folderPath: string;
 }
@@ -14,7 +13,9 @@ export interface Target {
     name: string;
     description: string;
     platform: string;
-    // format: string;
+    // formatFlag: boolean;
+    // formatStr: string;
+    // rotationFlag: boolean;
     // rotation: number;
     wipeCommand: string;
 }
@@ -37,7 +38,6 @@ export const emptyModule: Module = {
     "isHost": false,
     "debugFlag": true,
     "makeFlag": true,
-    "platformFlag": true,
     "folderPath": "",
 }
 
@@ -45,7 +45,9 @@ export const emptyTarget: Target = {
     "name": "",
     "description": "",
     "platform": "",
-    // "format": "",
+    // "formatFlag": false,
+    // formatStr: '',
+    // rotationFlag: false,
     // "rotation": 0,
     "wipeCommand": "",
 }

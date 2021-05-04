@@ -257,8 +257,16 @@ program
 });
 program
     .command('init')
-    .description('Initialize the current folder (create module config file')
+    .description('Initialize the current folder (create module config file)')
     .action(initConfig);
+program
+    .command('modules')
+    .description('List all configured Modules')
+    .action(listModules);
+program
+    .command('targets')
+    .description('List all configured Targets')
+    .action(listTargets);
 program
     .command('wipe <target>')
     .description('Wipes the <target> device')
