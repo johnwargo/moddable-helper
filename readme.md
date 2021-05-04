@@ -379,6 +379,43 @@ To deploy the 'host' module to the emulator for the current platform, execute th
 mddbl deploy host
 ```
 
+You can also deploy in interactive mode:
+
+```shell
+mddbl deploy
+```
+When you execute the `deploy` command without specifying a module, Moddable Helper will prompt you to select the Module  from a list of available options (from the project's configuration file):
+
+```text
+Moddable Helper (mddbl)
+Reading configuration file
+? Module Selection ...
+> host
+  hw
+  hwg
+```
+
+Next, it will prompt you to select a Target from the list of available options:
+
+```text
+Moddable Helper (mddbl)
+Reading configuration file
+√ Module Selection · host
+? Target Selection ...   
+> m5fire
+  mdbl2
+```
+
+And finally, it will trigger deployment using the selected options:
+
+```text
+Moddable Helper (mddbl)
+Reading configuration file
+√ Module Selection · host
+√ Target Selection · mdbl2      
+Deploying host to mdbl2
+```
+
 ### <a name='ListModulesorTargets'></a>List Modules or Targets
 
 When you're getting ready to execute the `deploy` or `wipe` commands, you may forget which module and target options are available to you. You can list the modules or targets defined in the project's configuration file using:
