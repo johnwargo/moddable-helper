@@ -8,7 +8,6 @@
  * actions.
  **********************************************************/
 
-// TODO: Deploy interactive
 // TODO: Module Add
 // TODO: Module Delete
 // TODO: Target Add
@@ -25,6 +24,8 @@ const logger = require('cli-logger');
 const os = require('os');
 const path = require('path');
 const program = require('commander');
+const { Select } = require('enquirer');
+// const { prompt } = require('enquirer');
 const cp = require("child_process");
 
 // https://stackoverflow.com/questions/9153571/is-there-a-way-to-get-version-from-package-json-in-nodejs-code
@@ -121,7 +122,9 @@ function doDeploy(rootCmd: string, mod: Module, target: Target) {
 
 function deployModule(modName: string, targetName: string = '') {
   log.debug(`deployModule(${modName}, ${targetName})`);
-  readConfig();
+
+  // only read the config if we didn't already read it
+  if (!appConfig) readConfig();
 
   // Does the specified module exist?
   const mod: any = appConfig.modules.find(item => item.name === modName);
@@ -154,7 +157,6 @@ function deployModule(modName: string, targetName: string = '') {
       log.error(`Invalid Target rotation value (${target.rotationValue})`);
       process.exit(1);
     }
-
   }
 
   // Execute the command
@@ -166,8 +168,55 @@ function deployModule(modName: string, targetName: string = '') {
   }
 }
 
-function deployInteractive() {
-  log.info('Deploying in interactive mode');
+async function deployInteractive() {
+  log.debug('Deploying in interactive mode');
+  readConfig();
+
+  if (appConfig.modules.length < 1) {
+    log.error(`Module list not defined, ${CHECK_CONFIG_STRING}`);
+    process.exit(1);
+  }
+
+  if (appConfig.targets.length < 1) {
+    log.error(`Module list not defined, ${CHECK_CONFIG_STRING}`);
+    process.exit(1);
+  }
+
+  const modPrompt = new Select({
+    name: 'modName',
+    message: 'Module Selection',
+    choices: appConfig.modules
+  });
+  const targetPrompt = new Select({
+    name: 'targetName',
+    message: 'Target Selection',
+    choices: appConfig.targets
+  });
+
+  var modName: string = '';
+  var targetName: string = '';
+
+  await modPrompt.run()
+    .then((result: any) => {
+      modName = result.toString();
+    })
+    .catch((err: any) => {
+      log.error(err);
+      process.exit(1);
+    });
+
+  await targetPrompt.run()
+    .then((result: any) => {
+      targetName = result.toString();
+    })
+    .catch((err: any) => {
+      log.error(err);
+      process.exit(1);
+    });
+
+  if (modName.length > 0 && targetName.length > 0) {
+    deployModule(modName, targetName);
+  }
 }
 
 function wipeDevice(targetName: string) {
@@ -347,15 +396,22 @@ program
 // ===========================
 // Setup the `deploy` command
 // ===========================
+// program
+//   .command('deploy')
+//   .description('Deploy; interactive mode')
+//   .action(deployInteractive);
 program
-  .command('deploy')
-  .description('Deploy; interactive mode')
-  .action(deployInteractive);
-program
-  .command('deploy <module> [target]')
-  .description('Deploy <module> to specified [target] device')
+  .command('deploy [module] [target]')
+  .description('Deploy Module to specified Target device')
   .action((mod: string, target: string) => {
-    deployModule(mod, target);
+    // Do we have a module name? 
+    if (mod) {
+      // Then we deploy using the module (if we can)
+      deployModule(mod, target);
+    } else {
+      // otherwise we go into interactive mode
+      deployInteractive();
+    }
   });
 // ===========================
 // Setup the `init` command

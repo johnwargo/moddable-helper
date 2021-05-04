@@ -28,6 +28,7 @@
     "chalk": "^4.1.1",
     "cli-logger": "^0.5.40",
     "commander": "^7.2.0",
+    "enquirer": "^2.3.6",
     "shelljs": "^0.8.4"
   },
   "devDependencies": {
