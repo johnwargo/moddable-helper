@@ -5,6 +5,7 @@ export interface Module {
     description: string;
     debugFlag: boolean;
     makeFlag: boolean;
+    platformFlag: boolean;
     isHost: boolean;
     folderPath: string;
 }
@@ -36,6 +37,7 @@ export const emptyModule: Module = {
     "isHost": false,
     "debugFlag": true,
     "makeFlag": true,
+    "platformFlag": true,
     "folderPath": "",
 }
 

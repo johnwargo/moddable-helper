@@ -62,7 +62,8 @@ function doDeploy(rootCmd, mod, target) {
         cmd += '-d ';
     if (mod.makeFlag)
         cmd += '-m ';
-    cmd += "-p " + target.platform;
+    if (mod.platformFlag)
+        cmd += "-p " + target.platform + " ";
     log.debug("Command: " + cmd);
     try {
         log.info(chalk.yellow("Changing to the '" + folder + "' directory"));

@@ -87,8 +87,7 @@ function doDeploy(rootCmd: string, mod: Module, target: Target) {
   let cmd: string = rootCmd + ' ';
   if (mod.debugFlag) cmd += '-d ';
   if (mod.makeFlag) cmd += '-m ';
-  // add the target platform
-  cmd += `-p ${target.platform}`;
+  if (mod.platformFlag) cmd += `-p ${target.platform} `;
   log.debug(`Command: ${cmd}`);
 
   try {

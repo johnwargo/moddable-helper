@@ -13,6 +13,7 @@ exports.emptyModule = {
     "isHost": false,
     "debugFlag": true,
     "makeFlag": true,
+    "platformFlag": true,
     "folderPath": "",
 };
 exports.emptyTarget = {
