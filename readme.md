@@ -384,7 +384,8 @@ You can also deploy in interactive mode:
 ```shell
 mddbl deploy
 ```
-When you execute the `deploy` command without specifying a module, Moddable Helper will prompt you to select the Module  from a list of available options (from the project's configuration file):
+
+You can also deploy in interactive mode. When you execute the `deploy` command without specifying a module, Moddable Helper will prompt you to select the Module  from a list of available options (from the project's configuration file):
 
 ```text
 Moddable Helper (mddbl)
