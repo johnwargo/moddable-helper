@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.0.4 - May 5, 2021
+## 0.0.4 - May 4, 2021
 
 * Added interactive deployment mode
 
