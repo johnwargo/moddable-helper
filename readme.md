@@ -338,7 +338,7 @@ To deploy a Host or Module to a connected device, execute the following command 
 mddbl deploy <module> [target]
 ```
 
-> **Note**: The `target` parameter is optional. If you omit it, then the Moddable SDK will load the module in the simulator for the operating system running the command (`win` for Windows, `mac` for macOS, etc.).
+> **Note**: The `target` parameter is optional. If you omit it, then the Moddable SDK will load the module in the emulator for the operating system running the command (`win` for Windows, `mac` for macOS, etc.).
 
 To deploy a project's `host` to the `mdbl2` (Moddable Two) defined in our sample config file, use:
 
@@ -350,6 +350,12 @@ To deploy the `helloworld` module to the `m5fire` device defined in our sample c
 
 ```shell
 mddbl deploy hw m5fire
+```
+
+To deploy the 'host' module to the emulator for the current platform, execute the following:
+
+```shell
+mddbl deploy host
 ```
 
 ### <a name='ListModulesorTargets'></a>List Modules or Targets
