@@ -13,8 +13,8 @@ export interface Target {
     name: string;
     description: string;
     platform: string;
-    // formatFlag: boolean;
-    // formatStr: string;
+    formatFlag: boolean;
+    formatStr: string;
     // rotationFlag: boolean;
     // rotation: number;
     wipeCommand: string;
@@ -45,8 +45,8 @@ export const emptyTarget: Target = {
     "name": "",
     "description": "",
     "platform": "",
-    // "formatFlag": false,
-    // formatStr: '',
+    "formatFlag": false,
+    "formatStr": "",
     // rotationFlag: false,
     // "rotation": 0,
     "wipeCommand": "",

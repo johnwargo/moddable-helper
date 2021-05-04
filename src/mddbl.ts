@@ -8,18 +8,14 @@
  * actions.
  **********************************************************/
 
-// TODO: Implement Add Module
-// TODO: Implement Add Target
-// TODO: Automatically pass additional command-line parameters to Moddable SDK
 // TODO: Implement support for the format command-line option
 // TODO: Implement support for the rotation command-line option
-
-// TODO: Deploy target optional
 // TODO: Deploy interactive
 // TODO: Module Add
 // TODO: Module Delete
 // TODO: Target Add
 // TODO: Target Delete
+// TODO: Automatically pass additional command-line parameters to Moddable SDK
 
 // ESP32 Wipe Command: python %IDF_PATH%\components\esptool_py\esptool\esptool.py erase_flash
 
@@ -95,6 +91,10 @@ function doDeploy(rootCmd: string, mod: Module, target: Target) {
   if (mod.debugFlag) cmd += '-d ';
   if (mod.makeFlag) cmd += '-m ';
   if (target) cmd += `-p ${target.platform} `;
+  if (target.formatFlag) {
+    cmd += `-f `;
+    if (target.formatStr.length > 0) cmd += `${target.formatStr} `;
+  }
   log.debug(`Command: ${cmd}`);
 
   try {
