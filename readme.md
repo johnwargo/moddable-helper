@@ -366,10 +366,20 @@ When you're getting ready to execute the `deploy` or `wipe` commands, you may fo
 mddbl list modules
 ```
 
+or 
+
+```shell
+mddbl modules
+```
+
 and
 
 ```shell
 mddbl list targets
+```
+
+```shell
+mddbl targets
 ```
 
 For the configuration file example in this document, the module list output looks the following:
