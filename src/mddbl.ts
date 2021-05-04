@@ -8,7 +8,6 @@
  * actions.
  **********************************************************/
 
-// TODO: Deploy interactive
 // TODO: Module Add
 // TODO: Module Delete
 // TODO: Target Add
