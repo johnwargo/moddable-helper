@@ -366,7 +366,7 @@ When you're getting ready to execute the `deploy` or `wipe` commands, you may fo
 mddbl list modules
 ```
 
-or 
+or
 
 ```shell
 mddbl modules
@@ -377,6 +377,8 @@ and
 ```shell
 mddbl list targets
 ```
+
+or
 
 ```shell
 mddbl targets
