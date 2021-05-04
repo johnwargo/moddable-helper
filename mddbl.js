@@ -127,6 +127,9 @@ function deployModule(modName, targetName) {
         doDeploy('mcrun', mod, target);
     }
 }
+function deployInteractive() {
+    log.info('Deploying in interactive mode');
+}
 function wipeDevice(targetName) {
     log.debug("wipeDevice(" + targetName + ")");
     readConfig();
@@ -269,6 +272,10 @@ program
     .description('Toggle the debug configuration setting')
     .action(toggleDebug);
 program
+    .command('deploy')
+    .description('Deploy; interactive mode')
+    .action(deployInteractive);
+program
     .command('deploy <module> [target]')
     .description('Deploy <module> to specified [target] device')
     .action(function (mod, target) {
@@ -306,14 +313,4 @@ configCmd
     .command('sort')
     .description('Sorts the config modules and targets arrays')
     .action(sortConfig);
-var listCmd = program.command('list')
-    .description('List configuration objects');
-listCmd
-    .command('modules')
-    .description('List all configured modules')
-    .action(listModules);
-listCmd
-    .command('targets')
-    .description('List all configured targets')
-    .action(listTargets);
 program.parse();

@@ -166,6 +166,10 @@ function deployModule(modName: string, targetName: string = '') {
   }
 }
 
+function deployInteractive() {
+  log.info('Deploying in interactive mode');
+}
+
 function wipeDevice(targetName: string) {
   log.debug(`wipeDevice(${targetName})`);
   readConfig();
@@ -343,6 +347,10 @@ program
 // ===========================
 // Setup the `deploy` command
 // ===========================
+program
+  .command('deploy')
+  .description('Deploy; interactive mode')
+  .action(deployInteractive);
 program
   .command('deploy <module> [target]')
   .description('Deploy <module> to specified [target] device')
