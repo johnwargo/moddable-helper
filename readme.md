@@ -39,9 +39,9 @@ The module supports the following commands:
 * `mddbl config edit` - Edit the project's configuration file
 * `mddbl config show` - Display the contents of the configuration file
 * `mddbl config sort` - Sort the module and target lists by name
-* `mddbl deploy <module> <target>` - Deploy the selected module (module or host) to the specified target device
-* `mddbl list modules` - Display the list of modules defined in the `modules` section of the configuration file
-* `mddbl list targets` - Display the list of targets defined in the `targets` section of the configuration file
+* `mddbl deploy [module] [target]` - Deploy the selected module (module or host) to the specified target device
+* `mddbl modules` - Display the list of modules defined in the `modules` section of the configuration file
+* `mddbl targets` - Display the list of targets defined in the `targets` section of the configuration file
 * `mddbl wipe <target>` - Wipe the selected target device
 * `mddbl debug` - Toggle the `debug` setting (true to false, and, of course, false to true) in the project's configuration file
 
