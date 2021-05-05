@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.5 - May 5, 2021
+
+* Readme file changes
+
 ## 0.0.4 - May 4, 2021
 
 * Added interactive deployment mode
