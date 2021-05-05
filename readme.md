@@ -8,15 +8,15 @@ Table of Contents:
 * [Issues & Pull Requests](#IssuesPullRequests)
 * [Background](#Background)
 * [Usage](#Usage)
-	* [Configuration](#Configuration)
-		* [Creating the Configuration File](#CreatingtheConfigurationFile)
-		* [Configuration Options](#ConfigurationOptions)
-		* [Viewing the Configuration File](#ViewingtheConfigurationFile)
-		* [Editing the Configuration File](#EditingtheConfigurationFile)
-		* [Sorting Module and Target Lists](#SortingModuleandTargetLists)
-	* [Deploy](#Deploy)
-	* [List Modules or Targets](#ListModulesorTargets)
-	* [Wipe Device](#WipeDevice)
+  * [Configuration](#Configuration)
+    * [Creating the Configuration File](#CreatingtheConfigurationFile)
+    * [Configuration Options](#ConfigurationOptions)
+    * [Viewing the Configuration File](#ViewingtheConfigurationFile)
+    * [Editing the Configuration File](#EditingtheConfigurationFile)
+    * [Sorting Module and Target Lists](#SortingModuleandTargetLists)
+  * [Deploy](#Deploy)
+  * [List Modules or Targets](#ListModulesorTargets)
+  * [Wipe Device](#WipeDevice)
 * [Planned Features](#PlannedFeatures)
 
 <!-- vscode-markdown-toc-config
@@ -71,7 +71,7 @@ I've been playing around lately with the Moddable SDK and I think the platform's
 
 One of the things I noticed when I started working with the Moddable SDK was that I found myself typing the same commands over and over again as I coded projects for the devices. Now, that's not unexpected for command-line based tooling, but when building and deploying for Moddable devices, I kept typing the exact same command-line options over and over again (`-d m -p <device>`). I decided to make this helper module to reduce my typing and simplify my work.
 
-Let me show you how this works using a real-world example. 
+Let me show you how this works using a real-world example.
 
 The folks at Moddable published a book called [IoT Development for ESP32 and ESP8266 with JavaScript](https://github.com/Moddable-OpenSource/iot-product-dev-book) that contains a lot of sample code demonstrating how to use the different APIs in their SDK. Moddable developers often break a project down into multiple parts, a host (the core native application running on the device plus a little JavaScript code to bootstrap the project) plus additional JavaScript modules that run within the host (a dramatic oversimplification, I know, but I'm not here to teach you Moddable development). Developers typically keep their host and module files in different folders within a project folder.
 
@@ -162,7 +162,7 @@ The mddbl module switches to the host module's folder (`host` as specified in th
 
 Next, to deploy one of the project's modules, `helloworld` for example, simply use the following command:
 
-```shell 
+```shell
 mddbl deploy hw mdbl2
 ```
 
