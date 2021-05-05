@@ -45,7 +45,9 @@ The module supports the following commands:
 * `mddbl wipe <target>` - Wipe the selected target device
 * `mddbl debug` - Toggle the `debug` setting (true to false, and, of course, false to true) in the project's configuration file
 
-Detailed instructions for these commands provided below.
+> **Note**: Required parameters are in angled brackets (`<` and `>`) and option parameters are in square brackets (`[` and `]`)
+
+Detailed instructions for these commands sections that follow.
 
 ## <a name='Installation'></a>Installation
 
