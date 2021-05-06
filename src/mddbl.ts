@@ -272,10 +272,11 @@ function listTargets() {
 
 function editConfig() {
   log.info('Editing module configuration');
+  console.log(configFilePath);
   // build the command string based on execution platform
   var cmdStr = (os.type().indexOf('Win') === 0)
-    ? `start ${configFilePath}`
-    : `open -e ./${configFilePath}`;
+    ? `start ${CONFIG_FILE_NAME}`
+    : `open -e ./${CONFIG_FILE_NAME}`;
   // execute the command
   cp.exec(cmdStr, function (error: any, stdout: any, stderr: any) {
     if (error) {

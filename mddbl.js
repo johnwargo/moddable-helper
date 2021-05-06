@@ -268,9 +268,10 @@ function listTargets() {
 }
 function editConfig() {
     log.info('Editing module configuration');
+    console.log(configFilePath);
     var cmdStr = (os.type().indexOf('Win') === 0)
-        ? "start " + configFilePath
-        : "open -e ./" + configFilePath;
+        ? "start " + CONFIG_FILE_NAME
+        : "open -e ./" + CONFIG_FILE_NAME;
     cp.exec(cmdStr, function (error, stdout, stderr) {
         if (error) {
             log.error('Unable to edit configuration');
