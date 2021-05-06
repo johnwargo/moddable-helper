@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.6 - May 6, 2021
+
+* Fixed issue with config edit on macOS
+
 ## 0.0.5 - May 5, 2021
 
 * Readme file changes
