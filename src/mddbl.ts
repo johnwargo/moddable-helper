@@ -8,6 +8,9 @@
  * actions.
  **********************************************************/
 
+// TODO: Update Docs for module commands
+// TODO: update docs for target commands
+
 // TODO: Module Delete
 // TODO: Target Delete
 // TODO: Automatically pass additional command-line parameters to Moddable SDK
