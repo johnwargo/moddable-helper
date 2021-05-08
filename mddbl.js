@@ -76,7 +76,12 @@ function checkDirectory(filePath) {
         return false;
     }
 }
-function listArray(listStr, theList) {
+function showObjectValues(obj) {
+    log.debug('listObject()');
+    console.dir(obj);
+}
+function listArrayNames(listStr, theList) {
+    log.debug('listArray()');
     if (theList.length > 0) {
         log.info("\nConfigured " + listStr + ":");
         for (var item in theList) {
@@ -327,24 +332,56 @@ function deployInteractive() {
     });
 }
 function moduleAdd() {
+    log.debug('moduleAdd()');
+    configRead();
+    appConfig.modules.push(config_1.emptyModule);
+    configWrite();
+    configEdit();
 }
 function moduleRemove(modName) {
+    log.debug("moduleRemove(" + modName + ")");
+    var mod = appConfig.modules.find(function (item) { return item.name === modName; });
+    if (!mod) {
+        log.error("Module '" + modName + "' " + CHECK_CONFIG_STRING);
+        process.exit(1);
+    }
 }
 function moduleShow(modName) {
+    log.debug("moduleShow(" + modName + ")");
+    var mod = appConfig.modules.find(function (item) { return item.name === modName; });
+    if (!mod) {
+        log.error("Module '" + modName + "' " + CHECK_CONFIG_STRING);
+        process.exit(1);
+    }
+    console.dir(mod);
 }
 function modulesList() {
+    log.debug('modulesList()');
     configRead();
-    listArray('Modules', appConfig.modules);
+    listArrayNames('Modules', appConfig.modules);
 }
 function targetAdd() {
+    log.debug('targetAdd()');
+    configRead();
+    appConfig.targets.push(config_1.emptyTarget);
+    configWrite();
+    configEdit();
 }
-function targetRemove(modName) {
+function targetRemove(targetName) {
+    log.debug("targetRemove(" + targetName + ")");
 }
-function targetShow(modName) {
+function targetShow(targetName) {
+    log.debug("targetShow(" + targetName + ")");
+    var mod = appConfig.modules.find(function (item) { return item.name === targetName; });
+    if (!mod) {
+        log.error("Target '" + targetName + "' " + CHECK_CONFIG_STRING);
+        process.exit(1);
+    }
+    console.dir(mod);
 }
 function targetsList() {
     configRead();
-    listArray('Targets', appConfig.targets);
+    listArrayNames('Targets', appConfig.targets);
 }
 function wipeDevice(targetName) {
     log.debug("wipeDevice(" + targetName + ")");

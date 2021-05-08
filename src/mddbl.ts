@@ -8,9 +8,7 @@
  * actions.
  **********************************************************/
 
-// TODO: Module Add
 // TODO: Module Delete
-// TODO: Target Add
 // TODO: Target Delete
 // TODO: Automatically pass additional command-line parameters to Moddable SDK
 
@@ -367,6 +365,7 @@ function moduleAdd() {
   configRead();
   appConfig.modules.push(emptyModule);
   configWrite();
+  configEdit();
 }
 
 function moduleRemove(modName: string) {
@@ -377,7 +376,7 @@ function moduleRemove(modName: string) {
     process.exit(1);
   }
 
-
+  // TODO: finish this
 
 }
 
@@ -408,14 +407,18 @@ function targetAdd() {
   configRead();
   appConfig.targets.push(emptyTarget);
   configWrite();
+  configEdit();
 }
 
 function targetRemove(targetName: string) {
   log.debug(`targetRemove(${targetName})`);
+
+  // TODO: finish this
+
 }
 
 function targetShow(targetName: string) {
-log.debug(`targetShow(${targetName})`);
+  log.debug(`targetShow(${targetName})`);
   const mod: any = appConfig.modules.find(item => item.name === targetName);
   if (!mod) {
     log.error(`Target '${targetName}' ${CHECK_CONFIG_STRING}`);
