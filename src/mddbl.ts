@@ -25,7 +25,6 @@ const os = require('os');
 const path = require('path');
 const program = require('commander');
 const { Select } = require('enquirer');
-// const { prompt } = require('enquirer');
 const cp = require("child_process");
 
 // https://stackoverflow.com/questions/9153571/is-there-a-way-to-get-version-from-package-json-in-nodejs-code
@@ -34,7 +33,7 @@ const packageDotJSON = require('./package.json');
 const APP_NAME = '\nModdable Helper (mddbl)';
 const APP_AUTHOR = 'by John M. Wargo (https://johnwargo.com)';
 const CONFIG_FILE_NAME = 'mddbl.json';
-const CHECK_CONFIG_STRING = `please check the module configuration (${CONFIG_FILE_NAME})`;
+const CHECK_CONFIG_STRING = `not defined, please check the module configuration (${CONFIG_FILE_NAME})`;
 const WORKING_PATH = process.cwd();
 
 var appConfig: ConfigObject;
@@ -62,19 +61,160 @@ function checkDirectory(filePath: string): boolean {
   }
 }
 
-function toggleDebug() {
-  log.debug('toggleDebug()');
-  readConfig();
+function showObjectValues(obj: Module | Target) {
+  log.debug('listObject()');
+  console.dir(obj);
+}
+
+function listArrayNames(listStr: string, theList: Target[] | Module[]) {
+  log.debug('listArray()');
+  // Write the array contents to the console
+  if (theList.length > 0) {
+    log.info(`\nConfigured ${listStr}:`);
+    for (let item in theList) {
+      let outputStr = `- ${theList[item].name}`;
+      if (theList[item].description) {
+        outputStr += ` - ${theList[item].description}`;
+      }
+      log.info(outputStr)
+    }
+  } else {
+    log.info(`\nNo ${listStr} configured`);
+    process.exit(1);
+  }
+}
+
+// ================
+// Config
+// ================
+function configEdit() {
+  log.info('Editing module configuration');
+  console.log(configFilePath);
+  // build the command string based on execution platform
+  var cmdStr = (os.type().indexOf('Win') === 0)
+    ? `start ${CONFIG_FILE_NAME}`
+    : `open -e ./${CONFIG_FILE_NAME}`;
+  // execute the command
+  cp.exec(cmdStr, function (error: any, stdout: any, stderr: any) {
+    if (error) {
+      log.error('Unable to edit configuration')
+      log.error(error);
+      process.exit(1);
+    }
+    if (stdout) {
+      log.info(stdout);
+    }
+    if (stderr) {
+      log.error(stderr);
+    }
+  });
+}
+
+function configInit() {
+  log.info('Initializing project folder...');
+  // Assign the default config to the variable  
+  appConfig = Object.assign({}, defaultConfig);
+  // write the object to the file
+  if (configWrite()) {
+    log.info(`Successfully created configuration file (${CONFIG_FILE_NAME})`);
+  } else {
+    process.exit(1);
+  }
+}
+
+function configRead() {
+  log.info('Reading configuration file');
+  if (fs.existsSync(configFilePath)) {
+    try {
+      const rawData: string = fs.readFileSync(configFilePath);
+      appConfig = JSON.parse(rawData);
+    } catch (err) {
+      log.error(`readConfig error: ${err}`);
+      process.exit(1);
+      // return;
+    }
+    // get the log level from the config 
+    const logLevel = appConfig.debug ? log.DEBUG : log.INFO;
+    log.level(logLevel);
+
+    log.debug('\nProgram Information (debug)');
+    log.debug(APP_AUTHOR);
+    log.debug(`Version: ${packageDotJSON.version}`);
+    log.debug('Command Options:', program.opts());
+    log.debug(`Working directory: ${WORKING_PATH}`);
+    log.debug(`Configuration file: ${configFilePath}\n`);
+  } else {
+    log.info(`\nConfiguration file not found (${configFilePath})`);
+    log.info(`Execute ${chalk.yellow('`mdbbl config init`')} to create one here`);
+    process.exit(1);
+  }
+}
+
+function configWrite(): boolean {
+  // Save the configuration to disk
+  log.info(`Writing configuration to ${configFilePath}`);
+  // create the pretty version of the config object
+  const data = JSON.stringify(appConfig, null, 2);
+  try {
+    // write the pretty version of the object to disk
+    fs.writeFileSync(configFilePath, data);
+    log.debug('Configuration file successfully written to disk');
+  } catch (err) {
+    log.error('Unable to write to configuration file');
+    log.error(err)
+    return false;
+  }
+  return true;
+}
+
+function configShow() {
+  log.debug('showConfig()');
+  configRead();
+  // print the module configuration settings to the console
+  log.info('\nModule configuration:');
+  // log.info(JSON.stringify(appConfig, null, 2));
+  console.dir(appConfig);
+}
+
+function configSort() {
+
+  // Function that helps sort the object array
+  function compare(a: Module | Target, b: Module | Target) {
+    return a.name > b.name ? 1 : -1;
+  }
+
+  // Get the config in memory
+  configRead();
   if (appConfig) {
-    log.debug(`Toggling Debug configuration parameter to ${!appConfig.debug}`)
-    appConfig.debug = !appConfig.debug;
+    // Sort the modules and targets arrays
+    appConfig.modules.sort(compare);
+    appConfig.targets.sort(compare);
     // write the changes to disk
-    if (!writeConfig()) {
+    if (!configWrite()) {
       process.exit(1);
     }
   }
 }
 
+// ================
+// Debug
+// ================
+function debugToggle() {
+  log.debug('toggleDebug()');
+  configRead();
+  if (appConfig) {
+    log.debug(`Toggling Debug configuration parameter to ${!appConfig.debug}`)
+    appConfig.debug = !appConfig.debug;
+    // write the changes to disk
+    if (!configWrite()) {
+      process.exit(1);
+    }
+  }
+}
+
+// ================
+// Deploy
+// ================
 function doDeploy(rootCmd: string, mod: Module, target: Target) {
   log.debug(`executeCommand(${rootCmd}, ${mod.name}, ${target.name})`);
 
@@ -124,17 +264,17 @@ function deployModule(modName: string, targetName: string = '') {
   log.debug(`deployModule(${modName}, ${targetName})`);
 
   // only read the config if we didn't already read it
-  if (!appConfig) readConfig();
+  if (!appConfig) configRead();
 
   // Does the specified module exist?
   const mod: any = appConfig.modules.find(item => item.name === modName);
   if (!mod) {
-    log.error(`Module '${modName}' not defined, ${CHECK_CONFIG_STRING}`);
+    log.error(`Module '${modName}' ${CHECK_CONFIG_STRING}`);
     process.exit(1);
   }
   // Does the module have a folder path?
   if (!mod.folderPath) {
-    log.error(`Module path '${mod.folderPath}' not defined, ${CHECK_CONFIG_STRING}`);
+    log.error(`Module path '${mod.folderPath}' ${CHECK_CONFIG_STRING}`);
     process.exit(1);
   }
 
@@ -143,12 +283,12 @@ function deployModule(modName: string, targetName: string = '') {
     // Does the specified target exist?
     target = appConfig.targets.find(item => item.name === targetName);
     if (!target) {
-      log.error(`Target '${targetName}' not defined, ${CHECK_CONFIG_STRING}`);
+      log.error(`Target '${targetName}' ${CHECK_CONFIG_STRING}`);
       process.exit(1);
     }
     // Does the target have a platform?
     if (!target.platform) {
-      log.error(`Target platform '${target.platform}' not defined, ${CHECK_CONFIG_STRING}`);
+      log.error(`Target platform '${target.platform}' ${CHECK_CONFIG_STRING}`);
       process.exit(1);
     }
 
@@ -170,15 +310,15 @@ function deployModule(modName: string, targetName: string = '') {
 
 async function deployInteractive() {
   log.debug('Deploying in interactive mode');
-  readConfig();
+  configRead();
 
   if (appConfig.modules.length < 1) {
-    log.error(`Module list not defined, ${CHECK_CONFIG_STRING}`);
+    log.error(`Module list ${CHECK_CONFIG_STRING}`);
     process.exit(1);
   }
 
   if (appConfig.targets.length < 1) {
-    log.error(`Module list not defined, ${CHECK_CONFIG_STRING}`);
+    log.error(`Module list ${CHECK_CONFIG_STRING}`);
     process.exit(1);
   }
 
@@ -219,18 +359,94 @@ async function deployInteractive() {
   }
 }
 
+// ================
+// Module
+// ================
+function moduleAdd() {
+  log.debug('moduleAdd()');
+  configRead();
+  appConfig.modules.push(emptyModule);
+  configWrite();
+}
+
+function moduleRemove(modName: string) {
+  log.debug(`moduleRemove(${modName})`);
+  const mod: any = appConfig.modules.find(item => item.name === modName);
+  if (!mod) {
+    log.error(`Module '${modName}' ${CHECK_CONFIG_STRING}`);
+    process.exit(1);
+  }
+
+
+
+}
+
+function moduleShow(modName: string) {
+  log.debug(`moduleShow(${modName})`);
+  const mod: any = appConfig.modules.find(item => item.name === modName);
+  if (!mod) {
+    log.error(`Module '${modName}' ${CHECK_CONFIG_STRING}`);
+    process.exit(1);
+  }
+  console.dir(mod);
+}
+
+// ================
+// Modules
+// ================
+function modulesList() {
+  log.debug('modulesList()');
+  configRead();
+  listArrayNames('Modules', appConfig.modules);
+}
+
+// ================
+// Target
+// ================
+function targetAdd() {
+  log.debug('targetAdd()');
+  configRead();
+  appConfig.targets.push(emptyTarget);
+  configWrite();
+}
+
+function targetRemove(targetName: string) {
+  log.debug(`targetRemove(${targetName})`);
+}
+
+function targetShow(targetName: string) {
+log.debug(`targetShow(${targetName})`);
+  const mod: any = appConfig.modules.find(item => item.name === targetName);
+  if (!mod) {
+    log.error(`Target '${targetName}' ${CHECK_CONFIG_STRING}`);
+    process.exit(1);
+  }
+  console.dir(mod);
+}
+
+// ================
+// Targets
+// ================
+function targetsList() {
+  configRead();
+  listArrayNames('Targets', appConfig.targets);
+}
+
+// ================
+// Wipe
+// ================
 function wipeDevice(targetName: string) {
   log.debug(`wipeDevice(${targetName})`);
-  readConfig();
+  configRead();
   // See if we can find the target  
   const target: any = appConfig.targets.find(item => item.name === targetName);
   if (!target) {
-    log.error(`Target '${targetName}' not defined, ${CHECK_CONFIG_STRING}`);
+    log.error(`Target '${targetName}' ${CHECK_CONFIG_STRING}`);
     process.exit(1);
   }
   // Is the wipe command defined?
   if (!target.wipeCommand) {
-    log.error(`Target wipe command '${target.wipeCommand}' not defined, ${CHECK_CONFIG_STRING}`);
+    log.error(`Target wipe command '${target.wipeCommand}' ${CHECK_CONFIG_STRING}`);
     process.exit(1);
   }
 
@@ -243,143 +459,6 @@ function wipeDevice(targetName: string) {
   }
 }
 
-function listArray(listStr: string, theList: Target[] | Module[]) {
-  // Write the array contents to the console
-  if (theList.length > 0) {
-    log.info(`\nConfigured ${listStr}:`);
-    for (let item in theList) {
-      let outputStr = `- ${theList[item].name}`;
-      if (theList[item].description) {
-        outputStr += ` - ${theList[item].description}`;
-      }
-      log.info(outputStr)
-    }
-  } else {
-    log.info(`\nNo ${listStr} configured`);
-    process.exit(1);
-  }
-}
-
-function listModules() {
-  readConfig();
-  listArray('Modules', appConfig.modules);
-}
-
-function listTargets() {
-  readConfig();
-  listArray('Targets', appConfig.targets);
-}
-
-function editConfig() {
-  log.info('Editing module configuration');
-  console.log(configFilePath);
-  // build the command string based on execution platform
-  var cmdStr = (os.type().indexOf('Win') === 0)
-    ? `start ${CONFIG_FILE_NAME}`
-    : `open -e ./${CONFIG_FILE_NAME}`;
-  // execute the command
-  cp.exec(cmdStr, function (error: any, stdout: any, stderr: any) {
-    if (error) {
-      log.error('Unable to edit configuration')
-      log.error(error);
-      process.exit(1);
-      // return;
-    }
-    if (stdout) {
-      log.info(stdout);
-    }
-    if (stderr) {
-      log.error(stderr);
-    }
-  });
-}
-
-function initConfig() {
-  log.info('Initializing project folder...');
-  // Assign the default config to the variable  
-  appConfig = Object.assign({}, defaultConfig);
-  // write the object to the file
-  if (writeConfig()) {
-    log.info(`Successfully created configuration file (${CONFIG_FILE_NAME})`);
-  } else {
-    process.exit(1);
-  }
-}
-
-function readConfig() {
-  log.info('Reading configuration file');
-  if (fs.existsSync(configFilePath)) {
-    try {
-      const rawData: string = fs.readFileSync(configFilePath);
-      appConfig = JSON.parse(rawData);
-    } catch (err) {
-      log.error(`readConfig error: ${err}`);
-      process.exit(1);
-      // return;
-    }
-    // get the log level from the config 
-    const logLevel = appConfig.debug ? log.DEBUG : log.INFO;
-    log.level(logLevel);
-
-    log.debug('\nProgram Information (debug)');
-    log.debug(APP_AUTHOR);
-    log.debug(`Version: ${packageDotJSON.version}`);
-    log.debug('Command Options:', program.opts());
-    log.debug(`Working directory: ${WORKING_PATH}`);
-    log.debug(`Configuration file: ${configFilePath}\n`);
-  } else {
-    log.info(`\nConfiguration file not found (${configFilePath})`);
-    log.info(`Execute ${chalk.yellow('`mdbbl config init`')} to create one here`);
-    process.exit(1);
-  }
-}
-
-function writeConfig(): boolean {
-  // Save the configuration to disk
-  log.info(`Writing configuration to ${configFilePath}`);
-  // create the pretty version of the config object
-  const data = JSON.stringify(appConfig, null, 2);
-  try {
-    // write the pretty version of the object to disk
-    fs.writeFileSync(configFilePath, data);
-    log.debug('Configuration file successfully written to disk');
-  } catch (err) {
-    log.error('Unable to write to configuration file');
-    log.error(err)
-    return false;
-  }
-  return true;
-}
-
-function showConfig() {
-  log.debug('showConfig()');
-  readConfig();
-  // print the module configuration settings to the console
-  log.info('\nModule configuration:');
-  // log.info(JSON.stringify(appConfig, null, 2));
-  console.dir(appConfig);
-}
-
-function sortConfig() {
-
-  // Function that helps sort the object array
-  function compare(a: Module | Target, b: Module | Target) {
-    return a.name > b.name ? 1 : -1;
-  }
-
-  // Get the config in memory
-  readConfig();
-  if (appConfig) {
-    // Sort the modules and targets arrays
-    appConfig.modules.sort(compare);
-    appConfig.targets.sort(compare);
-    // write the changes to disk
-    if (!writeConfig()) {
-      process.exit(1);
-    }
-  }
-}
-
 // *****************************************
 // Start
 // *****************************************
@@ -388,53 +467,115 @@ configFilePath = path.join(WORKING_PATH, CONFIG_FILE_NAME);
 program.version(packageDotJSON.version);
 program.option('--debug', 'Output extra information during operation');
 // ===========================
+// Setup the `config` command
+// ===========================
+const configCmd = program.command('config')
+  .description("Work with the module's configuration");
+configCmd
+  .command('edit')
+  .description('Edit the module\'s configuration file')
+  .action(configEdit);
+configCmd
+  .command('show')
+  .description('Print the modules config to the console')
+  .action(configShow);
+configCmd
+  .command('sort')
+  .description('Sorts the config modules and targets arrays')
+  .action(configSort);
+
+// ===========================
 // Setup the `debug` command
 // ===========================
 program
   .command('debug')
   .description('Toggle the debug configuration setting')
-  .action(toggleDebug);
+  .action(debugToggle);
+
 // ===========================
 // Setup the `deploy` command
 // ===========================
-// program
-//   .command('deploy')
-//   .description('Deploy; interactive mode')
-//   .action(deployInteractive);
 program
   .command('deploy [module] [target]')
   .description('Deploy Module to specified Target device')
-  .action((mod: string, target: string) => {
+  .action((module: string, target: string) => {
     // Do we have a module name? 
-    if (mod) {
+    if (module) {
       // Then we deploy using the module (if we can)
-      deployModule(mod, target);
+      deployModule(module, target);
     } else {
       // otherwise we go into interactive mode
       deployInteractive();
     }
   });
+
 // ===========================
 // Setup the `init` command
 // ===========================
 program
   .command('init')
   .description('Initialize the current folder (create module config file)')
-  .action(initConfig);
+  .action(configInit);
+
+// ===========================
+// Setup the `module` command
+// ===========================
+const moduleCmd = program.command('module')
+  .description('Work with the modules configuration');
+moduleCmd
+  .command('add')
+  .description('Add an empty module to the configuration file')
+  .action(moduleAdd);
+moduleCmd
+  .command('rm <module>')
+  .description('Remove a module from the configuration file')
+  .action((module: string) => {
+    moduleRemove(module);
+  });
+moduleCmd
+  .command('show <module>')
+  .description('Show a module configuration')
+  .action((module: string) => {
+    moduleShow(module)
+  });
+
 // ===========================
 // Setup the `modules` command
 // ===========================
 program
   .command('modules')
   .description('List all configured Modules')
-  .action(listModules);
+  .action(modulesList);
+
+// ===========================
+// Setup the `target` command
+// ===========================
+const targetCmd = program.command('target')
+  .description('Work with the targets configuration');
+targetCmd
+  .command('add')
+  .description('Add an empty target to the configuration file')
+  .action(targetAdd);
+targetCmd
+  .command('rm <target>')
+  .description('Remove a target from the configuration file')
+  .action((target: string) => {
+    targetRemove(target);
+  });
+targetCmd
+  .command('show <target>')
+  .description('Show a target configuration')
+  .action((target: string) => {
+    targetShow(target)
+  });
+
 // ===========================
 // Setup the `targets` command
 // ===========================
 program
   .command('targets')
   .description('List all configured Targets')
-  .action(listTargets);
+  .action(targetsList);
 // ===========================
 // setup the `wipe` command
 // ===========================
@@ -444,23 +585,5 @@ program
   .action((target: string) => {
     wipeDevice(target);
   });
-
-// ===========================
-// Setup the `config` command
-// ===========================
-const configCmd = program.command('config')
-  .description("Work with the module's configuration");
-configCmd
-  .command('edit')
-  .description('Edit the module\'s configuration file')
-  .action(editConfig);
-configCmd
-  .command('show')
-  .description('Print the modules config to the console')
-  .action(showConfig);
-configCmd
-  .command('sort')
-  .description('Sorts the config modules and targets arrays')
-  .action(sortConfig);
 
 program.parse();

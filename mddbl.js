@@ -50,7 +50,7 @@ var packageDotJSON = require('./package.json');
 var APP_NAME = '\nModdable Helper (mddbl)';
 var APP_AUTHOR = 'by John M. Wargo (https://johnwargo.com)';
 var CONFIG_FILE_NAME = 'mddbl.json';
-var CHECK_CONFIG_STRING = "please check the module configuration (" + CONFIG_FILE_NAME + ")";
+var CHECK_CONFIG_STRING = "not defined, please check the module configuration (" + CONFIG_FILE_NAME + ")";
 var WORKING_PATH = process.cwd();
 var appConfig;
 var configFilePath;
@@ -76,13 +76,118 @@ function checkDirectory(filePath) {
         return false;
     }
 }
-function toggleDebug() {
+function listArray(listStr, theList) {
+    if (theList.length > 0) {
+        log.info("\nConfigured " + listStr + ":");
+        for (var item in theList) {
+            var outputStr = "- " + theList[item].name;
+            if (theList[item].description) {
+                outputStr += " - " + theList[item].description;
+            }
+            log.info(outputStr);
+        }
+    }
+    else {
+        log.info("\nNo " + listStr + " configured");
+        process.exit(1);
+    }
+}
+function configEdit() {
+    log.info('Editing module configuration');
+    console.log(configFilePath);
+    var cmdStr = (os.type().indexOf('Win') === 0)
+        ? "start " + CONFIG_FILE_NAME
+        : "open -e ./" + CONFIG_FILE_NAME;
+    cp.exec(cmdStr, function (error, stdout, stderr) {
+        if (error) {
+            log.error('Unable to edit configuration');
+            log.error(error);
+            process.exit(1);
+        }
+        if (stdout) {
+            log.info(stdout);
+        }
+        if (stderr) {
+            log.error(stderr);
+        }
+    });
+}
+function configInit() {
+    log.info('Initializing project folder...');
+    appConfig = Object.assign({}, config_1.defaultConfig);
+    if (configWrite()) {
+        log.info("Successfully created configuration file (" + CONFIG_FILE_NAME + ")");
+    }
+    else {
+        process.exit(1);
+    }
+}
+function configRead() {
+    log.info('Reading configuration file');
+    if (fs.existsSync(configFilePath)) {
+        try {
+            var rawData = fs.readFileSync(configFilePath);
+            appConfig = JSON.parse(rawData);
+        }
+        catch (err) {
+            log.error("readConfig error: " + err);
+            process.exit(1);
+        }
+        var logLevel = appConfig.debug ? log.DEBUG : log.INFO;
+        log.level(logLevel);
+        log.debug('\nProgram Information (debug)');
+        log.debug(APP_AUTHOR);
+        log.debug("Version: " + packageDotJSON.version);
+        log.debug('Command Options:', program.opts());
+        log.debug("Working directory: " + WORKING_PATH);
+        log.debug("Configuration file: " + configFilePath + "\n");
+    }
+    else {
+        log.info("\nConfiguration file not found (" + configFilePath + ")");
+        log.info("Execute " + chalk.yellow('`mdbbl config init`') + " to create one here");
+        process.exit(1);
+    }
+}
+function configWrite() {
+    log.info("Writing configuration to " + configFilePath);
+    var data = JSON.stringify(appConfig, null, 2);
+    try {
+        fs.writeFileSync(configFilePath, data);
+        log.debug('Configuration file successfully written to disk');
+    }
+    catch (err) {
+        log.error('Unable to write to configuration file');
+        log.error(err);
+        return false;
+    }
+    return true;
+}
+function configShow() {
+    log.debug('showConfig()');
+    configRead();
+    log.info('\nModule configuration:');
+    console.dir(appConfig);
+}
+function configSort() {
+    function compare(a, b) {
+        return a.name > b.name ? 1 : -1;
+    }
+    configRead();
+    if (appConfig) {
+        appConfig.modules.sort(compare);
+        appConfig.targets.sort(compare);
+        if (!configWrite()) {
+            process.exit(1);
+        }
+    }
+}
+function debugToggle() {
     log.debug('toggleDebug()');
-    readConfig();
+    configRead();
     if (appConfig) {
         log.debug("Toggling Debug configuration parameter to " + !appConfig.debug);
         appConfig.debug = !appConfig.debug;
-        if (!writeConfig()) {
+        if (!configWrite()) {
             process.exit(1);
         }
     }
@@ -130,25 +235,25 @@ function deployModule(modName, targetName) {
     if (targetName === void 0) { targetName = ''; }
     log.debug("deployModule(" + modName + ", " + targetName + ")");
     if (!appConfig)
-        readConfig();
+        configRead();
     var mod = appConfig.modules.find(function (item) { return item.name === modName; });
     if (!mod) {
-        log.error("Module '" + modName + "' not defined, " + CHECK_CONFIG_STRING);
+        log.error("Module '" + modName + "' " + CHECK_CONFIG_STRING);
         process.exit(1);
     }
     if (!mod.folderPath) {
-        log.error("Module path '" + mod.folderPath + "' not defined, " + CHECK_CONFIG_STRING);
+        log.error("Module path '" + mod.folderPath + "' " + CHECK_CONFIG_STRING);
         process.exit(1);
     }
     var target;
     if (targetName.length > 0) {
         target = appConfig.targets.find(function (item) { return item.name === targetName; });
         if (!target) {
-            log.error("Target '" + targetName + "' not defined, " + CHECK_CONFIG_STRING);
+            log.error("Target '" + targetName + "' " + CHECK_CONFIG_STRING);
             process.exit(1);
         }
         if (!target.platform) {
-            log.error("Target platform '" + target.platform + "' not defined, " + CHECK_CONFIG_STRING);
+            log.error("Target platform '" + target.platform + "' " + CHECK_CONFIG_STRING);
             process.exit(1);
         }
         if (target.rotationFlag && target.rotationValue &&
@@ -172,13 +277,13 @@ function deployInteractive() {
             switch (_a.label) {
                 case 0:
                     log.debug('Deploying in interactive mode');
-                    readConfig();
+                    configRead();
                     if (appConfig.modules.length < 1) {
-                        log.error("Module list not defined, " + CHECK_CONFIG_STRING);
+                        log.error("Module list " + CHECK_CONFIG_STRING);
                         process.exit(1);
                     }
                     if (appConfig.targets.length < 1) {
-                        log.error("Module list not defined, " + CHECK_CONFIG_STRING);
+                        log.error("Module list " + CHECK_CONFIG_STRING);
                         process.exit(1);
                     }
                     modPrompt = new Select({
@@ -221,16 +326,36 @@ function deployInteractive() {
         });
     });
 }
+function moduleAdd() {
+}
+function moduleRemove(modName) {
+}
+function moduleShow(modName) {
+}
+function modulesList() {
+    configRead();
+    listArray('Modules', appConfig.modules);
+}
+function targetAdd() {
+}
+function targetRemove(modName) {
+}
+function targetShow(modName) {
+}
+function targetsList() {
+    configRead();
+    listArray('Targets', appConfig.targets);
+}
 function wipeDevice(targetName) {
     log.debug("wipeDevice(" + targetName + ")");
-    readConfig();
+    configRead();
     var target = appConfig.targets.find(function (item) { return item.name === targetName; });
     if (!target) {
-        log.error("Target '" + targetName + "' not defined, " + CHECK_CONFIG_STRING);
+        log.error("Target '" + targetName + "' " + CHECK_CONFIG_STRING);
         process.exit(1);
     }
     if (!target.wipeCommand) {
-        log.error("Target wipe command '" + target.wipeCommand + "' not defined, " + CHECK_CONFIG_STRING);
+        log.error("Target wipe command '" + target.wipeCommand + "' " + CHECK_CONFIG_STRING);
         process.exit(1);
     }
     try {
@@ -242,133 +367,34 @@ function wipeDevice(targetName) {
         process.exit(1);
     }
 }
-function listArray(listStr, theList) {
-    if (theList.length > 0) {
-        log.info("\nConfigured " + listStr + ":");
-        for (var item in theList) {
-            var outputStr = "- " + theList[item].name;
-            if (theList[item].description) {
-                outputStr += " - " + theList[item].description;
-            }
-            log.info(outputStr);
-        }
-    }
-    else {
-        log.info("\nNo " + listStr + " configured");
-        process.exit(1);
-    }
-}
-function listModules() {
-    readConfig();
-    listArray('Modules', appConfig.modules);
-}
-function listTargets() {
-    readConfig();
-    listArray('Targets', appConfig.targets);
-}
-function editConfig() {
-    log.info('Editing module configuration');
-    console.log(configFilePath);
-    var cmdStr = (os.type().indexOf('Win') === 0)
-        ? "start " + CONFIG_FILE_NAME
-        : "open -e ./" + CONFIG_FILE_NAME;
-    cp.exec(cmdStr, function (error, stdout, stderr) {
-        if (error) {
-            log.error('Unable to edit configuration');
-            log.error(error);
-            process.exit(1);
-        }
-        if (stdout) {
-            log.info(stdout);
-        }
-        if (stderr) {
-            log.error(stderr);
-        }
-    });
-}
-function initConfig() {
-    log.info('Initializing project folder...');
-    appConfig = Object.assign({}, config_1.defaultConfig);
-    if (writeConfig()) {
-        log.info("Successfully created configuration file (" + CONFIG_FILE_NAME + ")");
-    }
-    else {
-        process.exit(1);
-    }
-}
-function readConfig() {
-    log.info('Reading configuration file');
-    if (fs.existsSync(configFilePath)) {
-        try {
-            var rawData = fs.readFileSync(configFilePath);
-            appConfig = JSON.parse(rawData);
-        }
-        catch (err) {
-            log.error("readConfig error: " + err);
-            process.exit(1);
-        }
-        var logLevel = appConfig.debug ? log.DEBUG : log.INFO;
-        log.level(logLevel);
-        log.debug('\nProgram Information (debug)');
-        log.debug(APP_AUTHOR);
-        log.debug("Version: " + packageDotJSON.version);
-        log.debug('Command Options:', program.opts());
-        log.debug("Working directory: " + WORKING_PATH);
-        log.debug("Configuration file: " + configFilePath + "\n");
-    }
-    else {
-        log.info("\nConfiguration file not found (" + configFilePath + ")");
-        log.info("Execute " + chalk.yellow('`mdbbl config init`') + " to create one here");
-        process.exit(1);
-    }
-}
-function writeConfig() {
-    log.info("Writing configuration to " + configFilePath);
-    var data = JSON.stringify(appConfig, null, 2);
-    try {
-        fs.writeFileSync(configFilePath, data);
-        log.debug('Configuration file successfully written to disk');
-    }
-    catch (err) {
-        log.error('Unable to write to configuration file');
-        log.error(err);
-        return false;
-    }
-    return true;
-}
-function showConfig() {
-    log.debug('showConfig()');
-    readConfig();
-    log.info('\nModule configuration:');
-    console.dir(appConfig);
-}
-function sortConfig() {
-    function compare(a, b) {
-        return a.name > b.name ? 1 : -1;
-    }
-    readConfig();
-    if (appConfig) {
-        appConfig.modules.sort(compare);
-        appConfig.targets.sort(compare);
-        if (!writeConfig()) {
-            process.exit(1);
-        }
-    }
-}
 console.log(APP_NAME);
 configFilePath = path.join(WORKING_PATH, CONFIG_FILE_NAME);
 program.version(packageDotJSON.version);
 program.option('--debug', 'Output extra information during operation');
+var configCmd = program.command('config')
+    .description("Work with the module's configuration");
+configCmd
+    .command('edit')
+    .description('Edit the module\'s configuration file')
+    .action(configEdit);
+configCmd
+    .command('show')
+    .description('Print the modules config to the console')
+    .action(configShow);
+configCmd
+    .command('sort')
+    .description('Sorts the config modules and targets arrays')
+    .action(configSort);
 program
     .command('debug')
     .description('Toggle the debug configuration setting')
-    .action(toggleDebug);
+    .action(debugToggle);
 program
     .command('deploy [module] [target]')
     .description('Deploy Module to specified Target device')
-    .action(function (mod, target) {
-    if (mod) {
-        deployModule(mod, target);
+    .action(function (module, target) {
+    if (module) {
+        deployModule(module, target);
     }
     else {
         deployInteractive();
@@ -377,33 +403,55 @@ program
 program
     .command('init')
     .description('Initialize the current folder (create module config file)')
-    .action(initConfig);
+    .action(configInit);
+var moduleCmd = program.command('module')
+    .description('Work with the modules configuration');
+moduleCmd
+    .command('add')
+    .description('Add an empty module to the configuration file')
+    .action(moduleAdd);
+moduleCmd
+    .command('rm <module>')
+    .description('Remove a module from the configuration file')
+    .action(function (module) {
+    moduleRemove(module);
+});
+moduleCmd
+    .command('show <module>')
+    .description('Show a module configuration')
+    .action(function (module) {
+    moduleShow(module);
+});
 program
     .command('modules')
     .description('List all configured Modules')
-    .action(listModules);
+    .action(modulesList);
+var targetCmd = program.command('target')
+    .description('Work with the targets configuration');
+targetCmd
+    .command('add')
+    .description('Add an empty target to the configuration file')
+    .action(targetAdd);
+targetCmd
+    .command('rm <target>')
+    .description('Remove a target from the configuration file')
+    .action(function (target) {
+    targetRemove(target);
+});
+targetCmd
+    .command('show <target>')
+    .description('Show a target configuration')
+    .action(function (target) {
+    targetShow(target);
+});
 program
     .command('targets')
     .description('List all configured Targets')
-    .action(listTargets);
+    .action(targetsList);
 program
     .command('wipe <target>')
     .description('Wipes the <target> device')
     .action(function (target) {
     wipeDevice(target);
 });
-var configCmd = program.command('config')
-    .description("Work with the module's configuration");
-configCmd
-    .command('edit')
-    .description('Edit the module\'s configuration file')
-    .action(editConfig);
-configCmd
-    .command('show')
-    .description('Print the modules config to the console')
-    .action(showConfig);
-configCmd
-    .command('sort')
-    .description('Sorts the config modules and targets arrays')
-    .action(sortConfig);
 program.parse();
