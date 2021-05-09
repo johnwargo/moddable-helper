@@ -1,6 +1,8 @@
 # Changelog
 
-## 0.0.7 - May 10, 2021
+## 0.0.7 - May 9, 2021
+
+Mother's Day Edition
 
 * Added `module` commands `add`, `rm`, `show`
 * Added `target` commands `add`, `rm`, `show`

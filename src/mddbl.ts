@@ -406,6 +406,7 @@ function moduleShow(modName: string) {
     log.error(`Module '${modName}' ${CHECK_CONFIG_STRING}`);
     process.exit(1);
   }
+  log.info(`Configuration for the '${modName}' Module:`)
   console.dir(mod);
 }
 
@@ -444,6 +445,7 @@ function targetShow(targetName: string) {
     log.error(`Target '${targetName}' ${CHECK_CONFIG_STRING}`);
     process.exit(1);
   }
+  log.info(`Configuration for the '${targetName}' Target:`)
   console.dir(mod);
 }
 

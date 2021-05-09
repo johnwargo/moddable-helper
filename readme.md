@@ -504,9 +504,10 @@ The console will display the module's configuration as shown below:
 ```text
 Moddable Helper (mddbl)
 Reading configuration file
+Configuration for the 'dog' Module:
 {
   name: 'dog',
-  description: 'Doc module',
+  description: 'Dog module',
   isHost: false,
   debugFlag: true,
   makeFlag: true,
@@ -516,7 +517,61 @@ Reading configuration file
 
 ### <a name='TargetCommand'></a>Target Command
 
+The `mddbl target` command allows you to interact with the `targets` array in the project's configuration file. To add an empty target entry to the `targets` array, execute the following command:
 
+```shell
+mddbl target add
+```
+
+This will add the following entry to the `targets` array:
+
+```json
+
+```
+
+Next, the project's configuration file will open in the system's default `.json` file editor so you can populate the target definition with the appropriate settings for your project.
+
+To remove a specific target from the project's configuration file, execute the following command:
+
+```shell
+mddbl target rm <module>
+```
+
+For example, to remove a target called `dog` from the project's `targets` configuration, execute the following command:
+
+```shell
+mddbl target rm dog
+```
+
+To display the configuration of a particular target, execute the following command:
+
+```shell
+mddbl target show <module>
+```
+
+For example, to show the configuration for a target called `dog`, execute the following:
+
+```shell
+mddbl target show dog
+```
+
+The console will display the target's configuration as shown below:
+
+```text
+Moddable Helper (mddbl)
+Reading configuration file
+Configuration for the 'dog' Target:
+{
+    "name": "dog",
+    "description": "Doggie module",
+    "platform": "esp32",
+    "formatFlag": false,
+    "formatStr": "",
+    "rotationFlag": false,
+    "rotationValue": 0,
+    "wipeCommand": "python %IDF_PATH%\\components\\esptool_py\\esptool\\esptool.py erase_flash"
+}
+```
 
 ### <a name='WipeDevice'></a>Wipe Device
 
