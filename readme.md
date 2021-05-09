@@ -571,13 +571,6 @@ For example, using the sample configuration file example in this document, to wi
 mddbl wipe m5fire
 ```
 
-## Planned Features
-
-* Implement a command-line option to add a module to the configuration file
-* Implement a command-line option to add a target to the configuration file
-* Add support for other `mcconfig` and `mcrun` command-line parameters
-* Anything else I come up with as I work with the Moddable SDK
-
 ***
 
 You can find information on many different topics on my [personal blog](http://www.johnwargo.com). Learn about all of my publications at [John Wargo Books](http://www.johnwargobooks.com).
