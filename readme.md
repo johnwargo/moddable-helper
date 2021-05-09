@@ -30,7 +30,7 @@ The module supports the following commands:
 
 Detailed instructions for these commands sections that follow.
 
-## <a name='Installation'></a>Installation
+## Installation
 
 To install the module, open a terminal window (or command prompt on Windows), and execute the following command:
 
@@ -40,13 +40,13 @@ npm install -g moddable-helper
 
 This installs a `mddbl` command you can use anywhere on the system.
 
-## <a name='IssuesPullRequests'></a>Issues & Pull Requests
+## Issues & Pull Requests
 
 If you have an issue with this module, don't email the author, submit an [issue](https://github.com/johnwargo/moddable-helper/issues) in this repository instead.
 
 I built this project for the community, so if you have an enhancement, fix, or change for the project please submit a [Pull Request](https://github.com/johnwargo/moddable-helper/pulls).
 
-## <a name='Background'></a>Background
+## Background
 
 I've been playing around lately with the Moddable SDK and I think the platform's pretty interesting for a lot of reasons I'll write about later on [my blog](https://johnwargo.com). They deliver several very capable IoT devices with built-in displays at a great price. The real power comes from their SDK which delivers a robust and solid JavaScript API for inexpensive microcontroller devices
 
@@ -151,9 +151,9 @@ Moddable Helper switches to the module's folder (`helloworld` as specified in th
 
 > **Note**: The mddbl module uses the module's `isHost` property to determine whether to execute `mcconfig` or `mcrun` to deploy the module.
 
-## <a name='Usage'></a>Usage
+## Usage
 
-### <a name='Configuration'></a>Configuration
+### Configuration
 
 To use this module, you must first create the module's configuration file in the Moddable project's root folder. The file must be called `mddbl.json` and the default configuration file contains the following options:
 
@@ -165,7 +165,7 @@ To use this module, you must first create the module's configuration file in the
 }
 ```
 
-#### <a name='CreatingtheConfigurationFile'></a>Creating the Configuration File
+#### Creating the Configuration File
 
 The module can create it for you automatically, simply open a terminal window, navigate to the project folder, and execute the following command:
 
@@ -175,7 +175,7 @@ mddbl init
 
 Moddable Helper will create the default configuration file shown above.
 
-#### <a name='ConfigurationOptions'></a>Configuration Options
+#### Configuration Options
 
 The following sections describe the configuration options for the Moddable Helper module.
 
@@ -307,7 +307,7 @@ The example configuration file shown above defines two Targets devices:
 
 > **Note**: The targets use the same wipe command because the devices are both based on the ESP32 hardware platform.
 
-#### <a name='ViewingtheConfigurationFile'></a>Viewing the Configuration File
+#### Viewing the Configuration File
 
 To view the contents of the configuration file in the console, execute the following command:
 
@@ -315,7 +315,7 @@ To view the contents of the configuration file in the console, execute the follo
 mddbl config show
 ```
 
-#### <a name='EditingtheConfigurationFile'></a>Editing the Configuration File
+#### Editing the Configuration File
 
 To launch the module's configuration file using your system's default `.json` file editor, execute the following command:
 
@@ -323,7 +323,7 @@ To launch the module's configuration file using your system's default `.json` fi
 mdbbl config edit
 ```
 
-#### <a name='SortingModuleandTargetLists'></a>Sorting Module and Target Lists
+#### Sorting Module and Target Lists
 
 For users with a bit of obsessive compulsive disorder (OCD), you can sort the Module and Target lists using the following command:
 
@@ -333,7 +333,7 @@ mdbbl config sort
 
 You know, just because.
 
-### <a name='Deploy'></a>Deploy
+### Deploy
 
 To deploy a Host or Module to a connected device, execute the following command in the terminal window pointing to the Moddable project folder:
 
@@ -399,7 +399,7 @@ Reading configuration file
 Deploying host to mdbl2
 ```
 
-### <a name='ListModulesorTargets'></a>List Modules or Targets
+### List Modules or Targets
 
 When you're getting ready to execute the `deploy` or `wipe` commands, you may forget which module and target options are available to you. You can list the modules or targets defined in the project's configuration file using:
 
@@ -425,7 +425,7 @@ Configured Modules:
 - hwg - Hello World Graphical version
 ```
 
-### <a name='ModuleCommand'></a>Module Command
+### Module Command
 
 The `mddbl module` command allows you to interact with the `modules` array in the project's configuration file. To add an empty module entry to the `modules` array, execute the following command:
 
@@ -488,7 +488,7 @@ Configuration for the 'dog' Module:
 }
 ```
 
-### <a name='TargetCommand'></a>Target Command
+### Target Command
 
 The `mddbl target` command allows you to interact with the `targets` array in the project's configuration file. To add an empty target entry to the `targets` array, execute the following command:
 
@@ -499,7 +499,16 @@ mddbl target add
 This will add the following entry to the `targets` array:
 
 ```json
-
+{
+    "name": "",
+    "description": "",
+    "platform": "",
+    "formatFlag": false,
+    "formatStr": "",
+    "rotationFlag": false,
+    "rotationValue": 0,
+    "wipeCommand": ""
+}
 ```
 
 Next, the project's configuration file will open in the system's default `.json` file editor so you can populate the target definition with the appropriate settings for your project.
@@ -546,7 +555,7 @@ Configuration for the 'dog' Target:
 }
 ```
 
-### <a name='WipeDevice'></a>Wipe Device
+### Wipe Device
 
 While troubleshooting deployment or coding issues, you may encounter the need to wipe the device. Most, if not all, hardware platforms Moddable supports offer some mechanism for wiping the memory of the device. Since the device SDK commands needed to do this are obscure and not often executed, the Moddable Helper CLI offers a mechanism for storing the wipe command in the configuration file then invoking it by executing the following command:
 
@@ -560,7 +569,7 @@ For example, using the sample configuration file example in this document, to wi
 mddbl wipe m5fire
 ```
 
-## <a name='PlannedFeatures'></a>Planned Features
+## Planned Features
 
 * Implement a command-line option to add a module to the configuration file
 * Implement a command-line option to add a target to the configuration file
