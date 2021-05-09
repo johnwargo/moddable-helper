@@ -1,6 +1,6 @@
 # Moddable Helper
 
-## <a name='Introduction'></a>Introduction
+## Introduction
 
 Delivers a command-line interface to simplifying usage of the [Moddable SDK](https://github.com/Moddable-OpenSource/moddable). This repository hosts a node.js module that:
 
