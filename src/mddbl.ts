@@ -9,6 +9,7 @@
  **********************************************************/
 
 // TODO: Automatically pass additional command-line parameters to Moddable SDK
+// TODO: Show GitHub Build status on readme file
 // TODO: Add tests
 // TODO: Add GitHub Pages site
 
