@@ -8,11 +8,6 @@
  * actions.
  **********************************************************/
 
-// TODO: Update Docs for module commands
-// TODO: update docs for target commands
-// TODO: Module Delete
-// TODO: Target Delete
-
 // TODO: Automatically pass additional command-line parameters to Moddable SDK
 
 // ESP32 Wipe Command: python %IDF_PATH%\components\esptool_py\esptool\esptool.py erase_flash
