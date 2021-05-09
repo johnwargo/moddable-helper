@@ -8,8 +8,9 @@
  * actions.
  **********************************************************/
 
-// TODO: Add tests
 // TODO: Automatically pass additional command-line parameters to Moddable SDK
+// TODO: Add tests
+// TODO: Add GitHub Pages site
 
 // ESP32 Wipe Command: python %IDF_PATH%\components\esptool_py\esptool\esptool.py erase_flash
 
