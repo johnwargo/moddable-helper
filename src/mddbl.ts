@@ -10,9 +10,9 @@
 
 // TODO: Update Docs for module commands
 // TODO: update docs for target commands
-
 // TODO: Module Delete
 // TODO: Target Delete
+
 // TODO: Automatically pass additional command-line parameters to Moddable SDK
 
 // ESP32 Wipe Command: python %IDF_PATH%\components\esptool_py\esptool\esptool.py erase_flash
@@ -85,20 +85,31 @@ function listArrayNames(listStr: string, theList: Target[] | Module[]) {
   }
 }
 
-function deleteArrayItem(typeStr: string, theArray: Module[] | Target[], itemName: string): any[] {
+function deleteArrayItem(typeStr: string, theArray: Module[] | Target[], compareStr: string): any[] {
+
+  var idx = -1;
+
+  for (var i = 0; i < theArray.length; i++) {
+    // Force it to stop at the first one
+    if (idx < 0) {
+      log.debug(`${i}: ${theArray[i].name}`);
+      if (theArray[i].name == compareStr) {
+        log.debug(`Found match at index ${idx}`);
+        idx = i;
+      }
+    }
+  }
+
   // does the object exist in the array?
-
-  // Delete the item
-
-
-  const mod: any = appConfig.modules.find(item => item.name === itemName);
-  if (!mod) {
-    log.error(`${typeStr} '${itemName}' ${CHECK_CONFIG_STRING}`);
+  if (idx > -1) {
+    theArray.splice(idx, 1);
+    // Delete the item
+  } else {
+    log.error(`${typeStr} '${compareStr}' ${CHECK_CONFIG_STRING}`);
     process.exit(1);
   }
 
   return theArray;
-
 }
 
 // ================
@@ -381,7 +392,7 @@ async function deployInteractive() {
 // ================
 function moduleAdd() {
   log.debug('moduleAdd()');
-  configRead();  
+  configRead();
   appConfig.modules.push(emptyModule);
   configWrite();
   configEdit();
@@ -391,6 +402,7 @@ function moduleRemove(modName: string) {
   log.debug(`moduleRemove(${modName})`);
   configRead();
   appConfig.modules = deleteArrayItem('Module', appConfig.modules, modName);
+  configWrite();
 }
 
 function moduleShow(modName: string) {
@@ -428,7 +440,7 @@ function targetRemove(targetName: string) {
   log.debug(`targetRemove(${targetName})`);
   configRead();
   appConfig.modules = deleteArrayItem('Target', appConfig.targets, targetName);
-
+  configWrite();
 }
 
 function targetShow(targetName: string) {
