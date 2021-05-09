@@ -390,7 +390,7 @@ function targetAdd() {
 function targetRemove(targetName) {
     log.debug("targetRemove(" + targetName + ")");
     configRead();
-    appConfig.modules = deleteArrayItem('Target', appConfig.targets, targetName);
+    appConfig.targets = deleteArrayItem('Target', appConfig.targets, targetName);
     configWrite();
 }
 function targetShow(targetName) {
