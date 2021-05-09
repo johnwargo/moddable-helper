@@ -7,7 +7,7 @@
     "mddbl": "mddbl.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
     "start": "tsc && node ./mddbl.js"
   },
   "repository": {
@@ -32,6 +32,7 @@
     "shelljs": "^0.8.4"
   },
   "devDependencies": {
-    "@types/node": "^14.14.31"
+    "@types/node": "^14.14.31",
+    "mocha": "^8.4.0"
   }
 }
