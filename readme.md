@@ -1,6 +1,6 @@
 # Moddable Helper
 
-![Build Status](https://github.com/johnwargo/moddable-helper/workflows/main.yml/badge.svg)
+![Build Status](https://github.com/johnwargo/moddable-helper/actions/workflows/main.yml/badge.svg)
 
 ## Introduction
 
