@@ -1,5 +1,6 @@
 # Moddable Helper
 
+![Build Status](https://github.com/johnwargo/moddable-helper/blob/main/.github/workflows/main.yml/badge.svg)
 ## Introduction
 
 Delivers a command-line interface to simplifying usage of the [Moddable SDK](https://github.com/Moddable-OpenSource/moddable). This repository hosts a node.js module that:
