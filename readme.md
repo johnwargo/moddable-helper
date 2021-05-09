@@ -1,32 +1,5 @@
 # Moddable Helper
 
-Table of Contents:
-
-<!-- vscode-markdown-toc -->
-* [Introduction](#Introduction)
-* [Installation](#Installation)
-* [Issues & Pull Requests](#IssuesPullRequests)
-* [Background](#Background)
-* [Usage](#Usage)
-  * [Configuration](#Configuration)
-    * [Creating the Configuration File](#CreatingtheConfigurationFile)
-    * [Configuration Options](#ConfigurationOptions)
-    * [Viewing the Configuration File](#ViewingtheConfigurationFile)
-    * [Editing the Configuration File](#EditingtheConfigurationFile)
-    * [Sorting Module and Target Lists](#SortingModuleandTargetLists)
-  * [Deploy](#Deploy)
-  * [List Modules or Targets](#ListModulesorTargets)
-  * [Module Command](#ModuleCommand)
-  * [Target Command](#TargetCommand)
-  * [Wipe Device](#WipeDevice)
-* [Planned Features](#PlannedFeatures)
-
-<!-- vscode-markdown-toc-config
-	numbering=false
-	autoSave=true
-	/vscode-markdown-toc-config -->
-<!-- /vscode-markdown-toc -->
-
 ## <a name='Introduction'></a>Introduction
 
 Delivers a command-line interface to simplifying usage of the [Moddable SDK](https://github.com/Moddable-OpenSource/moddable). This repository hosts a node.js module that:
