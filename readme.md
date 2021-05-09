@@ -16,6 +16,8 @@ Table of Contents:
     * [Sorting Module and Target Lists](#SortingModuleandTargetLists)
   * [Deploy](#Deploy)
   * [List Modules or Targets](#ListModulesorTargets)
+  * [Module Command](#ModuleCommand)
+  * [Target Command](#TargetCommand)
   * [Wipe Device](#WipeDevice)
 * [Planned Features](#PlannedFeatures)
 
@@ -39,11 +41,17 @@ The module supports the following commands:
 * `mddbl config edit` - Edit the project's configuration file
 * `mddbl config show` - Display the contents of the configuration file
 * `mddbl config sort` - Sort the module and target lists by name
+* `mddbl debug` - Toggle the `debug` setting (true to false, and, of course, false to true) in the project's configuration file
 * `mddbl deploy [module] [target]` - Deploy the selected module (module or host) to the specified target device
+* `mddbl module add` - Adds an empty Module entry to the configuration file's `modules` array, then launches the configuration file in the system's default editor.
+* `mddbl module rm <module>` - Removes the specified module from the configuration file's `modules` array
+* `mddbl module show <module>` - Shows the configuration settings for the specified module
 * `mddbl modules` - Display the list of modules defined in the `modules` section of the configuration file
+* `mddbl target add` - Adds an empty Target entry to the configuration file's `targets` array, then launches the configuration file in the system's default editor.
+* `mddbl target rm <target>` - Removes the specified target from the configuration file's `targets` array
+* `mddbl target show <target>` - Shows the configuration settings for the specified target
 * `mddbl targets` - Display the list of targets defined in the `targets` section of the configuration file
 * `mddbl wipe <target>` - Wipe the selected target device
-* `mddbl debug` - Toggle the `debug` setting (true to false, and, of course, false to true) in the project's configuration file
 
 > **Note**: Required parameters are in angled brackets (`<` and `>`) and option parameters are in square brackets (`[` and `]`)
 
@@ -169,7 +177,6 @@ mddbl deploy hw mdbl2
 Moddable Helper switches to the module's folder (`helloworld` as specified in the module's `folderPath` property), executes the command to deploy the host (`mcrun -d -m -p esp32/moddable_two`), then switches back to the starting folder.
 
 > **Note**: The mddbl module uses the module's `isHost` property to determine whether to execute `mcconfig` or `mcrun` to deploy the module.
-
 
 ## <a name='Usage'></a>Usage
 
@@ -444,6 +451,72 @@ Configured Modules:
 - hw - Text-only version of the project
 - hwg - Hello World Graphical version
 ```
+
+### <a name='ModuleCommand'></a>Module Command
+
+The `mddbl module` command allows you to interact with the `modules` array in the project's configuration file. To add an empty module entry to the `modules` array, execute the following command:
+
+```shell
+mddbl module add
+```
+
+This will add the following entry to the `modules` array:
+
+```json
+{
+  "name": "",
+  "description": "",
+  "isHost": false,
+  "debugFlag": true,
+  "makeFlag": true,
+  "folderPath": ""
+}
+```
+
+Next, the project's configuration file will open in the system's default `.json` file editor so you can populate the module definition with the appropriate settings for your project.
+
+To remove a specific module from the project's configuration file, execute the following command:
+
+```shell
+mddbl module rm <module>
+```
+
+For example, to remove a module called `dog` from the project's `modules` configuration, execute the following command:
+
+```shell
+mddbl module rm dog
+```
+
+To display the configuration of a particular module, execute the following command:
+
+```shell
+mddbl module show <module>
+```
+
+For example, to show the configuration for a module called `dog`, execute the following:
+
+```shell
+mddbl module show dog
+```
+
+The console will display the module's configuration as shown below:
+
+```text
+Moddable Helper (mddbl)
+Reading configuration file
+{
+  name: 'dog',
+  description: 'Doc module',
+  isHost: false,
+  debugFlag: true,
+  makeFlag: true,
+  folderPath: 'doggie'
+}
+```
+
+### <a name='TargetCommand'></a>Target Command
+
+
 
 ### <a name='WipeDevice'></a>Wipe Device
 

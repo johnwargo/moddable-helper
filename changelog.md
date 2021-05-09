@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.7 - May 10, 2021
+
+* Added `module` commands `add`, `rm`, `show`
+* Added `target` commands `add`, `rm`, `show`
+* Refactored most function names and grouped related functions
+
 ## 0.0.6 - May 6, 2021
 
 * Fixed issue with config edit on macOS

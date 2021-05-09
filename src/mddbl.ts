@@ -81,9 +81,9 @@ function listArrayNames(listStr: string, theList: Target[] | Module[]) {
 }
 
 function deleteArrayItem(typeStr: string, theArray: Module[] | Target[], compareStr: string): any[] {
-
+  // initialize the idx to indicate no item found
   var idx = -1;
-
+  // Not loop through the array looking for the item
   for (var i = 0; i < theArray.length; i++) {
     // Force it to stop at the first one
     if (idx < 0) {
@@ -94,7 +94,6 @@ function deleteArrayItem(typeStr: string, theArray: Module[] | Target[], compare
       }
     }
   }
-
   // does the object exist in the array?
   if (idx > -1) {
     theArray.splice(idx, 1);
@@ -103,7 +102,6 @@ function deleteArrayItem(typeStr: string, theArray: Module[] | Target[], compare
     log.error(`${typeStr} '${compareStr}' ${CHECK_CONFIG_STRING}`);
     process.exit(1);
   }
-
   return theArray;
 }
 
