@@ -85,6 +85,22 @@ function listArrayNames(listStr: string, theList: Target[] | Module[]) {
   }
 }
 
+function deleteArrayItem(typeStr: string, theArray: Module[] | Target[], itemName: string): any[] {
+  // does the object exist in the array?
+
+  // Delete the item
+
+
+  const mod: any = appConfig.modules.find(item => item.name === itemName);
+  if (!mod) {
+    log.error(`${typeStr} '${itemName}' ${CHECK_CONFIG_STRING}`);
+    process.exit(1);
+  }
+
+  return theArray;
+
+}
+
 // ================
 // Config
 // ================
@@ -365,7 +381,7 @@ async function deployInteractive() {
 // ================
 function moduleAdd() {
   log.debug('moduleAdd()');
-  configRead();
+  configRead();  
   appConfig.modules.push(emptyModule);
   configWrite();
   configEdit();
@@ -373,18 +389,13 @@ function moduleAdd() {
 
 function moduleRemove(modName: string) {
   log.debug(`moduleRemove(${modName})`);
-  const mod: any = appConfig.modules.find(item => item.name === modName);
-  if (!mod) {
-    log.error(`Module '${modName}' ${CHECK_CONFIG_STRING}`);
-    process.exit(1);
-  }
-
-  // TODO: finish this
-
+  configRead();
+  appConfig.modules = deleteArrayItem('Module', appConfig.modules, modName);
 }
 
 function moduleShow(modName: string) {
   log.debug(`moduleShow(${modName})`);
+  configRead();
   const mod: any = appConfig.modules.find(item => item.name === modName);
   if (!mod) {
     log.error(`Module '${modName}' ${CHECK_CONFIG_STRING}`);
@@ -415,14 +426,15 @@ function targetAdd() {
 
 function targetRemove(targetName: string) {
   log.debug(`targetRemove(${targetName})`);
-
-  // TODO: finish this
+  configRead();
+  appConfig.modules = deleteArrayItem('Target', appConfig.targets, targetName);
 
 }
 
 function targetShow(targetName: string) {
   log.debug(`targetShow(${targetName})`);
-  const mod: any = appConfig.modules.find(item => item.name === targetName);
+  configRead();
+  const mod: any = appConfig.targets.find(item => item.name === targetName);
   if (!mod) {
     log.error(`Target '${targetName}' ${CHECK_CONFIG_STRING}`);
     process.exit(1);

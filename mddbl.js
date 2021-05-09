@@ -97,6 +97,14 @@ function listArrayNames(listStr, theList) {
         process.exit(1);
     }
 }
+function deleteArrayItem(typeStr, theArray, itemName) {
+    var mod = appConfig.modules.find(function (item) { return item.name === itemName; });
+    if (!mod) {
+        log.error(typeStr + " '" + itemName + "' " + CHECK_CONFIG_STRING);
+        process.exit(1);
+    }
+    return theArray;
+}
 function configEdit() {
     log.info('Editing module configuration');
     console.log(configFilePath);
@@ -340,14 +348,12 @@ function moduleAdd() {
 }
 function moduleRemove(modName) {
     log.debug("moduleRemove(" + modName + ")");
-    var mod = appConfig.modules.find(function (item) { return item.name === modName; });
-    if (!mod) {
-        log.error("Module '" + modName + "' " + CHECK_CONFIG_STRING);
-        process.exit(1);
-    }
+    configRead();
+    appConfig.modules = deleteArrayItem('Module', appConfig.modules, modName);
 }
 function moduleShow(modName) {
     log.debug("moduleShow(" + modName + ")");
+    configRead();
     var mod = appConfig.modules.find(function (item) { return item.name === modName; });
     if (!mod) {
         log.error("Module '" + modName + "' " + CHECK_CONFIG_STRING);
@@ -369,10 +375,13 @@ function targetAdd() {
 }
 function targetRemove(targetName) {
     log.debug("targetRemove(" + targetName + ")");
+    configRead();
+    appConfig.modules = deleteArrayItem('Target', appConfig.targets, targetName);
 }
 function targetShow(targetName) {
     log.debug("targetShow(" + targetName + ")");
-    var mod = appConfig.modules.find(function (item) { return item.name === targetName; });
+    configRead();
+    var mod = appConfig.targets.find(function (item) { return item.name === targetName; });
     if (!mod) {
         log.error("Target '" + targetName + "' " + CHECK_CONFIG_STRING);
         process.exit(1);
