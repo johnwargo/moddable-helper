@@ -44,7 +44,7 @@ var logger = require('cli-logger');
 var os = require('os');
 var path = require('path');
 var program = require('commander');
-var Select = require('enquirer').Select;
+var _a = require('enquirer'), Confirm = _a.Confirm, Select = _a.Select;
 var cp = require("child_process");
 var packageDotJSON = require('./package.json');
 var APP_NAME = '\nModdable Helper (mddbl)';
@@ -106,24 +106,47 @@ function listArrayNames(listStr, theList) {
     }
 }
 function deleteArrayItem(typeStr, theArray, compareStr) {
-    var idx = -1;
-    for (var i = 0; i < theArray.length; i++) {
-        if (idx < 0) {
-            log.debug(i + ": " + theArray[i].name);
-            if (theArray[i].name == compareStr) {
-                log.debug("Found match at index " + idx);
-                idx = i;
+    return __awaiter(this, void 0, void 0, function () {
+        var idx, i, prompt_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    idx = -1;
+                    for (i = 0; i < theArray.length; i++) {
+                        if (idx < 0) {
+                            log.debug(i + ": " + theArray[i].name);
+                            if (theArray[i].name == compareStr) {
+                                log.debug("Found match at index " + idx);
+                                idx = i;
+                            }
+                        }
+                    }
+                    if (!(idx > -1)) return [3, 2];
+                    prompt_1 = new Confirm({
+                        name: 'question',
+                        message: "Are you sure you want to remove " + compareStr + "?"
+                    });
+                    return [4, prompt_1.run()
+                            .then(function (answer) {
+                            console.log('Answer:', answer);
+                            theArray.splice(idx, 1);
+                            return theArray;
+                        })
+                            .catch(function (err) {
+                            log.error(err);
+                            process.exit(1);
+                        })];
+                case 1:
+                    _a.sent();
+                    return [3, 3];
+                case 2:
+                    log.error(typeStr + " '" + compareStr + "' " + CHECK_CONFIG_STRING);
+                    process.exit(1);
+                    _a.label = 3;
+                case 3: return [2, theArray];
             }
-        }
-    }
-    if (idx > -1) {
-        theArray.splice(idx, 1);
-    }
-    else {
-        log.error(typeStr + " '" + compareStr + "' " + CHECK_CONFIG_STRING);
-        process.exit(1);
-    }
-    return theArray;
+        });
+    });
 }
 function configEdit() {
     log.info('Editing module configuration');

@@ -23,7 +23,7 @@ const logger = require('cli-logger');
 const os = require('os');
 const path = require('path');
 const program = require('commander');
-const { Select } = require('enquirer');
+const { Confirm, Select } = require('enquirer');
 const cp = require("child_process");
 
 // https://stackoverflow.com/questions/9153571/is-there-a-way-to-get-version-from-package-json-in-nodejs-code
@@ -93,7 +93,7 @@ function listArrayNames(listStr: string, theList: Target[] | Module[]) {
   }
 }
 
-function deleteArrayItem(typeStr: string, theArray: Module[] | Target[], compareStr: string): any[] {
+async function deleteArrayItem(typeStr: string, theArray: Module[] | Target[], compareStr: string): Promise<Module[] | Target[]> {
   // initialize the idx to indicate no item found
   var idx = -1;
   // Not loop through the array looking for the item
@@ -109,8 +109,22 @@ function deleteArrayItem(typeStr: string, theArray: Module[] | Target[], compare
   }
   // does the object exist in the array?
   if (idx > -1) {
-    // Delete the item
-    theArray.splice(idx, 1);
+    const prompt = new Confirm({
+      name: 'question',
+      message: `Are you sure you want to remove ${compareStr}?`
+    });
+
+    await prompt.run()
+      .then((answer: boolean) => {
+        console.log('Answer:', answer)
+        // Delete the item
+        theArray.splice(idx, 1);
+        return theArray;
+      })
+      .catch((err: any) => {
+        log.error(err);
+        process.exit(1);
+      });
   } else {
     log.error(`${typeStr} '${compareStr}' ${CHECK_CONFIG_STRING}`);
     process.exit(1);
