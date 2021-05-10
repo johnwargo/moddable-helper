@@ -109,8 +109,8 @@ function deleteArrayItem(typeStr: string, theArray: Module[] | Target[], compare
   }
   // does the object exist in the array?
   if (idx > -1) {
-    theArray.splice(idx, 1);
     // Delete the item
+    theArray.splice(idx, 1);
   } else {
     log.error(`${typeStr} '${compareStr}' ${CHECK_CONFIG_STRING}`);
     process.exit(1);
