@@ -24,7 +24,7 @@ const logger = require('cli-logger');
 const os = require('os');
 const path = require('path');
 const program = require('commander');
-const { Select } = require('enquirer');
+const { prompt, Select } = require('enquirer');
 const cp = require("child_process");
 
 // https://stackoverflow.com/questions/9153571/is-there-a-way-to-get-version-from-package-json-in-nodejs-code
@@ -61,8 +61,9 @@ function checkDirectory(filePath: string): boolean {
   }
 }
 
-function showObjectValues(obj: Module | Target) {
+function showObjectValues(obj: Module | Target, type: string) {
   log.debug('listObject()');
+  log.info(`Configuration for the '${obj.name}' ${type}:`)
   console.dir(obj);
 }
 
@@ -410,8 +411,7 @@ function moduleShow(modName: string) {
     log.error(`Module '${modName}' ${CHECK_CONFIG_STRING}`);
     process.exit(1);
   }
-  log.info(`Configuration for the '${modName}' Module:`)
-  console.dir(mod);
+  showObjectValues(mod, 'Module');
 }
 
 // ================
@@ -444,13 +444,12 @@ function targetRemove(targetName: string) {
 function targetShow(targetName: string) {
   log.debug(`targetShow(${targetName})`);
   configRead();
-  const mod: any = appConfig.targets.find(item => item.name === targetName);
-  if (!mod) {
+  const target: any = appConfig.targets.find(item => item.name === targetName);
+  if (!target) {
     log.error(`Target '${targetName}' ${CHECK_CONFIG_STRING}`);
     process.exit(1);
   }
-  log.info(`Configuration for the '${targetName}' Target:`)
-  console.dir(mod);
+  showObjectValues(target, 'Target');
 }
 
 // ================
