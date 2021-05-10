@@ -60,9 +60,18 @@ function checkDirectory(filePath: string): boolean {
   }
 }
 
-function showObjectValues(obj: Module | Target, type: string) {
-  log.debug('listObject()');
-  log.info(`Configuration for the '${obj.name}' ${type}:`)
+function showObjectProperties(itemName: string, type: string) {
+  log.debug(`showObjectValues(${itemName}, ${type})`);
+  // Display the contents of a config array object (modules or targets)
+  // in the console
+  configRead();
+  const theArray: any[] = type === 'Module' ? appConfig.modules : appConfig.targets;
+  const obj: any = theArray.find(item => item.name === itemName);
+  if (!obj) {
+    log.error(`${type} '${itemName}' ${CHECK_CONFIG_STRING}`);
+    return;
+  }
+  log.info(`Configuration for the '${obj.name}' ${type}:`);
   console.dir(obj);
 }
 
@@ -156,12 +165,12 @@ function configRead() {
     } catch (err) {
       log.error(`readConfig error: ${err}`);
       process.exit(1);
-      // return;
     }
     // get the log level from the config 
     const logLevel = appConfig.debug ? log.DEBUG : log.INFO;
+    // set the log level
     log.level(logLevel);
-
+    // dump some program information to the console
     log.debug('\nProgram Information (debug)');
     log.debug(APP_AUTHOR);
     log.debug(`Version: ${packageDotJSON.version}`);
@@ -193,16 +202,15 @@ function configWrite(): boolean {
 }
 
 function configShow() {
+  // print the module configuration settings to the console
   log.debug('showConfig()');
   configRead();
-  // print the module configuration settings to the console
   log.info('\nModule configuration:');
   // log.info(JSON.stringify(appConfig, null, 2));
   console.dir(appConfig);
 }
 
 function configSort() {
-
   // Function that helps sort the object array
   function compare(a: Module | Target, b: Module | Target) {
     return a.name > b.name ? 1 : -1;
@@ -391,10 +399,7 @@ async function moduleAdd(modName: string) {
   log.debug(`moduleAdd(${modName})`);
   configRead();
   const newMod = Object.assign({}, emptyModule);
-  console.dir(newMod);
   newMod.name = modName;
-  console.dir(newMod);
-
   appConfig.modules.push(newMod);
   configWrite();
   configEdit();
@@ -409,13 +414,7 @@ function moduleRemove(modName: string) {
 
 function moduleShow(modName: string) {
   log.debug(`moduleShow(${modName})`);
-  configRead();
-  const mod: any = appConfig.modules.find(item => item.name === modName);
-  if (!mod) {
-    log.error(`Module '${modName}' ${CHECK_CONFIG_STRING}`);
-    process.exit(1);
-  }
-  showObjectValues(mod, 'Module');
+  showObjectProperties(modName, 'Module');
 }
 
 // ================
@@ -449,13 +448,7 @@ function targetRemove(targetName: string) {
 
 function targetShow(targetName: string) {
   log.debug(`targetShow(${targetName})`);
-  configRead();
-  const target: any = appConfig.targets.find(item => item.name === targetName);
-  if (!target) {
-    log.error(`Target '${targetName}' ${CHECK_CONFIG_STRING}`);
-    process.exit(1);
-  }
-  showObjectValues(target, 'Target');
+  showObjectProperties(targetName, 'Target');
 }
 
 // ================

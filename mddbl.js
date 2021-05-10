@@ -76,8 +76,15 @@ function checkDirectory(filePath) {
         return false;
     }
 }
-function showObjectValues(obj, type) {
-    log.debug('listObject()');
+function showObjectProperties(itemName, type) {
+    log.debug("showObjectValues(" + itemName + ", " + type + ")");
+    configRead();
+    var theArray = type === 'Module' ? appConfig.modules : appConfig.targets;
+    var obj = theArray.find(function (item) { return item.name === itemName; });
+    if (!obj) {
+        log.error(type + " '" + itemName + "' " + CHECK_CONFIG_STRING);
+        return;
+    }
     log.info("Configuration for the '" + obj.name + "' " + type + ":");
     console.dir(obj);
 }
@@ -359,9 +366,7 @@ function moduleAdd(modName) {
             log.debug("moduleAdd(" + modName + ")");
             configRead();
             newMod = Object.assign({}, config_1.emptyModule);
-            console.dir(newMod);
             newMod.name = modName;
-            console.dir(newMod);
             appConfig.modules.push(newMod);
             configWrite();
             configEdit();
@@ -377,13 +382,7 @@ function moduleRemove(modName) {
 }
 function moduleShow(modName) {
     log.debug("moduleShow(" + modName + ")");
-    configRead();
-    var mod = appConfig.modules.find(function (item) { return item.name === modName; });
-    if (!mod) {
-        log.error("Module '" + modName + "' " + CHECK_CONFIG_STRING);
-        process.exit(1);
-    }
-    showObjectValues(mod, 'Module');
+    showObjectProperties(modName, 'Module');
 }
 function modulesList() {
     log.debug('modulesList()');
@@ -407,13 +406,7 @@ function targetRemove(targetName) {
 }
 function targetShow(targetName) {
     log.debug("targetShow(" + targetName + ")");
-    configRead();
-    var target = appConfig.targets.find(function (item) { return item.name === targetName; });
-    if (!target) {
-        log.error("Target '" + targetName + "' " + CHECK_CONFIG_STRING);
-        process.exit(1);
-    }
-    showObjectValues(target, 'Target');
+    showObjectProperties(targetName, 'Target');
 }
 function targetsList() {
     configRead();
