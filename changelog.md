@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.0.8 - May 10, 2021
+
+* Added required parameter `module` to the `module add` command
+* Added required parameter `target` to the `target add` command
+
 ## 0.0.7 - May 9, 2021
 
 Mother's Day Edition
