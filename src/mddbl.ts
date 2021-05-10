@@ -9,7 +9,6 @@
  **********************************************************/
 
 // TODO: Confirm deletion for `module rm` and `target rm`
-// TODO: Prompt for module or target name in `add` command
 // TODO: Automatically pass additional command-line parameters to Moddable SDK
 // TODO: Add tests
 // TODO: Add GitHub Pages site
@@ -24,7 +23,7 @@ const logger = require('cli-logger');
 const os = require('os');
 const path = require('path');
 const program = require('commander');
-const { prompt, Select } = require('enquirer');
+const { Select } = require('enquirer');
 const cp = require("child_process");
 
 // https://stackoverflow.com/questions/9153571/is-there-a-way-to-get-version-from-package-json-in-nodejs-code
@@ -388,10 +387,15 @@ async function deployInteractive() {
 // ================
 // Module
 // ================
-function moduleAdd() {
-  log.debug('moduleAdd()');
+async function moduleAdd(modName: string) {
+  log.debug(`moduleAdd(${modName})`);
   configRead();
-  appConfig.modules.push(emptyModule);
+  const newMod = Object.assign({}, emptyModule);
+  console.dir(newMod);
+  newMod.name = modName;
+  console.dir(newMod);
+
+  appConfig.modules.push(newMod);
   configWrite();
   configEdit();
 }
@@ -426,10 +430,12 @@ function modulesList() {
 // ================
 // Target
 // ================
-function targetAdd() {
+function targetAdd(targetName: string) {
   log.debug('targetAdd()');
   configRead();
-  appConfig.targets.push(emptyTarget);
+  const newTarget = Object.assign({}, emptyTarget);
+  newTarget.name = targetName;
+  appConfig.targets.push(newTarget);
   configWrite();
   configEdit();
 }
@@ -551,9 +557,11 @@ program
 const moduleCmd = program.command('module')
   .description('Work with the modules configuration');
 moduleCmd
-  .command('add')
+  .command('add <module>')
   .description('Add an empty module to the configuration file')
-  .action(moduleAdd);
+  .action((module: string) => {
+    moduleAdd(module);
+  });
 moduleCmd
   .command('rm <module>')
   .description('Remove a module from the configuration file')
@@ -581,9 +589,11 @@ program
 const targetCmd = program.command('target')
   .description('Work with the targets configuration');
 targetCmd
-  .command('add')
+  .command('add <target>')
   .description('Add an empty target to the configuration file')
-  .action(targetAdd);
+  .action((target: string) => {
+    targetAdd(target);
+  });
 targetCmd
   .command('rm <target>')
   .description('Remove a target from the configuration file')

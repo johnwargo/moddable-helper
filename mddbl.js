@@ -76,8 +76,9 @@ function checkDirectory(filePath) {
         return false;
     }
 }
-function showObjectValues(obj) {
+function showObjectValues(obj, type) {
     log.debug('listObject()');
+    log.info("Configuration for the '" + obj.name + "' " + type + ":");
     console.dir(obj);
 }
 function listArrayNames(listStr, theList) {
@@ -351,12 +352,22 @@ function deployInteractive() {
         });
     });
 }
-function moduleAdd() {
-    log.debug('moduleAdd()');
-    configRead();
-    appConfig.modules.push(config_1.emptyModule);
-    configWrite();
-    configEdit();
+function moduleAdd(modName) {
+    return __awaiter(this, void 0, void 0, function () {
+        var newMod;
+        return __generator(this, function (_a) {
+            log.debug("moduleAdd(" + modName + ")");
+            configRead();
+            newMod = Object.assign({}, config_1.emptyModule);
+            console.dir(newMod);
+            newMod.name = modName;
+            console.dir(newMod);
+            appConfig.modules.push(newMod);
+            configWrite();
+            configEdit();
+            return [2];
+        });
+    });
 }
 function moduleRemove(modName) {
     log.debug("moduleRemove(" + modName + ")");
@@ -372,18 +383,19 @@ function moduleShow(modName) {
         log.error("Module '" + modName + "' " + CHECK_CONFIG_STRING);
         process.exit(1);
     }
-    log.info("Configuration for the '" + modName + "' Module:");
-    console.dir(mod);
+    showObjectValues(mod, 'Module');
 }
 function modulesList() {
     log.debug('modulesList()');
     configRead();
     listArrayNames('Modules', appConfig.modules);
 }
-function targetAdd() {
+function targetAdd(targetName) {
     log.debug('targetAdd()');
     configRead();
-    appConfig.targets.push(config_1.emptyTarget);
+    var newTarget = Object.assign({}, config_1.emptyTarget);
+    newTarget.name = targetName;
+    appConfig.targets.push(newTarget);
     configWrite();
     configEdit();
 }
@@ -396,13 +408,12 @@ function targetRemove(targetName) {
 function targetShow(targetName) {
     log.debug("targetShow(" + targetName + ")");
     configRead();
-    var mod = appConfig.targets.find(function (item) { return item.name === targetName; });
-    if (!mod) {
+    var target = appConfig.targets.find(function (item) { return item.name === targetName; });
+    if (!target) {
         log.error("Target '" + targetName + "' " + CHECK_CONFIG_STRING);
         process.exit(1);
     }
-    log.info("Configuration for the '" + targetName + "' Target:");
-    console.dir(mod);
+    showObjectValues(target, 'Target');
 }
 function targetsList() {
     configRead();
@@ -469,9 +480,11 @@ program
 var moduleCmd = program.command('module')
     .description('Work with the modules configuration');
 moduleCmd
-    .command('add')
+    .command('add <module>')
     .description('Add an empty module to the configuration file')
-    .action(moduleAdd);
+    .action(function (module) {
+    moduleAdd(module);
+});
 moduleCmd
     .command('rm <module>')
     .description('Remove a module from the configuration file')
@@ -491,9 +504,11 @@ program
 var targetCmd = program.command('target')
     .description('Work with the targets configuration');
 targetCmd
-    .command('add')
+    .command('add <target>')
     .description('Add an empty target to the configuration file')
-    .action(targetAdd);
+    .action(function (target) {
+    targetAdd(target);
+});
 targetCmd
     .command('rm <target>')
     .description('Remove a target from the configuration file')

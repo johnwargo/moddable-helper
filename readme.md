@@ -18,11 +18,11 @@ The module supports the following commands:
 * `mddbl config sort` - Sort the module and target lists by name
 * `mddbl debug` - Toggle the `debug` setting (true to false, and, of course, false to true) in the project's configuration file
 * `mddbl deploy [module] [target]` - Deploy the selected module (module or host) to the specified target device
-* `mddbl module add` - Adds an empty Module entry to the configuration file's `modules` array, then launches the configuration file in the system's default editor.
+* `mddbl module add <module>` - Adds an empty Module entry to the configuration file's `modules` array, then launches the configuration file in the system's default editor.
 * `mddbl module rm <module>` - Removes the specified module from the configuration file's `modules` array
 * `mddbl module show <module>` - Shows the configuration settings for the specified module
 * `mddbl modules` - Display the list of modules defined in the `modules` section of the configuration file
-* `mddbl target add` - Adds an empty Target entry to the configuration file's `targets` array, then launches the configuration file in the system's default editor.
+* `mddbl target add <target>` - Adds an empty Target entry to the configuration file's `targets` array, then launches the configuration file in the system's default editor.
 * `mddbl target rm <target>` - Removes the specified target from the configuration file's `targets` array
 * `mddbl target show <target>` - Shows the configuration settings for the specified target
 * `mddbl targets` - Display the list of targets defined in the `targets` section of the configuration file
@@ -429,17 +429,23 @@ Configured Modules:
 
 ### Module Command
 
-The `mddbl module` command allows you to interact with the `modules` array in the project's configuration file. To add an empty module entry to the `modules` array, execute the following command:
+The `mddbl module` command allows you to interact with the `modules` array in the project's configuration file. To add a module entry to the `modules` array, execute the following command:
 
 ```shell
-mddbl module add
+mddbl module add <module>
+```
+
+For example, to add a new module called `test1`, execute the following command:
+
+```shell
+mddbl module add test1
 ```
 
 This will add the following entry to the `modules` array:
 
 ```json
 {
-  "name": "",
+  "name": "test1",
   "description": "",
   "isHost": false,
   "debugFlag": true,
@@ -495,14 +501,20 @@ Configuration for the 'dog' Module:
 The `mddbl target` command allows you to interact with the `targets` array in the project's configuration file. To add an empty target entry to the `targets` array, execute the following command:
 
 ```shell
-mddbl target add
+mddbl target add <target>
+```
+
+For example, to add a new target called `test2`, execute the following command:
+
+```shell
+mddbl target add test2
 ```
 
 This will add the following entry to the `targets` array:
 
 ```json
 {
-    "name": "",
+    "name": "test2",
     "description": "",
     "platform": "",
     "formatFlag": false,
