@@ -8,8 +8,9 @@
  * actions.
  **********************************************************/
 
+// TODO: Confirm deletion for `module rm` and `target rm`
+// TODO: Prompt for module or target name in `add` command
 // TODO: Automatically pass additional command-line parameters to Moddable SDK
-// TODO: Show GitHub Build status on readme file
 // TODO: Add tests
 // TODO: Add GitHub Pages site
 
