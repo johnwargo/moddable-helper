@@ -498,7 +498,7 @@ Configuration for the 'dog' Module:
 
 ### Target Command
 
-The `mddbl target` command allows you to interact with the `targets` array in the project's configuration file. To add an empty target entry to the `targets` array, execute the following command:
+The `mddbl target` command allows you to interact with the `targets` array in the project's configuration file. To add a target entry to the `targets` array, execute the following command:
 
 ```shell
 mddbl target add <target>
@@ -530,7 +530,7 @@ Next, the project's configuration file will open in the system's default `.json`
 To remove a specific target from the project's configuration file, execute the following command:
 
 ```shell
-mddbl target rm <module>
+mddbl target rm <target>
 ```
 
 For example, to remove a target called `dog` from the project's `targets` configuration, execute the following command:
@@ -542,7 +542,7 @@ mddbl target rm dog
 To display the configuration of a particular target, execute the following command:
 
 ```shell
-mddbl target show <module>
+mddbl target show <target>
 ```
 
 For example, to show the configuration for a target called `dog`, execute the following:
