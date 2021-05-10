@@ -1,6 +1,6 @@
 {
   "name": "moddable-helper",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Adds a simple command to help automate Moddable SDK commands",
   "main": "mddbl.js",
   "bin": {
