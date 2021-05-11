@@ -46,18 +46,12 @@ function checkDirectory(filePath: string): boolean {
     // Check to see if it's a folder
     try {
       let stats = fs.statSync(filePath);
-      if (stats) {
-        return stats.isDirectory;
-      } else {
-        return false;
-      }
+      if (stats) return stats.isDirectory;
     } catch (err) {
       log.error(`checkDirectory error: ${err}`);
-      return false;
     }
-  } else {
-    return false;
   }
+  return false;
 }
 
 function showObjectProperties(itemName: string, type: string) {
@@ -77,7 +71,7 @@ function showObjectProperties(itemName: string, type: string) {
 
 function listArrayNames(listStr: string, theList: Target[] | Module[]) {
   log.debug('listArray()');
-  // Write the array contents to the console
+  // Write the array's name property list to the console
   if (theList.length > 0) {
     log.info(`\nConfigured ${listStr}:`);
     for (let item in theList) {
@@ -94,6 +88,7 @@ function listArrayNames(listStr: string, theList: Target[] | Module[]) {
 }
 
 function deleteArrayItem(typeStr: string, theArray: Module[] | Target[], compareStr: string): any[] {
+  // Remove an object from the array
   // initialize the idx to indicate no item found
   var idx = -1;
   // Not loop through the array looking for the item
@@ -249,7 +244,7 @@ function debugToggle() {
 // Deploy
 // ================
 function doDeploy(rootCmd: string, mod: Module, target: Target) {
-  log.debug(`executeCommand(${rootCmd}, ${mod.name}, ${target.name})`);
+  log.debug(`doDeploy(${rootCmd}, ${mod.name}, ${target.name})`);
 
   // does the module folder exist?
   const folder = mod.folderPath;
@@ -293,7 +288,7 @@ function doDeploy(rootCmd: string, mod: Module, target: Target) {
   }
 }
 
-function deployModule(modName: string, targetName: string = '') {
+function deployModule(modName: string, targetName: string) {
   log.debug(`deployModule(${modName}, ${targetName})`);
 
   // only read the config if we didn't already read it
@@ -302,34 +297,37 @@ function deployModule(modName: string, targetName: string = '') {
   // Does the specified module exist?
   const mod: any = appConfig.modules.find(item => item.name === modName);
   if (!mod) {
-    log.error(`Module '${modName}' ${CHECK_CONFIG_STRING}`);
+    log.error(`ERROR: Module '${modName}' ${CHECK_CONFIG_STRING}`);
     process.exit(1);
   }
   // Does the module have a folder path?
   if (!mod.folderPath) {
-    log.error(`Module path '${mod.folderPath}' ${CHECK_CONFIG_STRING}`);
+    log.error(`ERROR: Module path '${mod.folderPath}' ${CHECK_CONFIG_STRING}`);
     process.exit(1);
   }
 
   var target: any;
-  if (targetName.length > 0) {
-    // Does the specified target exist?
+  if (targetName) {
+    // Does the specified target exist?    
     target = appConfig.targets.find(item => item.name === targetName);
     if (!target) {
-      log.error(`Target '${targetName}' ${CHECK_CONFIG_STRING}`);
+      log.error(`ERROR: Target '${targetName}' ${CHECK_CONFIG_STRING}`);
       process.exit(1);
     }
     // Does the target have a platform?
     if (!target.platform) {
-      log.error(`Target platform '${target.platform}' ${CHECK_CONFIG_STRING}`);
+      log.error(`ERROR: Target platform '${target.platform}' ${CHECK_CONFIG_STRING}`);
       process.exit(1);
     }
 
     if (target.rotationFlag && target.rotationValue &&
       !(target.rotationValue == 0 || target.rotationValue == 90 || target.rotationValue == 180 || target.rotationValue == 270)) {
-      log.error(`Invalid Target rotation value (${target.rotationValue})`);
+      log.error(`ERROR: Invalid Target rotation value (${target.rotationValue})`);
       process.exit(1);
     }
+  } else {
+    log.error('ERROR: Missing Target value on command line');
+    process.exit(1);
   }
 
   // Execute the command
@@ -607,6 +605,7 @@ program
   .command('targets')
   .description('List all configured Targets')
   .action(targetsList);
+  
 // ===========================
 // setup the `wipe` command
 // ===========================

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.0.9 - May 11, 2021
+
+* Fixed logic error in deploy command, didn't fail correctly if a target was not passed to the command
+* Refactored (simplified) the `checkDirectory` function
+
 ## 0.0.8 - May 10, 2021
 
 * Added required parameter `module` to the `module add` command

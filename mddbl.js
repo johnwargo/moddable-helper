@@ -60,21 +60,14 @@ function checkDirectory(filePath) {
     if (fs.existsSync(filePath)) {
         try {
             var stats = fs.statSync(filePath);
-            if (stats) {
+            if (stats)
                 return stats.isDirectory;
-            }
-            else {
-                return false;
-            }
         }
         catch (err) {
             log.error("checkDirectory error: " + err);
-            return false;
         }
     }
-    else {
-        return false;
-    }
+    return false;
 }
 function showObjectProperties(itemName, type) {
     log.debug("showObjectValues(" + itemName + ", " + type + ")");
@@ -226,7 +219,7 @@ function debugToggle() {
     }
 }
 function doDeploy(rootCmd, mod, target) {
-    log.debug("executeCommand(" + rootCmd + ", " + mod.name + ", " + target.name + ")");
+    log.debug("doDeploy(" + rootCmd + ", " + mod.name + ", " + target.name + ")");
     var folder = mod.folderPath;
     if (!checkDirectory(folder)) {
         log.error("Specified module folder (" + folder + ") does not exist");
@@ -265,35 +258,38 @@ function doDeploy(rootCmd, mod, target) {
     }
 }
 function deployModule(modName, targetName) {
-    if (targetName === void 0) { targetName = ''; }
     log.debug("deployModule(" + modName + ", " + targetName + ")");
     if (!appConfig)
         configRead();
     var mod = appConfig.modules.find(function (item) { return item.name === modName; });
     if (!mod) {
-        log.error("Module '" + modName + "' " + CHECK_CONFIG_STRING);
+        log.error("ERROR: Module '" + modName + "' " + CHECK_CONFIG_STRING);
         process.exit(1);
     }
     if (!mod.folderPath) {
-        log.error("Module path '" + mod.folderPath + "' " + CHECK_CONFIG_STRING);
+        log.error("ERROR: Module path '" + mod.folderPath + "' " + CHECK_CONFIG_STRING);
         process.exit(1);
     }
     var target;
-    if (targetName.length > 0) {
+    if (targetName) {
         target = appConfig.targets.find(function (item) { return item.name === targetName; });
         if (!target) {
-            log.error("Target '" + targetName + "' " + CHECK_CONFIG_STRING);
+            log.error("ERROR: Target '" + targetName + "' " + CHECK_CONFIG_STRING);
             process.exit(1);
         }
         if (!target.platform) {
-            log.error("Target platform '" + target.platform + "' " + CHECK_CONFIG_STRING);
+            log.error("ERROR: Target platform '" + target.platform + "' " + CHECK_CONFIG_STRING);
             process.exit(1);
         }
         if (target.rotationFlag && target.rotationValue &&
             !(target.rotationValue == 0 || target.rotationValue == 90 || target.rotationValue == 180 || target.rotationValue == 270)) {
-            log.error("Invalid Target rotation value (" + target.rotationValue + ")");
+            log.error("ERROR: Invalid Target rotation value (" + target.rotationValue + ")");
             process.exit(1);
         }
+    }
+    else {
+        log.error('ERROR: Missing Target value on command line');
+        process.exit(1);
     }
     console.log("Deploying " + modName + " to " + targetName);
     if (mod.isHost) {
