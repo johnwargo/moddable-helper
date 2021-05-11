@@ -219,7 +219,12 @@ function debugToggle() {
     }
 }
 function doDeploy(rootCmd, mod, target) {
-    log.debug("doDeploy(" + rootCmd + ", " + mod.name + ", " + target.name + ")");
+    if (target) {
+        log.debug("doDeploy(" + rootCmd + ", " + mod.name + ", " + target.name + ")");
+    }
+    else {
+        log.debug("doDeploy(" + rootCmd + ", " + mod.name + ")");
+    }
     var folder = mod.folderPath;
     if (!checkDirectory(folder)) {
         log.error("Specified module folder (" + folder + ") does not exist");
@@ -230,17 +235,18 @@ function doDeploy(rootCmd, mod, target) {
         cmd += '-d ';
     if (mod.makeFlag)
         cmd += '-m ';
-    if (target)
+    if (target) {
         cmd += "-p " + target.platform + " ";
-    if (target.formatFlag) {
-        cmd += "-f ";
-        if (target.formatStr.length > 0)
-            cmd += target.formatStr + " ";
-    }
-    if (target.rotationFlag) {
-        cmd += "-r ";
-        if (target.rotationValue > -1)
-            cmd += target.rotationValue + " ";
+        if (target.formatFlag) {
+            cmd += "-f ";
+            if (target.formatStr.length > 0)
+                cmd += target.formatStr + " ";
+        }
+        if (target.rotationFlag) {
+            cmd += "-r ";
+            if (target.rotationValue > -1)
+                cmd += target.rotationValue + " ";
+        }
     }
     log.debug("Command: " + cmd);
     try {
@@ -286,10 +292,6 @@ function deployModule(modName, targetName) {
             log.error("ERROR: Invalid Target rotation value (" + target.rotationValue + ")");
             process.exit(1);
         }
-    }
-    else {
-        log.error('ERROR: Missing Target value on command line');
-        process.exit(1);
     }
     console.log("Deploying " + modName + " to " + targetName);
     if (mod.isHost) {

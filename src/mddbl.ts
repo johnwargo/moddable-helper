@@ -244,7 +244,11 @@ function debugToggle() {
 // Deploy
 // ================
 function doDeploy(rootCmd: string, mod: Module, target: Target) {
-  log.debug(`doDeploy(${rootCmd}, ${mod.name}, ${target.name})`);
+  if (target) {
+    log.debug(`doDeploy(${rootCmd}, ${mod.name}, ${target.name})`);
+  } else {
+    log.debug(`doDeploy(${rootCmd}, ${mod.name})`);
+  }
 
   // does the module folder exist?
   const folder = mod.folderPath;
@@ -257,16 +261,20 @@ function doDeploy(rootCmd: string, mod: Module, target: Target) {
   let cmd: string = rootCmd + ' ';
   if (mod.debugFlag) cmd += '-d ';
   if (mod.makeFlag) cmd += '-m ';
-  // Target the platform flag (-p)
-  if (target) cmd += `-p ${target.platform} `;
-  if (target.formatFlag) {
-    cmd += `-f `;
-    if (target.formatStr.length > 0) cmd += `${target.formatStr} `;
-  }
-  // Process the rotation flag (`r)
-  if (target.rotationFlag) {
-    cmd += `-r `;
-    if (target.rotationValue > -1) cmd += `${target.rotationValue} `;
+
+  // Do we have a target to process?
+  if (target) {
+    // then do the target stuff    
+    cmd += `-p ${target.platform} `;
+    if (target.formatFlag) {
+      cmd += `-f `;
+      if (target.formatStr.length > 0) cmd += `${target.formatStr} `;
+    }
+    // Process the rotation flag (`r)
+    if (target.rotationFlag) {
+      cmd += `-r `;
+      if (target.rotationValue > -1) cmd += `${target.rotationValue} `;
+    }
   }
 
   log.debug(`Command: ${cmd}`);
@@ -325,11 +333,8 @@ function deployModule(modName: string, targetName: string) {
       log.error(`ERROR: Invalid Target rotation value (${target.rotationValue})`);
       process.exit(1);
     }
-  } else {
-    log.error('ERROR: Missing Target value on command line');
-    process.exit(1);
   }
-
+  
   // Execute the command
   console.log(`Deploying ${modName} to ${targetName}`);
   if (mod.isHost) {
@@ -605,7 +610,7 @@ program
   .command('targets')
   .description('List all configured Targets')
   .action(targetsList);
-  
+
 // ===========================
 // setup the `wipe` command
 // ===========================

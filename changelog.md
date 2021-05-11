@@ -1,8 +1,13 @@
 # Changelog
 
+## 0.0.10 - May 11, 2021
+
+* Reverted the `deployModule` changes from 0.0.9
+* Actually fixed the issue with `deploy`; it now properly processes the deployment when you don't provide a target
+
 ## 0.0.9 - May 11, 2021
 
-* Fixed logic error in deploy command, didn't fail correctly if a target was not passed to the command
+* Fixed logic error in `deploy` command, didn't fail correctly if a target was not passed to the command
 * Refactored (simplified) the `checkDirectory` function
 
 ## 0.0.8 - May 10, 2021
