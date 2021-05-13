@@ -90,7 +90,6 @@ With this module, you create a configuration file called `mddbl.json` (the modul
       "isHost": true,
       "debugFlag": true,
       "makeFlag": true,
-
       "folderPath": "host"
     },
     {
@@ -161,9 +160,9 @@ To use this module, you must first create the module's configuration file in the
 
 ```json
 {
-    "debug": false,
-    "modules": [],
-    "targets": [],
+  "debug": false,
+  "modules": [],
+  "targets": [],
 }
 ```
 
@@ -189,9 +188,9 @@ To enable debug mode, set the configuration file's `debug` option to `true` as s
 
 ```json
 {
-    "debug": true,
-    "modules": [],
-    "targets": [],
+  "debug": true,
+  "modules": [],
+  "targets": [],
 }
 ```
 
@@ -207,12 +206,12 @@ Use the `modules` section of the configuration file to configure an array of `mo
 
 ```json
 {
-    "name": "",
-    "description": "",
-    "isHost": false,
-    "debugFlag": true,
-    "makeFlag": true,
-    "folderPath": "",
+  "name": "",
+  "description": "",
+  "isHost": false,
+  "debugFlag": true,
+  "makeFlag": true,
+  "folderPath": "",
 }
 ```
 
@@ -227,30 +226,30 @@ The example configuration file shown above defines three modules:
 
 ```json
 "modules": [
-    {
-      "name": "host",
-      "description": "The project's host module",
-      "isHost": true,
-      "debugFlag": true,
-      "makeFlag": true,
-      "folderPath": "host"
-    },
-    {
-      "name": "hw",
-      "description": "Text-only version of the project",
-      "isHost": false,
-      "debugFlag": true,
-      "makeFlag": true,
-      "folderPath": "helloworld"
-    },
-    {
-      "name": "hwg",
-      "description": "Hello World Graphical version",
-      "isHost": false,
-      "debugFlag": true,
-      "makeFlag": true,
-      "folderPath": "helloworld-gui"
-    }
+  {
+    "name": "host",
+    "description": "The project's host module",
+    "isHost": true,
+    "debugFlag": true,
+    "makeFlag": true,
+    "folderPath": "host"
+  },
+  {
+    "name": "hw",
+    "description": "Text-only version of the project",
+    "isHost": false,
+    "debugFlag": true,
+    "makeFlag": true,
+    "folderPath": "helloworld"
+  },
+  {
+    "name": "hwg",
+    "description": "Hello World Graphical version",
+    "isHost": false,
+    "debugFlag": true,
+    "makeFlag": true,
+    "folderPath": "helloworld-gui"
+  }
 ],
 ```
 
@@ -262,10 +261,10 @@ Use the `targets` section of the configuration file to configure an array of `ta
 
 ```json
 {
-    "name": "",
-    "description": "",
-    "platform": "",
-    "wipeCommand": "",
+  "name": "",
+  "description": "",
+  "platform": "",
+  "wipeCommand": "",
 }
 ```
 
@@ -284,27 +283,27 @@ The example configuration file shown above defines two Targets devices:
 
 ```json
 "targets": [
-    {
-      "name": "mdbl2",
-      "description": "Moddable Two",
-      "platform": "esp32/moddable_two",
-      "formatFlag": false,
-      "formatStr": "",
-      "rotationFlag": false,
-      "rotationValue": 0,
-      "wipeCommand": "python %IDF_PATH%\\components\\esptool_py\\esptool\\esptool.py erase_flash"
-    },
-    {
-      "name": "m5fire",
-      "description": "M5Stack Fire device",
-      "platform": "esp32/m5stack_fire",
-      "formatFlag": true,
-      "formatStr": "gray16",
-      "rotationFlag": false,
-      "rotationValue": 0,
-      "wipeCommand": "python %IDF_PATH%\\components\\esptool_py\\esptool\\esptool.py erase_flash"
-    }
-  ]
+  {
+    "name": "mdbl2",
+    "description": "Moddable Two",
+    "platform": "esp32/moddable_two",
+    "formatFlag": false,
+    "formatStr": "",
+    "rotationFlag": false,
+    "rotationValue": 0,
+    "wipeCommand": "python %IDF_PATH%\\components\\esptool_py\\esptool\\esptool.py erase_flash"
+  },
+  {
+    "name": "m5fire",
+    "description": "M5Stack Fire device",
+    "platform": "esp32/m5stack_fire",
+    "formatFlag": true,
+    "formatStr": "gray16",
+    "rotationFlag": false,
+    "rotationValue": 0,
+    "wipeCommand": "python %IDF_PATH%\\components\\esptool_py\\esptool\\esptool.py erase_flash"
+  }
+]
 ```
 
 > **Note**: The targets use the same wipe command because the devices are both based on the ESP32 hardware platform.
@@ -514,14 +513,14 @@ This will add the following entry to the `targets` array:
 
 ```json
 {
-    "name": "test2",
-    "description": "",
-    "platform": "",
-    "formatFlag": false,
-    "formatStr": "",
-    "rotationFlag": false,
-    "rotationValue": 0,
-    "wipeCommand": ""
+  "name": "test2",
+  "description": "",
+  "platform": "",
+  "formatFlag": false,
+  "formatStr": "",
+  "rotationFlag": false,
+  "rotationValue": 0,
+  "wipeCommand": ""
 }
 ```
 
@@ -558,14 +557,14 @@ Moddable Helper (mddbl)
 Reading configuration file
 Configuration for the 'dog' Target:
 {
-    "name": "dog",
-    "description": "Doggie module",
-    "platform": "esp32",
-    "formatFlag": false,
-    "formatStr": "",
-    "rotationFlag": false,
-    "rotationValue": 0,
-    "wipeCommand": "python %IDF_PATH%\\components\\esptool_py\\esptool\\esptool.py erase_flash"
+  "name": "dog",
+  "description": "Doggie module",
+  "platform": "esp32",
+  "formatFlag": false,
+  "formatStr": "",
+  "rotationFlag": false,
+  "rotationValue": 0,
+  "wipeCommand": "python %IDF_PATH%\\components\\esptool_py\\esptool\\esptool.py erase_flash"
 }
 ```
 
