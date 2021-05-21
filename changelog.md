@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.11 - May 20, 2021
+
+* Added finally deploy function, ensuring it switches back to the starting folder
+
 ## 0.0.10 - May 11, 2021
 
 * Reverted the `deployModule` changes from 0.0.9

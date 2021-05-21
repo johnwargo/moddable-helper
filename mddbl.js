@@ -249,18 +249,20 @@ function doDeploy(rootCmd, mod, target) {
         }
     }
     log.debug("Command: " + cmd);
+    log.info(chalk.yellow("Changing to the '" + folder + "' directory"));
+    process.chdir(folder);
+    log.debug("Current directory: " + process.cwd());
     try {
-        log.info(chalk.yellow("Changing to the '" + folder + "' directory"));
-        process.chdir(folder);
-        log.debug("Current directory: " + process.cwd());
         log.info(chalk.yellow('Executing:') + " " + cmd);
         cp.execSync(cmd, { stdio: 'inherit' });
-        log.info(chalk.yellow("Changing back to the '" + WORKING_PATH + "' directory"));
-        process.chdir(WORKING_PATH);
     }
     catch (e) {
         log.error(chalk.red(e));
         process.exit(1);
+    }
+    finally {
+        log.info(chalk.yellow("Changing back to the '" + WORKING_PATH + "' directory"));
+        process.chdir(WORKING_PATH);
     }
 }
 function deployModule(modName, targetName) {

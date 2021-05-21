@@ -278,21 +278,22 @@ function doDeploy(rootCmd: string, mod: Module, target: Target) {
   }
 
   log.debug(`Command: ${cmd}`);
-
+  // Change to the module folder
+  log.info(chalk.yellow(`Changing to the '${folder}' directory`));
+  process.chdir(folder);
+  log.debug(`Current directory: ${process.cwd()}`);
+  // execute the command
   try {
-    // Change to the module folder
-    log.info(chalk.yellow(`Changing to the '${folder}' directory`));
-    process.chdir(folder);
-    log.debug(`Current directory: ${process.cwd()}`);
-    // execute the command
     log.info(`${chalk.yellow('Executing:')} ${cmd}`);
     cp.execSync(cmd, { stdio: 'inherit' });
-    // switch back to the starting folder
-    log.info(chalk.yellow(`Changing back to the '${WORKING_PATH}' directory`));
-    process.chdir(WORKING_PATH);
   } catch (e) {
     log.error(chalk.red(e));
     process.exit(1);
+  }
+  finally {
+    // switch back to the starting folder
+    log.info(chalk.yellow(`Changing back to the '${WORKING_PATH}' directory`));
+    process.chdir(WORKING_PATH);
   }
 }
 
@@ -334,7 +335,7 @@ function deployModule(modName: string, targetName: string) {
       process.exit(1);
     }
   }
-  
+
   // Execute the command
   console.log(`Deploying ${modName} to ${targetName}`);
   if (mod.isHost) {
