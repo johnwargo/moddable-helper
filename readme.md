@@ -277,7 +277,7 @@ Use the `targets` section of the configuration file to configure an array of `ta
 * `rotationValue` - With `rotationFlag` enabled, specifies the screen rotation value. Supported values are `0`, `90`, `180` or `270`. The Moddable SDK defaults to 0, but there's no way to leave this value blank, so you must ensure a valid value is set for this property.
 * `wipeCommand` - The file system command to wipe the device. The command used is specific to the hardware platform, not the Moddable SDK.
 
-> **Note**: On Microsoft Windows, you must double-up file system delimiters; `"python %IDF_PATH%\components\esptool_py\esptool\esptool.py erase_flash"` becomes `"python %IDF_PATH%\\components\\esptool_py\\esptool\\esptool.py erase_flash"`. JavaScript uses the backslash (`\`) when escaping other characters in a string, so to include the backslash in a command string, you must escape it with a backslash first.
+> **Note**: On Microsoft Windows, you must double-up file system delimiters; `"python %IDF_PATH%\components\esptool_py\esptool\esptool.py erase_flash"` becomes `"python %IDF_PATH%\\components\\esptool_py\\esptool\\esptool.py erase_flash"`. JavaScript uses the backslash (`\`) when escaping other characters in a string, so to include the backslash in a command string, you must escape it with a backslash first. On Linux or macOS, the command string is "python $IDF_PATH/components/esptool_py/esptool/esptool.py erase_flash" (no special escaping needed).
 
 The example configuration file shown above defines two Targets devices:
 
