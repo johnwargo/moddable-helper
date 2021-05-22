@@ -282,9 +282,9 @@ function doDeploy(rootCmd: string, mod: Module, target: Target) {
   log.info(chalk.yellow(`Changing to the '${folder}' directory`));
   process.chdir(folder);
   log.debug(`Current directory: ${process.cwd()}`);
-  // execute the command
+  log.info(`${chalk.yellow('Executing:')} ${cmd}`);
   try {
-    log.info(`${chalk.yellow('Executing:')} ${cmd}`);
+    // execute the command
     cp.execSync(cmd, { stdio: 'inherit' });
   } catch (e) {
     log.error(chalk.red(e));
