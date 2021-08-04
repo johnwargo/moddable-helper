@@ -46,7 +46,7 @@ This installs a `mddbl` command you can use anywhere on the system.
 
 If you have an issue with this module, don't email the author, submit an [issue](https://github.com/johnwargo/moddable-helper/issues) in this repository instead.
 
-I built this project for the community, so if you have an enhancement, fix, or change for the project please submit a [Pull Request](https://github.com/johnwargo/moddable-helper/pulls).
+I built this project for the community, so if you have an enhancement, fix, or change for the project, please submit a [Pull Request](https://github.com/johnwargo/moddable-helper/pulls).
 
 ## Background
 
@@ -67,7 +67,7 @@ cd host
 mcconfig -d -m -p esp32/moddable_two
 ```
 
-Next, to deploy the host, execute the following commands:
+Next, to deploy the helloworld module, execute the following commands:
 
 ```shell
 cd ../helloworld
